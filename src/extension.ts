@@ -20,6 +20,22 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+
+	const command_button = vscode.commands.registerCommand('better-mark.button', () => {
+		const editor = vscode.window.activeTextEditor;
+		if(!editor) {
+			vscode.window.showInformationMessage('No active text editor found.');
+			return;
+		}
+		const user_selection = editor.selection;
+		const text_selected = editor.document.getText(user_selection);
+		if(text_selected.length === 0) {
+			vscode.window.showInformationMessage('No text selected.');
+			return;
+		}
+	});
+
+	context.subscriptions.push(command_button);
 }
 
 // This method is called when your extension is deactivated

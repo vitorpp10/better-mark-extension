@@ -38,112 +38,88 @@ Sequência de comandos para debbugar o código da sua extensão:
 2. Entrar em `src/extension.ts` e iniciar a depuração (`F5`/`Ctrl + Shift + P/Debbunging: Start...`).
 3. Ver se código da extensão está funcionando com `Ctrl + Shift + P/Hello World!`.
 
-# Feature 1
+# Feature 1 (Criar e visualizar botão no menu)
 
-Fazer o botão do *menu bar* aparecer somente em arquivos `.md`.
+Passo a passo para fazer o botão do *menu bar* aparecer somente em arquivos `.md`.
 
-REDIJIR OQUE APRENDI DE COMO ADICIONAR UM BOTAO NA MENU BAR AQUI QUANDO VOLTAR
+*package.json*: 
 
----
+Adicionar comando para criar botão, nome, ícone, depois vamos adicionar ele na área `editor/title` que seria o *menu bar*. Vamos criar nome do comado, a qual grupo pertence e condição para ele funcionar, nesse caso `editorLangId == markdown` quer dizer que ele so deve aparecer quando o arquivo que estiver aberto na IDE for do tipo `.md`.
 
-Continuar daqui:
+```json
+/* ... */
+"commands": [
+    {
+        "command": "better-mark.button",
+        "title": "Button",
+        "icon": "$(wand)"
+    }
+],
+"menus": [
+    {
+        "command": "better-mark.button",
+        "group": "navigation",
+        "when": "editorLangId == markdown"
+    }
+]
+/* ... */
+``` 
 
-Parei nessa etapa
+*extension.ts*: 
 
-# 6\. Etapa 3 — fazer o botão aparecer somente em Markdown
+Aqui basicamente, criamos uma variável que registra o comando do botão e se associa a ele por meio de um *lambda*. Quando o botão é clicado, esse *lambda* é executado e exibe a mensagem de sucesso na tela. Por fim, colocamos esse registro dentro do `context.subscriptions`para que o VS Code saiba que deve limpar esse comando da memória e liberar os recursos quando a extensão for desativada ou fechada.
 
-  
+```ts
+// Importações aqui...
 
-Essa é uma excelente primeira pequena feature.
+export function activate(context: vscode.ExtesionContext) {
+    // Outros comandos/iniciais aqui...
 
-  
+    const command_button = vscode.commands.registerCommand('better-mark.button', () => {
+        vscode.window.showInformationMessage('SUCCESS TO USE BUTTON');
+    });
 
-Você quer chegar a:
+    context.subscriptions.push(command_button);
 
-  
+    // ...
+}
+``` 
 
-```
+# Feature 2 (Seleção de texto)
 
-arquivo.md
+Nessa feature vamos fazer a lógica de seleção de texto do usuário sobre o editor/arquivo, dessa forma conseguimos capturar exatamente oque o usuário quer selecionar para aplicar as mudanças em seu arquivo. 
 
-  
+Primeira coisa que temos que fazer é criar variáveis para guardar a janela de edição aberta atualmente (`editor`), outra para guardar a seleção que ele fizer sobre essa janela de edição, ou seja, o `range` (*área*) do texto selecionado (`user_selection`) e a última variável seria para pegar o texto que está nessa área que o usuário demarcou e transformar em `string` para manipulação (`text_selected`).
 
-┌─────────────────────────────────────────────┐
+Também vamos usar estruturas de condições para caso não tenha nenhum janela de edição (*arquivo*) aberto no momento ou quando o tamanho da área demarcada pelo usuário for igual a 0.
 
-│ README.md [✨] [...]│
+```ts
+// Importações aqui...
 
-├─────────────────────────────────────────────┤
+export function activate(context: vscode.ExtesionContext) {
+    // Outros comandos/iniciais aqui...
 
-│ │
+    const command_button = vscode.commands.registerCommand('better-mark.button', () => {
+        // Guarda janela de edição atual
+        const editor = vscode.window.activeTextEditor;
+        // Se não tiver nenhum arquivo aberto...
+        if(!editor) {
+            // Retornamos erro e encerramos
+            vscode.window.showInformationMessage('No active text editor found.');
+            return;
+        }
+        // Variáveis de seleção de texto e texto em si
+        const user_selection = editor.selection;
+        const text_selected = editor.document.getText(user_selection);
+        // Se o usuário não selecionou nada então apenas retornamos uma mensagem de erro avisando e encerramos
+        if(text_selected.length === 0) {
+            vscode.window.showInformationMessage('No text selected.');
+            return;
+        }
+    });
 
-│ texto │
+    context.subscriptions.push(command_button);
 
-│ │
-
-└─────────────────────────────────────────────┘
-
-```
-
-  
-
-Mas:
-
-  
-
-```
-
-arquivo.ts
-
-  
-
-┌─────────────────────────────────────────────┐
-
-│ extension.ts [...] │
-
-├─────────────────────────────────────────────┤
-
-```
-
-  
-
-Sem o botão.
-
-  
-
-Aqui você vai aprender um conceito importantíssimo do VS Code:
-
-  
-
-**when clauses / context keys**.
-
-  
-
-Pesquise:
-
-  
-
-[When clause contexts — VS Code](<https://code.visualstudio.com/api/references/when-clause-contexts?utm_source=chatgpt.com>)
-
-  
-
-Você vai descobrir como fazer algo conceitualmente como:
-
-  
-
-```
-
-quando:
-
-editorLangId == markdown
-
-```
-
-  
-
-Isso vai te ensinar uma coisa que será útil durante toda a extensão:
-
-  
-
-> A UI da extensão é declarativa; a lógica é TypeScript.
-
-  
+    // ...
+}
+``` 
