@@ -19,7 +19,8 @@
       },
       {
         "command": "better-mark.button",
-        "title": "Transform text to UpperCase",
+        "title": "Better Mark: Format Selection",
+        "shortTitle": "Format to Markdown",
         "icon": "$(wand)"
       }
     ],

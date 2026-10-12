@@ -170,3 +170,49 @@ export function activate(context: vscode.ExtesionContext) {
     // ...
 }
 ``` 
+
+# Feature 4: Formatar Texto
+
+Nessa *feature* vamos colocar regras iniciais reais que um título tem que ter para receber um `#` em markdown. Então, basicamente vamos criar uma função que recebe o texto selecionado pelo *user* e retorna ele formatado para título caso seja necessário.
+
+Nossa função vai receber uma `string` referente ao texto selecionado pelo `user`e depois vai criar 3 variáveis que vão ser as "regras" que aquele texto tem que ter para virar um título. São elas:
+
+1. Tamanho menor que 80
+2. Não possuir quebra de linha
+3. Não terminar com ponto final (afinal um título não tem ponto final)
+4. Não ser uma linha vazia (`length === 0`)
+
+Se passar pelas condições ele vira um título (`# ${result}`).
+
+```ts
+function formatToTitle(text: string): string { 
+    let result = text.trim();
+    const is_short = result.length < 80;
+    const has_no_line_breaks = !result.includes('\n');
+    const does_not_end_with_period = !result.endsWith('.');
+    const nothing = result.length !== 0;
+    if(is_short && has_no_line_breaks && does_not_end_with_period && nothing) {
+        result = `# ${result}`;
+    }
+    return result;
+} 
+```
+
+# Feature 5: Pipeline de Múltiplas Linhas
+
+Agora vamos "melhorar" oque fizemos na *feature 4*, ou seja, vamos fazer a inserção de títulos para quando o *user* selecionar várias linhas, assim a formatação de título vai funcionr para mais de uma linha.
+
+Dentro dessa função nova (`formatMarkdown`) vamos dividir o texto selecionado pelo *user* e separar os índices com base em quebra de linha (`\n`). Assim, quando tiver quebras de linhas ele separa por índice e conseguimos analisar mais de um bloco de texto ao mesmo tempo. Além disso essa função nova será a função principal que vai chamar todas.
+
+```ts
+function formatToMarkdown(text: string): string {
+    const lines = text.split('\n');
+    const new_lines = [];
+    for(let i = 0; i < lines.length; i++) {
+        let current_line = lines[i];
+        current_line = formatTitle(current_line);
+        new_lines.push(current_line);
+    }
+    return new_lines.join('\n');
+}
+``` 

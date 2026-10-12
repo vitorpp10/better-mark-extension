@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		} 
 		editor.edit((editBuilder) => {
-			const new_text_selected: string = formartMarkdown(text_selected);
+			const new_text_selected: string = formatToMarkdown(text_selected);
 			editBuilder.replace(user_selection, new_text_selected);
 		}).then(success => {
 			if(success) {
@@ -47,9 +47,29 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(command_button);
 }
 
+// This method is called when user needs format any texts lines
+function formatToMarkdown(text: string): string {
+	const lines = text.split('\n');
+	const new_lines = [];
+	for(let i = 0; i < lines.length; i++) {
+		let current_line = lines[i];
+		current_line = formatToTitle(current_line);
+		new_lines.push(current_line);
+	}
+	return new_lines.join('\n');
+}
+
 // This method is called when needs change text to better text
-function formartMarkdown(text: string): string {
-	// CONTINUAR AQUI QUANDO VOLTAR 
+function formatToTitle(text: string): string { 
+	let result = text.trim();
+	const is_short =  result.length < 80;
+	const has_no_line_breaks = !result.includes('\n');
+	const does_not_end_with_period = !result.endsWith('.');
+	const nothing = result.length !== 0;
+	if(is_short && has_no_line_breaks && does_not_end_with_period && nothing) {
+		result = `# ${result}`;
+	} 
+	return result;
 }
 
 // This method is called when your extension is deactivated
