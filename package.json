@@ -19,7 +19,7 @@
       },
       {
         "command": "better-mark.button",
-        "title": "Button",
+        "title": "Transform text to UpperCase",
         "icon": "$(wand)"
       }
     ],

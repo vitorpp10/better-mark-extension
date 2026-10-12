@@ -38,7 +38,7 @@ Sequência de comandos para debbugar o código da sua extensão:
 2. Entrar em `src/extension.ts` e iniciar a depuração (`F5`/`Ctrl + Shift + P/Debbunging: Start...`).
 3. Ver se código da extensão está funcionando com `Ctrl + Shift + P/Hello World!`.
 
-# Feature 1 (Criar e visualizar botão no menu)
+# Feature 1: Criar e visualizar botão no menu
 
 Passo a passo para fazer o botão do *menu bar* aparecer somente em arquivos `.md`.
 
@@ -85,7 +85,7 @@ export function activate(context: vscode.ExtesionContext) {
 }
 ``` 
 
-# Feature 2 (Seleção de texto)
+# Feature 2: Seleção de texto
 
 Nessa feature vamos fazer a lógica de seleção de texto do usuário sobre o editor/arquivo, dessa forma conseguimos capturar exatamente oque o usuário quer selecionar para aplicar as mudanças em seu arquivo. 
 
@@ -119,6 +119,53 @@ export function activate(context: vscode.ExtesionContext) {
     });
 
     context.subscriptions.push(command_button);
+
+    // ...
+}
+``` 
+
+# Feature 3: Substituição de Texto Selecionado
+
+O objetivo desta etapa é substituir o texto selecionado por meio da Feature 2. Inicialmente, capturaremos o fragmento de texto destacado pelo usuário no momento da execução e o converteremos para caixa alta (TUDO MAIÚSCULO) para fins de teste de validação.
+
+O primeiro passo consiste em utilizar o método `editor.edit`, atribuindo-o a uma variável correspondente. Este comando permite manipular o texto selecionado de diversas formas, tais como `replace` (substituir), `insert` (inserir) e `delete` (excluir). Neste cenário específico, aplicaremos o `replace` para sobrescrever o conteúdo atual pelo equivalente em maiúsculas, confirmando a eficácia da lógica. Posteriormente, manipularemos os resultados com base nos dados retornados pelo comando.
+
+```ts
+// Importações aqui...
+
+export function activate(context: vscode.ExtesionContext) {
+    // Outros comandos/iniciais aqui...
+
+        const command_button = vscode.commands.registerCommand('better-mark.button', () => {
+		const editor = vscode.window.activeTextEditor;
+		if(!editor) {
+			vscode.window.showErrorMessage('No active text editor found.');
+			return;
+		}
+		const user_selection = editor.selection;
+		const text_selected = editor.document.getText(user_selection);
+		if(text_selected.length === 0) {
+			vscode.window.showErrorMessage('No text selected.');
+			return;
+		} 
+
+        // /=====/ PARTE NOVA AQUI /======/ 
+        
+        editor.edit((editBuilder) => {
+            const new_text_selected: string = text_selected.toUpperCase();
+            editBuilder.replace(user_selection, new_text_selected);
+        }).then(success => {
+            if(success) {
+                vscode.window.showInformationMessage('Modified changes.');
+            } else {
+                vscode.window.showErrorMessage('Error modifying changes.');
+            }
+        });
+
+        // /=====/ FIM DA PARTE NOVA AQUI /======/
+
+	});
+	context.subscriptions.push(command_button);
 
     // ...
 }

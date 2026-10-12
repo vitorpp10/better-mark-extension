@@ -24,18 +24,32 @@ export function activate(context: vscode.ExtensionContext) {
 	const command_button = vscode.commands.registerCommand('better-mark.button', () => {
 		const editor = vscode.window.activeTextEditor;
 		if(!editor) {
-			vscode.window.showInformationMessage('No active text editor found.');
+			vscode.window.showErrorMessage('No active text editor found.');
 			return;
 		}
 		const user_selection = editor.selection;
 		const text_selected = editor.document.getText(user_selection);
 		if(text_selected.length === 0) {
-			vscode.window.showInformationMessage('No text selected.');
+			vscode.window.showErrorMessage('No text selected.');
 			return;
-		}
+		} 
+		editor.edit((editBuilder) => {
+			const new_text_selected: string = formartMarkdown(text_selected);
+			editBuilder.replace(user_selection, new_text_selected);
+		}).then(success => {
+			if(success) {
+				vscode.window.showInformationMessage('Modified changes.');
+			} else {
+				vscode.window.showErrorMessage('Error modifying changes.');
+			}
+		});
 	});
-
 	context.subscriptions.push(command_button);
+}
+
+// This method is called when needs change text to better text
+function formartMarkdown(text: string): string {
+	// CONTINUAR AQUI QUANDO VOLTAR 
 }
 
 // This method is called when your extension is deactivated
