@@ -53,7 +53,10 @@ function formatToMarkdown(text: string): string {
 	const new_lines = [];
 	for(let i = 0; i < lines.length; i++) {
 		let current_line = lines[i];
-		current_line = formatToTitle(current_line);
+		current_line = formatToList(current_line);
+		if(current_line === lines[i]) { 
+			current_line = formatToTitle(current_line);
+		}
 		new_lines.push(current_line);
 	}
 	return new_lines.join('\n');
@@ -70,6 +73,22 @@ function formatToTitle(text: string): string {
 		result = `# ${result}`;
 	} 
 	return result;
+}
+
+function formatToList(text: string): string {
+	let result = text.trim();
+	const default_regex = /^(\d+)[.)]\s+/;
+	const match = text.match(/^\s*/);
+	const leading_spaces = match ? match[0] : "";
+	if(result.startsWith("* ") || result.startsWith("+ ")) {
+		const new_text = result.replace(/^[*+]/, "-");
+		return leading_spaces + new_text;
+	}
+	if(default_regex.test(result)) {
+		const new_text = result.replace(default_regex, "$1. ");
+		return leading_spaces + new_text;
+	}
+	return text;
 }
 
 // This method is called when your extension is deactivated

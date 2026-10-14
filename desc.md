@@ -216,3 +216,33 @@ function formatToMarkdown(text: string): string {
     return new_lines.join('\n');
 }
 ``` 
+
+# Feature 6: Listas Não-Ordenadas e Ordenadas
+
+Transformar listas não-ordernadas e ordenadas em formato *markdown*, pois desse modo quando o *user* digitar linhas seguidas que possuem caracteres especiais ou números de forma sequencial ou separada e seguida de texto, quer dizer provalvemente que ele planeja uma lista ali.
+
+Vamos criar a função `formatToList`. Nessa função vamos checar se o inicio do texto começa com `*, +, 1), 1.` e depois transformar em formato de lista de acordo com *markdown*.
+
+Além disso caso o *user* faça uma lista com tabulação, para nõa quebrar sua tabulação vamos reserva uma variável que vai guardar esse espaçamento e depois da mudança realocá-lo novamente.
+
+```ts
+function formatToList(text: string): string {
+    let result = text.trim();
+    const default_regex = /^(\d+)[.)]\s+/;
+	const match = text.match(/^\s*/);
+	const leading_spaces = match ? match[0] : "";
+    if(result.startsWith("* ") || result.startsWith("+ ")) {
+		const new_text = result.replace(/^[*+]/, "-");
+		return leading_spaces + new_text;
+	}
+	if(default_regex.test(result)) {
+		const new_text = result.replace(default_regex, "$1. ");
+		return leading_spaces + new_text;
+	}
+	return text;
+}
+``` 
+
+`default_regex`: Guarda expressão para formatos de lista ordenada, assim se o inicio do texto seguir o padrão de uma lista ele entra na substituição da ordenada;
+
+`^` = início da linha e `\s*` = ero ou mais espaços/tabs. O método `.match()` retorna um array com o que encontrou. `leading_spaces` guarda as tabulações contando a partir do que o `.match()` encontrou.
