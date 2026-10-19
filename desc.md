@@ -246,3 +246,58 @@ function formatToList(text: string): string {
 `default_regex`: Guarda expressão para formatos de lista ordenada, assim se o inicio do texto seguir o padrão de uma lista ele entra na substituição da ordenada;
 
 `^` = início da linha e `\s*` = ero ou mais espaços/tabs. O método `.match()` retorna um array com o que encontrou. `leading_spaces` guarda as tabulações contando a partir do que o `.match()` encontrou.
+
+---
+
+# Status da implementação
+
+> Seção adicionada depois da reorganização. O texto acima continua sendo o
+> registro do processo de aprendizado (features 1–6) e não foi reescrito.
+
+## O que está pronto
+
+| Nível | Escopo | Estado |
+| --- | --- | --- |
+| Nível 1 | títulos + listas, offline | completo |
+| Nível 2A | código inline determinístico | completo |
+| Nível 2B | IA (DeepSeek, Gemini, GLM, Nemotron, OpenAI) | implementado |
+| Fase 4 | testes, erros, cancelamento | parcial |
+| Fase 5 | publicação no Marketplace | não iniciado |
+
+## Mudança de arquitetura em relação ao plano original
+
+O `desc.md` previa tudo em `src/extension.ts`. Com o Nível 2 entrando, isso
+virou um arquivo grande demais para testar e para explicar. A separação atual:
+
+    src/core/    motor puro — NÃO importa `vscode`, roda no vitest
+    src/ai/      provedores atrás da interface `AiProvider`
+    src/vscode/  cola com o editor (comandos, settings, erros)
+
+O ganho concreto: 86 testes rodam em menos de 1 segundo, sem abrir o VS Code.
+
+## Regras que mudaram em relação às features 4–6
+
+As funções `formatToTitle`/`formatToList` do plano tinham falsos positivos
+reais, descobertos ao rodar o motor contra o próprio `desc.md` e o `README.md`:
+
+| Entrada | Comportamento antigo | Comportamento atual |
+| --- | --- | --- |
+| `Health check failed because the database is unavailable` | virava `#` | intacto (conectivo + nº de palavras) |
+| `Este é um parâmetro normal e comprido...` | virava `#` | intacto (prosa) |
+| `Baixar: npm install` | viraria `` `Baixar`: `` | intacto (palavra de prosa) |
+| `segunda linha do parágrafo` | podia virar `#` | intacto (continuação) |
+| `` ``` `` bloco de código | era formatado | protegido |
+| tabela, front matter, citação | eram formatados | protegidos |
+| `## Seção` já existente | novo título virava `#` | vira `##` (infere o nível) |
+
+A regra que ficou mais importante não é a regex: é a lista de **o que não deve
+mudar**. Um formatador que estraga o README do usuário é pior do que um que
+não faz nada.
+
+## Próximos passos sugeridos
+
+1. Rodar `npm test` e `npm run test:integration` (este último precisa de display).
+2. Testar o botão ✨ com o F5 em um README real e ver o diff com calma.
+3. Configurar a API key pelo comando e testar o Nível 2B em um texto bagunçado.
+4. Gravar um GIF curto da extensão funcionando (Fase 4).
+5. Só então estudar `.vsix` e publicação (Fase 5).

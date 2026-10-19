@@ -3,3 +3,19 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+
+# Proteção contra artefatos de build caindo dentro de src/ (já aconteceu:
+# um inline-code.js antigo ao lado do .ts fez o vitest rodar código velho).
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+
+# O tsc compila qualquer .ts fora de src/ quando o include é amplo: o
+# vitest.config.ts já gerou .js/.js.map na raiz mais de uma vez.
+/vitest.config.js
+/vitest.config.js.map
+/vitest.config.d.ts
+/eslint.config.js
+
+# Documento de teste manual (contém a sua chave? não — mas evita subir junto)
+/teste-manual.md

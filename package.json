@@ -1,56 +1,217 @@
 {
   "name": "better-mark",
-  "displayName": "better_mark",
-  "description": "extension to increase a better markdown to your projects ",
-  "version": "0.0.1",
+  "displayName": "Better Mark",
+  "description": "Aplica semântica de Markdown na seleção: títulos, listas, código inline e, opcionalmente, IA.",
+  "version": "0.6.0",
+  "publisher": "vitor",
+  "license": "MIT",
   "engines": {
-    "vscode": "^1.138.0"
+    "vscode": "^1.90.0"
   },
   "categories": [
+    "Formatters",
     "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "format",
+    "readme",
+    "lists",
+    "headings"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "better-mark.helloWorld",
-        "title": "Hello World"
+        "command": "better-mark.menu",
+        "title": "Format… (choose a mode)",
+        "category": "Better Mark"
       },
       {
-        "command": "better-mark.button",
-        "title": "Better Mark: Format Selection",
-        "shortTitle": "Format to Markdown",
-        "icon": "$(wand)"
+        "command": "better-mark.format",
+        "title": "Fix formatting (no AI)",
+        "category": "Better Mark"
+      },
+      {
+        "command": "better-mark.formatWithAi",
+        "title": "Improve with AI (keep my words)",
+        "category": "Better Mark"
+      },
+      {
+        "command": "better-mark.restructure",
+        "title": "Rebuild loose text into Markdown (AI)",
+        "category": "Better Mark"
+      },
+      {
+        "command": "better-mark.configureApiKey",
+        "title": "Set API key",
+        "category": "Better Mark"
+      },
+      {
+        "command": "better-mark.showStats",
+        "title": "Show current configuration",
+        "category": "Better Mark"
+      },
+      {
+        "command": "better-mark.helloWorld",
+        "title": "Hello World",
+        "category": "Better Mark"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "better-mark.button",
-          "group": "navigation",
+          "command": "better-mark.menu",
+          "when": "editorLangId == markdown",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "better-mark.menu",
+          "when": "editorLangId == markdown",
+          "group": "1_modification@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "better-mark.format",
+          "when": "editorLangId == markdown"
+        },
+        {
+          "command": "better-mark.formatWithAi",
           "when": "editorLangId == markdown"
         }
       ]
+    },
+    "keybindings": [
+      {
+        "command": "better-mark.format",
+        "key": "ctrl+alt+m",
+        "mac": "cmd+alt+m",
+        "when": "editorTextFocus && editorLangId == markdown"
+      }
+    ],
+    "configuration": {
+      "title": "Better Mark",
+      "properties": {
+        "betterMark.format.headingLevel": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 6,
+          "markdownDescription": "Nível do título gerado (`#`, `##`...). `0` (padrão) **infere** o nível a partir dos títulos já existentes no trecho; se não houver nenhum, usa `#`.",
+          "scope": "language-overridable"
+        },
+        "betterMark.format.protectBlocks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Nunca alterar blocos de código, tabelas, front matter, HTML e citações. Recomendado manter ligado.",
+          "scope": "language-overridable"
+        },
+        "betterMark.level2.inlineCodeTerms": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Nível 2A: transformar rótulos de definição em código inline (`Conceito:` → `` `Conceito`: ``).",
+          "scope": "language-overridable"
+        },
+        "betterMark.level2.inlineCodeMentions": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Nível 2A: colocar crase em arquivos, caminhos e comandos citados no texto (`npm install` → `` `npm install` ``). **Ligado por padrão.**",
+          "scope": "language-overridable"
+        },
+        "betterMark.ai.provider": {
+          "type": "string",
+          "default": "river",
+          "enum": [
+            "river",
+            "deepseek",
+            "gemini",
+            "glm",
+            "nemotron",
+            "openai"
+          ],
+          "enumDescriptions": [
+            "River AI (api.river.ai/v1) — gateway compatível com OpenAI",
+            "Google Gemini (AI Studio)",
+            "GLM / Zhipu AI",
+            "Nemotron via NVIDIA NIM",
+            "OpenAI"
+          ],
+          "description": "Provedor de IA usado pelo comando de formatação com IA."
+        },
+        "betterMark.ai.model": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Modelo usado. Vazio = padrão do provedor (ex.: `deepseek-ai/DeepSeek-V4.1-Flash`, `deepseek-chat`, `gemini-2.0-flash`)."
+        },
+        "betterMark.ai.apiKey": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "API key do provedor. **Prefira o comando `Better Mark: Configurar API key`**, que guarda a chave no SecretStorage criptografado do VS Code em vez de texto puro no `settings.json`.",
+          "scope": "machine"
+        },
+        "betterMark.ai.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "URL base alternativa (para proxies, gateways ou modelos locais compatíveis com OpenAI). Vazio = padrão do provedor."
+        },
+        "betterMark.ai.timeoutMs": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 5000,
+          "maximum": 120000,
+          "description": "Tempo máximo de espera pela resposta da IA, em milissegundos."
+        },
+        "betterMark.ai.emphasis": {
+          "type": "string",
+          "default": "deduce",
+          "enum": [
+            "deduce",
+            "safe",
+            "off"
+          ],
+          "enumDescriptions": [
+            "Deduz negrito, itálico e código a partir das pistas do texto (padrão).",
+            "Só padrões inequívocos: avisos e termos técnicos óbvios.",
+            "Não acrescenta ênfase nenhuma; apenas corrige estrutura."
+          ],
+          "markdownDescription": "Quanta liberdade a IA tem para deduzir formatação inline. O texto NUNCA é reescrito em nenhum modo — a validação rejeita a resposta se alguma palavra mudar."
+        },
+        "betterMark.ai.instructions": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Instruções extras para a IA, somadas ao prompt interno. Ex.: `Responda em português e use títulos nível 2`."
+        }
+      }
     }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "check": "tsc -p ./ --noEmit && npm run lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pretest:integration": "npm run compile",
+    "test:integration": "vscode-test",
+    "format:sample": "node ./scripts/format-sample.mjs",
+    "set-api-key": "npm run compile && vscode-test --config .vscode-test.setkey.mjs",
+    "test:ai": "node ./scripts/test-ai.mjs"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.19.2",
-    "@types/vscode": "^1.140.0",
+    "@types/vscode": "1.90.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0",
     "eslint": "^10.5.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.61.1",
+    "vitest": "^3.2.7"
   },
   "overrides": {
     "diff": "^8.0.4",

@@ -1,95 +1,93 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+/**
+ * better-mark — extensão VS Code.
+ *
+ * Ponto de entrada. Responsabilidade única: registrar comandos e limpar
+ * recursos. A lógica vive em:
+ *
+ *   src/core/    → motor de formatação puro (sem `vscode`), testado por vitest
+ *   src/ai/      → camada de IA, com provedores atrás de uma interface
+ *   src/vscode/  → a cola com o editor (comandos, configuração, erros)
+ *
+ * Fluxo:
+ *
+ *   package.json  → declara comando / menu / ativação
+ *         ↓
+ *   activate()    → registra os comandos
+ *         ↓
+ *   comando       → lê a seleção, chama o core, escreve de volta
+ */
+
 import * as vscode from 'vscode';
+import {
+	registerConfigureApiKeyCommand,
+	registerFormatCommand,
+	registerFormatMenuCommand,
+	registerFormatWithAiCommand,
+	registerRestructureCommand,
+	registerShowStatsCommand,
+} from './vscode/commands';
+import { registerStatusBarItem } from './vscode/status-bar';
+import { SUPPORTED_LANGUAGES } from './core/types';
+import { getAiSettings, setApiKey, clearApiKey } from './vscode/config';
+import { PROVIDERS } from './ai/registry';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "better-mark" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('better-mark.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from better_mark!');
-	});
-
-	context.subscriptions.push(disposable);
-
-	const command_button = vscode.commands.registerCommand('better-mark.button', () => {
-		const editor = vscode.window.activeTextEditor;
-		if(!editor) {
-			vscode.window.showErrorMessage('No active text editor found.');
-			return;
-		}
-		const user_selection = editor.selection;
-		const text_selected = editor.document.getText(user_selection);
-		if(text_selected.length === 0) {
-			vscode.window.showErrorMessage('No text selected.');
-			return;
-		} 
-		editor.edit((editBuilder) => {
-			const new_text_selected: string = formatToMarkdown(text_selected);
-			editBuilder.replace(user_selection, new_text_selected);
-		}).then(success => {
-			if(success) {
-				vscode.window.showInformationMessage('Modified changes.');
-			} else {
-				vscode.window.showErrorMessage('Error modifying changes.');
-			}
-		});
-	});
-	context.subscriptions.push(command_button);
+/**
+ * API exposta para automação (scripts e testes de integração).
+ *
+ * Serve para gravar a API key no SecretStorage sem passar pelo input box do
+ * comando interativo. Não é API pública da extensão: pode mudar sem aviso.
+ */
+export interface BetterMarkApi {
+	setApiKey(apiKey: string): Promise<void>;
+	getApiKey(): Promise<string | undefined>;
+	clearApiKey(): Promise<void>;
+	/** Provedores disponíveis, para diagnóstico. */
+	listProviders(): string[];
 }
 
-// This method is called when user needs format any texts lines
-function formatToMarkdown(text: string): string {
-	const lines = text.split('\n');
-	const new_lines = [];
-	for(let i = 0; i < lines.length; i++) {
-		let current_line = lines[i];
-		current_line = formatToList(current_line);
-		if(current_line === lines[i]) { 
-			current_line = formatToTitle(current_line);
-		}
-		new_lines.push(current_line);
-	}
-	return new_lines.join('\n');
+export function activate(context: vscode.ExtensionContext): BetterMarkApi {
+	console.log('better-mark ativa.');
+
+	registerFormatMenuCommand(context);
+	registerFormatCommand(context);
+	registerFormatWithAiCommand(context);
+	registerRestructureCommand(context);
+	registerConfigureApiKeyCommand(context);
+	registerShowStatsCommand(context);
+	registerStatusBarItem(context);
+
+	// Guarda contra o erro mais comum: rodar em arquivo que não é Markdown.
+	context.subscriptions.push(
+		vscode.commands.registerCommand('better-mark.helloWorld', () => {
+			void vscode.window.showInformationMessage('Better Mark: extensão ativa. Use o botão ✨ no editor.');
+		}),
+	);
+
+	context.subscriptions.push(
+		vscode.window.onDidChangeActiveTextEditor((editor) => {
+			setMarkdownContext(editor);
+		}),
+	);
+	setMarkdownContext(vscode.window.activeTextEditor);
+
+	console.log(`better-mark: idiomas suportados → ${SUPPORTED_LANGUAGES.join(', ')}`);
+
+	// Retornar a API faz o VS Code publicá-la em `extension.exports`.
+	const api: BetterMarkApi = {
+		setApiKey: (apiKey: string) => setApiKey(context, apiKey),
+		getApiKey: async () => (await getAiSettings(context)).apiKey,
+		clearApiKey: () => clearApiKey(context),
+		listProviders: () => PROVIDERS.map((provider) => provider.id),
+	};
+	return api;
 }
 
-// This method is called when needs change text to better text
-function formatToTitle(text: string): string { 
-	let result = text.trim();
-	const is_short =  result.length < 80;
-	const has_no_line_breaks = !result.includes('\n');
-	const does_not_end_with_period = !result.endsWith('.');
-	const nothing = result.length !== 0;
-	if(is_short && has_no_line_breaks && does_not_end_with_period && nothing) {
-		result = `# ${result}`;
-	} 
-	return result;
+export function deactivate(): void {
+	// Nada a liberar: tudo foi registrado em `context.subscriptions`.
 }
 
-function formatToList(text: string): string {
-	let result = text.trim();
-	const default_regex = /^(\d+)[.)]\s+/;
-	const match = text.match(/^\s*/);
-	const leading_spaces = match ? match[0] : "";
-	if(result.startsWith("* ") || result.startsWith("+ ")) {
-		const new_text = result.replace(/^[*+]/, "-");
-		return leading_spaces + new_text;
-	}
-	if(default_regex.test(result)) {
-		const new_text = result.replace(default_regex, "$1. ");
-		return leading_spaces + new_text;
-	}
-	return text;
+/** Expõe `betterMark.isMarkdown` para as `when` clauses do package.json. */
+function setMarkdownContext(editor: vscode.TextEditor | undefined): void {
+	const isMarkdown = editor?.document.languageId === 'markdown';
+	void vscode.commands.executeCommand('setContext', 'betterMark.isMarkdown', isMarkdown);
 }
-
-// This method is called when your extension is deactivated
-export function deactivate() {}
