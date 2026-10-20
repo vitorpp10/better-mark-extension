@@ -28,7 +28,7 @@ Sem abrir o ChatGPT, sem gastar tokens, sem colar nada em outro lugar.
 ```bash
 npm install          # dependências
 npm run compile      # build da extensão (tsc → out/)
-npm test             # 86 testes unitários do motor (não precisa abrir o VS Code)
+npm test             # 172 testes unitários do motor (não precisa abrir o VS Code)
 npm run lint         # eslint
 npm run check        # typecheck + lint
 ```

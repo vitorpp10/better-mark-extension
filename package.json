@@ -1,7 +1,7 @@
 {
   "name": "better-mark",
   "displayName": "Better Mark",
-  "description": "Aplica semântica de Markdown na seleção: títulos, listas, código inline e, opcionalmente, IA.",
+  "description": "Fixes messy Markdown: headings, lists and inline code. Optional AI pass that never changes your words.",
   "version": "0.6.0",
   "publisher": "vitor",
   "license": "MIT",
