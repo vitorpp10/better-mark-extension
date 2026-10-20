@@ -61,7 +61,7 @@ export function registerFormatCommand(context: vscode.ExtensionContext): void {
 	const disposable = vscode.commands.registerCommand('better-mark.format', async () => {
 		const target = resolveTarget(vscode.window.activeTextEditor, true);
 		if (!target.ok) {
-			void vscode.window.showWarningMessage(`Paste as Markdown: ${target.reason}`);
+			void vscode.window.showWarningMessage(`Markdownify: ${target.reason}`);
 			return;
 		}
 
@@ -69,19 +69,19 @@ export function registerFormatCommand(context: vscode.ExtensionContext): void {
 		const result = formatSelection(text, getFormatOptions());
 
 		if (result.text === text) {
-			void vscode.window.showInformationMessage('Paste as Markdown: nothing to format.');
+			void vscode.window.showInformationMessage('Markdownify: nothing to format.');
 			return;
 		}
 
 		const applied = await replaceRange(editor, range, result.text);
 		if (!applied) {
-			void vscode.window.showErrorMessage('Paste as Markdown: could not edit the document.');
+			void vscode.window.showErrorMessage('Markdownify: could not edit the document.');
 			return;
 		}
 
 		const rules = result.appliedRules.length > 0 ? result.appliedRules.join(', ') : 'nenhuma';
 		void vscode.window.showInformationMessage(
-			`Paste as Markdown: ${result.changedLines} linha(s) ajustada(s) — ${rules}.`,
+			`Markdownify: ${result.changedLines} linha(s) ajustada(s) — ${rules}.`,
 		);
 	});
 
@@ -101,7 +101,7 @@ async function runAiFormat(
 ): Promise<void> {
 	const target = resolveTarget(vscode.window.activeTextEditor, true);
 	if (!target.ok) {
-		void vscode.window.showWarningMessage(`Paste as Markdown: ${target.reason}`);
+		void vscode.window.showWarningMessage(`Markdownify: ${target.reason}`);
 		return;
 	}
 
@@ -110,7 +110,7 @@ async function runAiFormat(
 
 	if (!settings.apiKey) {
 		const action = await vscode.window.showWarningMessage(
-			'Paste as Markdown: no API key configured.',
+			'Markdownify: no API key configured.',
 			'Set API key',
 		);
 		if (action === 'Set API key') {
@@ -121,8 +121,8 @@ async function runAiFormat(
 
 	const title =
 		mode === 'restructure'
-			? `Paste as Markdown: restructuring text with ${settings.providerId}...`
-			: `Paste as Markdown: formatting with ${settings.providerId}...`;
+			? `Markdownify: restructuring text with ${settings.providerId}...`
+			: `Markdownify: formatting with ${settings.providerId}...`;
 
 	await vscode.window.withProgress(
 		{ location: vscode.ProgressLocation.Notification, title, cancellable: true },
@@ -130,12 +130,12 @@ async function runAiFormat(
 			try {
 				const report = await ai.format(text, { ...settings, mode }, token);
 				if (report.markdown === text) {
-					void vscode.window.showInformationMessage('Paste as Markdown: no changes needed.');
+					void vscode.window.showInformationMessage('Markdownify: no changes needed.');
 					return;
 				}
 				const applied = await replaceRange(editor, range, report.markdown);
 				if (!applied) {
-					void vscode.window.showErrorMessage('Paste as Markdown: could not edit the document.');
+					void vscode.window.showErrorMessage('Markdownify: could not edit the document.');
 					return;
 				}
 				const parts =
@@ -145,7 +145,7 @@ async function runAiFormat(
 				if (report.shieldedBlocks > 0) {
 					parts.push(`${report.shieldedBlocks} protected block(s) untouched`);
 				}
-				void vscode.window.showInformationMessage(`Paste as Markdown: ${parts.join(' — ')}.`);
+				void vscode.window.showInformationMessage(`Markdownify: ${parts.join(' — ')}.`);
 			} catch (error) {
 				reportAiError(context, error);
 			}
@@ -192,7 +192,7 @@ export function registerFormatMenuCommand(context: vscode.ExtensionContext): voi
 				},
 			],
 			{
-				title: 'Paste as Markdown — fix formatting',
+				title: 'Markdownify — fix formatting',
 				placeHolder: 'Offline handles almost everything; AI polishes further',
 				matchOnDetail: true,
 			},
@@ -223,7 +223,7 @@ export function registerFormatMenuCommand(context: vscode.ExtensionContext): voi
 		];
 
 		const picked = await vscode.window.showQuickPick(modes, {
-			title: 'Paste as Markdown — AI polish',
+			title: 'Markdownify — AI polish',
 			placeHolder: 'Is your text already Markdown, or loose text from a PDF?',
 			matchOnDetail: true,
 		});
@@ -282,7 +282,7 @@ export function registerConfigureApiKeyCommand(context: vscode.ExtensionContext)
 		const current = settings.apiKey.length > 0 ? '••••••••' : '(vazia)';
 
 		const apiKey = await vscode.window.showInputBox({
-			title: `Paste as Markdown — API key (${settings.providerId})`,
+			title: `Markdownify — API key (${settings.providerId})`,
 			prompt: `Current value: ${current}. Stored in VS Code SecretStorage (encrypted by the OS), never in settings.json.`,
 			password: true,
 			ignoreFocusOut: true,
@@ -295,12 +295,12 @@ export function registerConfigureApiKeyCommand(context: vscode.ExtensionContext)
 
 		if (apiKey.trim().length === 0) {
 			await clearApiKey(context);
-			void vscode.window.showInformationMessage('Paste as Markdown: API key removed.');
+			void vscode.window.showInformationMessage('Markdownify: API key removed.');
 			return;
 		}
 
 		await setApiKey(context, apiKey.trim());
-		void vscode.window.showInformationMessage('Paste as Markdown: API key saved securely.');
+		void vscode.window.showInformationMessage('Markdownify: API key saved securely.');
 	});
 
 	context.subscriptions.push(disposable);
@@ -314,7 +314,7 @@ export function registerShowStatsCommand(context: vscode.ExtensionContext): void
 		const editor = vscode.window.activeTextEditor;
 
 		const lines = [
-			'# Paste as Markdown — configuração atual',
+			'# Markdownify — configuração atual',
 			'',
 			'## Nível 1 / 2A (offline)',
 			'',
@@ -356,12 +356,12 @@ function reportAiError(context: vscode.ExtensionContext, error: unknown): void {
 		// usuário não precisa do detalhe técnico, e o arquivo está intacto.
 		// O motivo fica no Output/console para diagnóstico.
 		if (error.kind === 'cancelled') {
-			void vscode.window.showInformationMessage('Paste as Markdown: operation cancelled.');
+			void vscode.window.showInformationMessage('Markdownify: operation cancelled.');
 			return;
 		}
 		if (error.kind === 'missing-key' || error.kind === 'unauthorized') {
 			void vscode.window
-				.showErrorMessage(`Paste as Markdown: ${error.friendlyMessage}`, 'Set API key')
+				.showErrorMessage(`Markdownify: ${error.friendlyMessage}`, 'Set API key')
 				.then((action) => {
 					if (action === 'Set API key') {
 						void vscode.commands.executeCommand('better-mark.configureApiKey');
@@ -369,12 +369,12 @@ function reportAiError(context: vscode.ExtensionContext, error: unknown): void {
 				});
 			return;
 		}
-		void vscode.window.showErrorMessage(`Paste as Markdown: ${error.friendlyMessage}`);
+		void vscode.window.showErrorMessage(`Markdownify: ${error.friendlyMessage}`);
 		return;
 	}
 
 	console.error('[better-mark] erro inesperado', error);
 	void vscode.window.showErrorMessage(
-		`Paste as Markdown: erro inesperado — ${error instanceof Error ? error.message : String(error)}`,
+		`Markdownify: erro inesperado — ${error instanceof Error ? error.message : String(error)}`,
 	);
 }

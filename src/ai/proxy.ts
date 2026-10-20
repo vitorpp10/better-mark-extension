@@ -1,5 +1,5 @@
 /**
- * Provedor que fala com o proxy do Paste as Markdown.
+ * Provedor que fala com o proxy do Markdownify.
  *
  * POR QUE ESTE PROVEDOR EXISTE (a razão de o projeto ter um servidor):
  *
@@ -39,7 +39,7 @@ export const DEFAULT_PROXY_URL = 'http://localhost:8787';
 
 export class ProxyProvider implements AiProvider {
 	readonly id = 'proxy';
-	readonly label = 'Paste as Markdown (no setup)';
+	readonly label = 'Markdownify (no setup)';
 	readonly defaultModel = 'default';
 	/**
 	 * O modelo é escolhido no servidor, não aqui. `baseUrl` da configuração
@@ -119,12 +119,12 @@ export class ProxyProvider implements AiProvider {
 					request.signal?.aborted ? 'cancelled' : 'timeout',
 					request.signal?.aborted
 						? 'Operação cancelada.'
-						: 'O servidor do Paste as Markdown demorou demais para responder.',
+						: 'O servidor do Markdownify demorou demais para responder.',
 				);
 			}
 			throw new AiError(
 				'network',
-				'Não foi possível falar com o servidor do Paste as Markdown. Ele está rodando?',
+				'Não foi possível falar com o servidor do Markdownify. Ele está rodando?',
 			);
 		} finally {
 			request.signal?.removeEventListener('abort', onAbort);
@@ -153,7 +153,7 @@ export class ProxyProvider implements AiProvider {
 		if (response.status === 502 || response.status === 504) {
 			return new AiError(
 				'network',
-				'O servidor do Paste as Markdown não conseguiu falar com o provedor de IA.',
+				'O servidor do Markdownify não conseguiu falar com o provedor de IA.',
 			);
 		}
 
@@ -167,7 +167,7 @@ export class ProxyProvider implements AiProvider {
 
 		return new AiError(
 			'bad-response',
-			`Servidor do Paste as Markdown respondeu ${response.status}${detail ? `: ${detail}` : ''}.`,
+			`Servidor do Markdownify respondeu ${response.status}${detail ? `: ${detail}` : ''}.`,
 		);
 	}
 }

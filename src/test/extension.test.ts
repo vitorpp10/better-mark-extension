@@ -9,7 +9,7 @@ import * as vscode from 'vscode';
  * Aqui testamos o que o vitest não alcança: registro de comandos e a
  * escrita real no documento do editor.
  */
-suite('Paste as Markdown — integração', () => {
+suite('Markdownify — integração', () => {
 	test('a extensão está ativa e registrou os comandos', async () => {
 		const extension = vscode.extensions.getExtension('vitor.better-mark');
 		assert.ok(extension, 'extensão não encontrada');

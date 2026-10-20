@@ -1,7 +1,7 @@
 {
-  "name": "paste-as-markdown",
-  "displayName": "Paste as Markdown — Text to Clean Markdown",
-  "description": "Turn messy text into clean Markdown in one click: paste AI output, web clips or PDF dumps. No account, no API key.",
+  "name": "markdownify",
+  "displayName": "Markdownify — Messy Text to Clean Markdown",
+  "description": "Turn messy text into clean Markdown in one click: AI output, web clips, PDF dumps. No account, no API key.",
   "version": "0.6.0",
   "publisher": "vitor",
   "license": "MIT",
@@ -14,6 +14,7 @@
   ],
   "keywords": [
     "markdown",
+    "markdownify",
     "paste",
     "text to markdown",
     "format",
@@ -29,37 +30,37 @@
       {
         "command": "better-mark.menu",
         "title": "Format… (choose a mode)",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       },
       {
         "command": "better-mark.format",
         "title": "Fix formatting (no AI)",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       },
       {
         "command": "better-mark.formatWithAi",
         "title": "Improve with AI (keep my words)",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       },
       {
         "command": "better-mark.restructure",
         "title": "Rebuild loose text into Markdown (AI)",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       },
       {
         "command": "better-mark.configureApiKey",
         "title": "Set API key",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       },
       {
         "command": "better-mark.showStats",
         "title": "Show current configuration",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       },
       {
         "command": "better-mark.helloWorld",
         "title": "Hello World",
-        "category": "Paste as Markdown"
+        "category": "Markdownify"
       }
     ],
     "menus": {

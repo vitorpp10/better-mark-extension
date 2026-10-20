@@ -92,7 +92,7 @@ export class AiError extends Error {
 	get friendlyMessage(): string {
 		switch (this.kind) {
 			case 'missing-key':
-				return 'No API key configured. Run "Paste as Markdown: Set API key".';
+				return 'No API key configured. Run "Markdownify: Set API key".';
 			case 'unauthorized':
 				return 'Invalid API key, or it has no permission for this model.';
 			case 'rate-limit':
