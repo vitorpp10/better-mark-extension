@@ -1,0 +1,192 @@
+[AI-generated summary]
+
+Summary of “Other” write-in responses:
+
+   •   The dominant barriers are policy/security constraints, ethical/environmental objec-
+       tions, and lack of trust in output quality.
+   •   For C++ specifically, respondents repeatedly point to AI tools struggling with large pro-
+       jects, complex build systems, macros, generated code, correctness, idiomatic mod-
+       ern C++, and the cost of reviewing/fixing generated output.
+   •   Notable tone: Compared with a neutral “Other” list, this set contains unusually strong
+       negative sentiment: “unethical,” “garbage,” “harmful,” “fasc tech,” “burning planet,” and
+       similar language. That suggests a segment of respondents is not merely unconvinced by AI
+       tools but actively opposed to them.
+[AI-generated summary]
+                                                                            Many find AI useful for second-pass review, subtle bugs, PR
+Primary themes (most commonly cited and emphasized)                         summaries, thread-safety hints, and neutral review com-
+                                                                            ments; others report false positives and review burden.
+1.   AI is most useful as a faster documentation/search/re-
+     search front end.                                                      Actionable: AI review tools need confidence levels, evidence
+                                                                            links, reproducible reasoning, and suppression controls.
+     Many respondents use it instead of Google/Stack Over-
+     flow/cppreference-style lookup, especially for APIs, libraries,   8.   Prototyping and “blank page” acceleration are common
+     compiler flags, standards features, obscure functions, and             benefits.
+     poor documentation.                                                    AI helps users get from idea/spec to first working draft, proof
+     Actionable: improve official C++ documentation discoverabil-           of concept, or competing design alternatives faster.
+     ity, examples, and AI-consumable structure.                            Actionable: support explicit prototype-to-production work-
+2.   Boilerplate, repetitive code, small utilities, and scaffolding         flows with review, hardening, and cleanup stages.
+     are the clearest coding wins.                                     9.   Learning C++ features and concepts is a recurring benefit.
+     Users repeatedly cite faster generation of wrappers, getters,          Respondents use AI to learn modern C++, standard-library
+     skeletons, helper scripts, small functions, test harnesses, and        features, coroutines, executors, reflection, SFINAE/templates,
+     routine edits.                                                         platform APIs, and algorithms.
+     Actionable: products should target low-risk, easily reviewable,        Actionable: standards and tool vendors should provide au-
+     pattern-based code generation.                                         thoritative examples and explanations suitable for AI retrieval.
+3.   Tests are a major AI success case.                                10. AI as rubber duck / design partner is useful for some users.
+     Unit tests, test skeletons, edge-case suggestions, and “more           Users cite brainstorming, architecture tradeoff discussion,
+     tests than I would write by hand” appear often.                        naming, “second opinion,” and idea exploration.
+     Actionable: invest in AI-assisted test generation, coverage ex-        Actionable: design-assistant modes should be clearly sepa-
+     pansion, and test-data generation integrated with build/CI             rated from code-generation modes and should preserve archi-
+     systems.                                                               tectural context.
+4.   Understanding unfamiliar code, libraries, APIs, and legacy
+     systems is a major productivity gain.                             Honorable mentions / significant cautions
+     Respondents value codebase navigation, explanation of old or      11. A large minority report no meaningful productivity gain, or
+     unknown code, call-path/log analysis, and onboarding to un-           a net loss.
+     familiar systems.
+                                                                            Common reasons: unreliable output, hallucinated APIs, sub-
+     Actionable: tools should emphasize code comprehension, se-             tle bugs, excessive review time, poor C++/systems under-
+     mantic search, dependency/context maps, and “explain this              standing, context limits, and AI-generated coworker/OSS
+     subsystem” workflows.                                                  “slop.”
+5.   Debugging, compiler-error explanation, and build/tooling          12. Trust, review cost, and maintainability are the dominant
+     diagnosis are frequent high-value uses.                               negative themes.
+     C++ template errors, vague compiler diagnostics, build fail-           Many say AI is helpful only when outputs are small, local, and
+     ures, CI-only problems, package/configuration issues, logs,            easy to verify; complex C++, performance-sensitive, safety-
+     and third-party library interactions are common pain points.           critical, embedded, regulated, or architectural work remains
+     Actionable: AI should be paired with compilers, sanitizers,            poorly served.
+     static analysis, build logs, and repro/ minimization tools.       13. Workplace constraints matter.
+                                                                            Some cannot use cloud AI because of employer policy, pri-
+Secondary themes (less frequent but notable)                                vacy/IP concerns, air-gapped systems, regulated domains, or
+6.   Refactoring and modernization are valued, especially at                lack of approved tooling.
+     scale.                                                            14. The best pattern is “AI drafts, human reviews.”
+     Users report gains from large mechanical refactors, moderni-           Positive respondents often stress that productivity gains re-
+     zation, repeated pattern changes across files/repos, and edits         quire strong human expertise, tight scope, good prompts, ex-
+     beyond regex.                                                          isting tests, compiler/static-analysis feedback, and line-by-
+     Actionable: combine AI with AST-aware tooling, clang-tidy,             line review.
+     compiler feedback, formatting, and safe transactional review.
+7.   Code review and bug finding are promising but uneven.
+[AI-generated summary]
+                                                                                    Proposed change: Require stronger implementation maturity before
+Primary Themes (most frequent and emphasized)                                       standardization; improve conformance and feature parity.
+1. Standard package/dependency management, simpler build integration                Impact: Developers can use new features sooner and with less per-
+                                                                                    compiler workaround code.
+     Problem: Disproportionate time on dependency acquisition, linking,
+     CMake/vcpkg/Conan/Bazel fragmentation, and cross-platform setup.          8. Expand practical standard-library coverage
+
+     Proposed change: Standardize a Cargo/pip-like package manager,                 Problem: Users repeatedly need third-party libraries for common ba-
+     registry/interchange format, and common project/build metadata.                sics: networking, JSON/XML, Unicode, GUI, strings, async tasks, units,
+                                                                                    UUID/IP, crash reporting.
+     Impact: Faster onboarding, easier library use, fewer bespoke build
+     systems, better enterprise/SBOM/security workflows.                            Proposed change: Add or standardize broadly useful libraries and im-
+                                                                                    prove existing weak areas such as regex, strings, chrono, locale, and
+2. Make modules/header replacement actually work                                    formatting.
+     Problem: Headers, includes, macros, TU boundaries, and current                 Impact: Less dependency friction, more portable applications, and
+     modules support remain painful, slow, and inconsistently supported.            fewer incompatible ad hoc library choices.
+     Proposed change: Make modules production-ready across compilers,          9. Better diagnostics, static analysis, and tooling
+     build systems, package managers, IDEs, and standard libraries.
+                                                                                    Problem: Template/concepts errors, linker errors, false-positive
+     Impact: Reduced include hell, faster builds, cleaner project structure,        searches, weak LSP behavior, and sanitizer friction waste time.
+     and fewer fragile macro/export hacks.
+                                                                                    Proposed change: Improve compiler diagnostics, refactoring, static
+3. Reduce build times and improve iteration speed                                   analysis, sanitizer usability, docs generation, and IDE/LSP correctness.
+     Problem: Full and incremental builds are repeatedly described as too           Impact: Faster debugging, easier learning, better maintainability, and
+     slow, especially with templates, headers, ranges, and big std headers.         less time spent interpreting tool output.
+     Proposed change: Prioritize compilation performance: better module        10. Reflection and code generation
+     caching, compiled templates, smaller headers, build-system depend-
+     ency precision.                                                                Problem: Boilerplate for serialization, config, GUI binding, database
+                                                                                    mapping, and type introspection is manual or macro/tool driven.
+     Impact: Shorter edit/build/test cycles, less CI waste, and more practi-
+     cal use of modern C++ in large codebases.                                      Proposed change: Deliver static reflection with practical compile-
+                                                                                    time code generation.
+4. Allow ABI/compatibility breaks, epochs, or versioned evolution
+                                                                                    Impact: Less repetitive code, safer refactoring, simpler metaprogram-
+     Problem: ABI stability and backward compatibility are seen as block-           ming, and potentially faster compilation than template-heavy worka-
+     ing stdlib repair, safer defaults, and removal of legacy baggage.              rounds.
+     Proposed change: Introduce epochs/profiles/versioned ABIs or ex-
+     plicit opt-in compatibility breaks.
+                                                                               Honorable Mentions
+     Impact: Enables fixing old mistakes without freezing the ecosystem
+     around historical constraints.                                            Unicode/text handling
+
+5. Safety profiles, safer defaults, and fewer footguns                              Problem: UTF-8/UTF-16 conversion, casing, locale, and char8_t inter-
+                                                                                    actions remain inconsistent.
+     Problem: Bugs from undefined behavior, implicit conversions, unsafe
+     legacy C compatibility, dangling/lifetime issues, and wrong defaults.          Proposed change: Make Unicode/UTF-8 a first-class, coherent stand-
+                                                                                    ard-library capability.
+     Proposed change: Add enforceable profiles/subsets: no C-style
+     casts, stricter conversions, const/explicit/noexcept defaults, life-           Impact: Less platform-specific text code, fewer third-party patches.
+     time/borrow checking.                                                     Embedded and low-level support
+     Impact: Fewer latent defects, better static checking, easier code re-          Problem: Locale, exceptions, RTTI, dynamic allocation, hardware ad-
+     view, and stronger confidence in C++ for safety-critical work.                 dresses, and type punning are often poor fits for embedded/resource-
+                                                                                    constrained targets.
+
+Secondary Themes (less frequent but notable)                                        Proposed change: Provide freestanding-friendly facilities, constexpr
+                                                                                    hardware-address support, exception-free APIs, allocator control, and
+6. Simplify the language and standard library                                       low-overhead modes.
+     Problem: Users complain of too many features, too many ways to do              Impact: Makes modern C++ more usable where size, determinism,
+     the same thing, and rising cognitive load.                                     and hardware control matter.
+     Proposed change: Consolidate, deprecate, remove obsolete features,        Interop and migration paths
+     slow feature churn, and favor simple language mechanisms over tem-
+     plate-heavy libraries.                                                         Problem: Users want easier interop with C, Rust, Swift, .NET/CLR,
+                                                                                    GPU/device code, and binary libraries.
+     Impact: Easier teaching, maintenance, review, and long-term mastery.
+                                                                                    Proposed change: Standardize safer ABI contracts, FFI patterns, and
+7. Faster, more complete, more consistent standards implementation                  migration/interop support.
+     Problem: C++20/23/26 features are unevenly available across MSVC,              Impact: Protects existing C++ investments while reducing pressure to
+     GCC, Clang, IDEs, platforms, and standard libraries.                           rewrite wholesale.
+[AI-generated summary] Summary, in frequency order
+1. ISO / WG21 / C++ Standards Committee                                Respondents valued it for filling gaps in the standard library, provid-
+This was by far the most frequently mentioned organization cluster.    ing high-quality reusable components, and influencing C++ evolu-
+Respondents usually cited it because it defines the C++ standard,      tion. The C++ Alliance was usually mentioned in connection with
+controls language evolution, publishes new features, and gives         Boost stewardship and ecosystem support. Sentiment was mostly
+C++ its formal direction. Positive comments described the commit-      positive, with occasional fatigue around complexity but no broad
+tee as essential, transparent, and responsible for moving the lan-     repeated negative theme.
+guage forward. Negative comments focused on slow progress,             7. GNU / GCC / FSF
+over-complex language design, and frustration with features such       GNU and GCC were frequently cited as one of the pillars of practi-
+as modules.                                                            cal C++ development. Respondents mentioned GCC, g++,
+2. Microsoft / MSVC / Visual Studio                                    libstdc++, and the FSF as crucial compiler and open-source infra-
+Microsoft was the most frequently mentioned company. Most re-          structure. Positive sentiment emphasized GCC’s importance, avail-
+spondents associated it with Visual Studio, MSVC, Windows devel-       ability, and role in preventing compiler tooling from becoming en-
+opment, VS Code, vcpkg, and long-term support for C++ tooling.         tirely commercial. Negative sentiment was minimal.
+Positive sentiment emphasized strong IDE support, compiler in-         8. NVIDIA
+vestment, Windows-native development, and visible standards            NVIDIA was associated with CUDA, GPU computing, high-perfor-
+participation. Negative sentiment focused on MSVC quality, stand-      mance computing, conference presence, and standards work
+ards conformance gaps, bloat, and the feeling that Microsoft has       around execution models. Respondents mentioned CUDA, Ten-
+too much influence over C++.                                           sorRT, CCCL, std::execution, and NVIDIA engineers’ visibility in
+3. Google / Alphabet                                                   talks and committees. Positive sentiment focused on serious C++
+Google was mentioned as a major C++ user, open-source contribu-        use in performance-critical domains and visible technical leader-
+tor, and standards/community participant. Respondents cited            ship. Negative sentiment was minimal.
+GoogleTest, Abseil, protobuf, Google Benchmark, Chromium, cod-         9. CppCon
+ing guidelines, large-scale infrastructure, and contributions to       CppCon was frequently mentioned as a central C++ learning and
+Clang/LLVM. Positive sentiment centered on useful libraries, mas-      community institution. Respondents associated it with talks,
+sive production C++ codebases, and broad community influence.          YouTube videos, standards updates, recognizable speakers, spon-
+Negative sentiment focused mainly on dislike of Google’s C++ style     sors, and visibility for companies such as Bloomberg, Microsoft,
+guide, perceived poor or overly idiosyncratic code practices, and a    Google, Adobe, and NVIDIA. Positive sentiment centered on educa-
+sense that Google may be reducing its C++ investment.                  tion, conference culture, and keeping developers aware of modern
+4. Bloomberg                                                           C++ practices. Some respondents were critical of “ivory tower”
+Bloomberg was strongly associated with C++ conferences, com-           tendencies, but the dominant sentiment was that CppCon is a ma-
+mittee participation, funding, sponsorship, talks, trading systems,    jor source of C++ knowledge.
+and language-evolution work. Many respondents mentioned                10. Qt / Qt Group / KDE
+Bloomberg because its engineers are visible at CppCon and WG21         Qt was mentioned both as a company/ecosystem and as a practi-
+and because the company is seen as a major financial-industry          cal C++ UI framework. Respondents cited daily use of Qt, GUI de-
+C++ user. Positive sentiment credited Bloomberg with serious in-       velopment, cross-platform desktop work, and KDE-related devel-
+vestment in C++ and influence on features such as reflection or        opment. Positive sentiment emphasized Qt as a productive, ma-
+contracts. Negative sentiment centered on concern that Bloom-          ture, high-level C++ framework that made C++ useful for applica-
+berg has disproportionate influence and may be unrepresentative        tion development. Negative sentiment was minimal.
+of the wider C++ community.
+                                                                       11. Meta / Facebook
+5. LLVM / Clang
+                                                                       Meta/Facebook was usually grouped with Google and other large-
+LLVM and Clang were commonly mentioned as core compiler and            scale C++ users. Respondents cited large C++ codebases, open-
+tooling infrastructure. Respondents cited Clang, clang-format,         source libraries such as Folly, infrastructure, and big-company use
+clang-tidy, clangd, libclang, and the broader LLVM ecosystem as        of C++ at scale. Positive sentiment focused on useful libraries and
+tools they use directly. Positive sentiment was very strong: LLVM      the credibility that comes from running large production systems in
+was described as forward-looking, readable, contributable, and         C++. Negative sentiment was minimal.
+foundational for modern C++ tooling. There was little recurring neg-
+                                                                       12. Yandex
+ative sentiment beyond occasional general complaints about com-
+piler implementation difficulty.                                       Yandex was cited as a major C++ employer, conference organizer,
+                                                                       backend C++ user, and source of tools or frameworks such as us-
+6. Boost / C++ Alliance
+                                                                       erver. Positive sentiment focused on C++ visibility, education, talks,
+Boost was repeatedly described as an essential library ecosystem       internships, and large-scale production use. Negative sentiment
+and a proving ground for future standard-library features.             was minimal.
+

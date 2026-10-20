@@ -59,7 +59,7 @@ export function activate(context: vscode.ExtensionContext): BetterMarkApi {
 	// Guarda contra o erro mais comum: rodar em arquivo que não é Markdown.
 	context.subscriptions.push(
 		vscode.commands.registerCommand('better-mark.helloWorld', () => {
-			void vscode.window.showInformationMessage('Better Mark: extensão ativa. Use o botão ✨ no editor.');
+			void vscode.window.showInformationMessage('Paste as Markdown: extensão ativa. Use o botão ✨ no editor.');
 		}),
 	);
 

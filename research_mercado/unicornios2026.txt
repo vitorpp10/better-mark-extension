@@ -1,0 +1,1707 @@
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+
+
+
+
+         RELATÓRIO
+         Unicórnios
+         brasileiros:
+         quem são
+         e de onde vêm
+         Andrea Minardi
+
+         Charles Kirschbaum
+
+         Gisela Macedo
+
+         Rodrigo Amantea
+Sumário Executivo
+
+
+O que você vai encontrar
+neste relatório
+Este relatório apresenta um panorama
+consolidado dos unicórnios brasileiros até
+2025, a partir da combinação de diferentes
+bases de dados nacionais e internacionais. Ao
+longo do texto, mapeamos quantos são, em
+quais setores atuam, onde estão localizados,
+quem são seus fundadores e como o Brasil
+se posiciona no cenário global de startups
+avaliadas em mais de US$ 1 bilhão. Também
+comparamos o percurso dessas empresas
+com o de unicórnios de outros países,
+destacando convergências e particularidades
+do ecossistema brasileiro.
+Principais destaques
+
+Trinta unicórnios brasileiros            Tempo e número de rodadas até
+mapeados                                 o status de unicórnio
+Consolidação de diferentes               O tempo médio até a obtenção
+bases identificou 30 unicórnios          do status de unicórnio é de pouco
+e 71 fundadores, refletindo o            mais de sete anos e, em média,
+amadurecimento recente do                são necessárias cinco rodadas de
+ecossistema de inovação no país.         investimento. A maioria das startups
+                                         brasileiras chega a unicórnio a partir
+Brasil entre os principais               da série C, enquanto no resto do
+geradores de unicórnios do               mundo há proporcionalmente mais
+mundo                                    casos em estágios anteriores.
+Os Estados Unidos lideram,
+seguidos por China, Índia e Reino        Concentração setorial em
+Unido. Alemanha e Brasil aparecem        fintechs, e-commerce e
+praticamente empatados nas 5ª e 6ª       logística
+posições, com o país se destacando       Fintechs representam 40% dos
+como líder na América Latina.            unicórnios, seguidas por e-commerce
+                                         e logística (cerca de 17% cada),
+Aceleração recente, com auge             impulsionados pela transformação
+em 2021                                  digital e pelo avanço das compras
+O Brasil passou a gerar unicórnios em    online. Setores como proptechs,
+2018 e o ano de 2021 concentrou cerca    healthtechs e edtechs ainda são
+de um terço deles, em consonância
+com o “boom” global. Os anos seguintes
+foram de desaceleração em um cenário
+de capital mais seletivo.
+
+                                                                                  3
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+minoritários, mas em expansão.
+
+
+Forte concentração geográfica
+no Sudeste
+São Paulo concentra 19 unicórnios,
+seguido por Rio de Janeiro e Paraná,
+com três cada. Minas Gerais, Espírito
+Santo e Ceará apresentam participação
+mais limitada, o que evidencia o
+Sudeste como principal polo de
+inovação do país.
+
+
+Perfil típico dos fundadores:
+times pequenos e técnico-
+analíticos
+As startups têm, em média, 2,3
+fundadores; 77% foram criadas por
+equipes com pelo menos duas pessoas;
+34% dos fundadores são serial founders
+e cerca de 90% têm graduação em
+STEM, Administração ou Economia.
+
+
+Baixa participação feminina
+e presença moderada de
+estrangeiros
+Apenas dois unicórnios têm mulheres
+em seus times fundadores (cerca
+de 7% dos fundadores) e 30% dos
+unicórnios contam com ao menos um
+fundador estrangeiro que representam
+19% do total de fundadores, o
+que indica desafios relacionados
+à diversidade e à atração de
+empreendedores de fora do país.
+
+
+
+4
+                                       1. A caça aos unicórnios:
+                                       critérios e fontes
+                                       A classificação como unicórnio brasileiro neste
+                                       relatório segue dois critérios principais:
+                                       (1) ser uma startup fundada em território
+                                       brasileiro; e (2) ter sido avaliada em 1 bilhão de
+                                       dólares1 ou mais em algum momento de sua
+                                       trajetória, independentemente de ter capital
+                                       fechado ou aberto.
+                                         Para sustentar este estudo, foram consolidadas
+                                       as bases de dados da Crunchbase, do Troposlab
+                                       e do Distrito. A partir desta consolidação, foram
+                                       mapeados 30 unicórnios com 71 fundadores no Brasil,
+                                       considerando informações disponíveis até 2025.
+                                         Os sites oficiais das empresas foram utilizados para
+                                       obter informações sobre modelo de negócio e setor
+                                       de atuação, e para confirmar a composição dos times
+                                       fundadores. No caso das rodadas de investimento, os
+                                       dados foram extraídos inteiramente da Crunchbase.
+                                         Para analisar o perfil dos fundadores, recorreram-
+                                       se a informações disponíveis em perfis de LinkedIn e
+                                       em outras fontes públicas, como sites corporativos,
+                                       reportagens e bases de dados abertas.
+                                         Ainda assim, não foi possível levantar todas
+                                       as informações de maneira uniforme para todos
+                                       os unicórnios e seus times de fundadores. Essas
+                                       lacunas apontam oportunidades de aprimoramento
+LEE, Aileen. Welcome to the Unicorn
+1
+
+
+                Club. Disponível em:   em edições futuras deste estudo, especialmente
+https://techcrunch.com/2013/11/02/     no detalhamento de trajetórias individuais e na
+     welcome-to-the-unicorn-club/.
+             Acesso em: 4 jul. 2025.   atualização contínua dos dados.
+
+
+
+                                                                                            5
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+2. Unicórnios brasileiros
+2.1 O Brasil no mapa global dos unicórnios
+  Os Estados Unidos são o país com o maior número de unicórnios no mundo,
+seguidos por China e Índia (Figura 1). As diferenças entre os três primeiros
+colocados são expressivas: os EUA têm mais de quatro vezes o número de
+unicórnios da China que, por sua vez, tem cerca de três vezes o número de
+unicórnios da Índia, 3ª colocada. A Índia está muito próxima do Reino Unido, que
+aparece em 4º lugar. Já Alemanha e Brasil surgem praticamente empatados nas
+5ª e 6ª posições.
+
+
+
+
+Figura 1: Número de unicórnios por país
+
+
+
+
+Nota: Total de 1.277 unicórnios. Fontes: Distrito, Troposlab e Crunchbase para
+unicórnios brasileiros. CBInsights para unicórnios de outros países.
+
+
+
+
+6
+  O Brasil começou a gerar unicórnios em 2018                                        2
+                                                                                      Strebulaev, I (2025). What it takes to
+                                                                                     build a unicorn.
+(Figura 2). O ano de maior destaque no Brasil é
+2021, quando aproximadamente um terço dos                                            3
+                                                                                       LEE, Aileen. Welcome to the
+                                                                                     Unicorn Club. Disponível em: https://
+unicórnios nacionais alcançaram esse status — o                                      techcrunch.com/2013/11/02/welcome-
+mesmo ano em que se observou um “boom” mundial                                       to-the-unicorn-club/.
+                                                                                     Acesso em: 4 jul. 2025.
+de unicórnios2 3. A partir de 2022, há um declínio
+no surgimento de novas empresas unicórnios
+tanto no Brasil quanto no mundo, acompanhando
+o arrefecimento da liquidez global e a maior
+seletividade dos investidores.
+  A Figura 2 ilustra o número de unicórnios
+brasileiros e estrangeiros de acordo com o ano em
+que a empresa se tornou unicórnio.
+
+
+Figura 2: Número de unicórnios por ano
+
+
+
+
+Nota: Total de 1.209 unicórnios. Fontes: Estadão | Exame.com | IstoÉ Dinheiro | PR
+Newswire para unicórnios brasileiros. CB Insight para unicórnios de outros países.
+
+
+
+                                                                                                                           7
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+2.2 Linha do tempo dos unicórnios
+  A linha do tempo entre a fundação das empresas e                           4
+                                                                              Strebulaev, I (2025). What it takes to
+                                                                             build a unicorn.
+a conquista do status de unicórnio permite analisar o
+tempo médio para atingir escala e comparar o Brasil                          5
+                                                                              LEE, Aileen. Welcome to the
+                                                                             Unicorn Club. Disponível em: https://
+com outros ecossistemas. As empresas brasileiras
+                                                                             techcrunch.com/2013/11/02/welcome-
+que se tornaram unicórnios foram fundadas entre                              to-the-unicorn-club/.
+                                                                             Acesso em: 4 jul. 2025.
+2000 e 2021, com maior concentração nos períodos
+de 2011 e 2013 e, novamente, em 2018.
+  O ecossistema de startups brasileiro foi beneficiado
+pela evolução da indústria de venture capital, que
+registrou picos de captação em 2013, 2019 e 2021
+(Figura 3). Com mais capital disponível, ampliou-se o
+espaço para o surgimento de novas startups e para a
+escalada de modelos de negócios inovadores.
+  No Brasil, a idade média em que a startup se torna
+unicórnio é de 7,3 anos, com mediana de 7 anos
+(Figura 4), em linha com a média mundial4 5. Apenas
+                                                                             Nota: Total de 30 unicórnios e 113
+quatro empresas brasileiras atingiram o status de                            fundos de Venture Capital. Fontes:
+                                                                             Bloomberg Linea | C6 Bank | CargoX
+unicórnio em dois anos ou menos, indicando que
+                                                                             | Crunchbase | Dock | Loft | PR
+trajetórias desse tipo são raras.                                            Newswire | Spectra | Stone
+
+
+
+Figura 3: Número de fundos e unicórnios fundados por ano no Brasil
+
+
+
+
+                                                                       f
+8
+Figura 4: Tempo para se tornar unicórnio no Brasil
+
+
+
+
+Nota: Total de 30 unicórnios. Fontes: Bloomberg Linea | C6 Bank | CargoX | Crunchbase
+| Dock | Estadão | Exame | IstoÉ Dinheiro | Loft | PR Newswire | Stone
+
+
+
+
+2.3 Jornada até o status de unicórnio
+  Entender as rodadas de investimento é fundamental
+para compreender a jornada até o status de unicórnio.
+No Brasil, são necessárias, em média, cinco rodadas
+de capital para uma startup se tornar unicórnio, o
+mesmo número observado nos EUA6 (Figura 5). O
+número de rodadas indica o grau de maturidade
+necessário para atingir o valuation de 1 bilhão de
+dólares, independentemente do modelo de negócio,
+do setor ou do país.
+  Daki, Merama e C6 Bank se tornaram unicórnios
+em um intervalo de 11 a 23 meses. O C6 atingiu esse
+status em dezembro de 2020, enquanto a Daki e a                                 6
+                                                                                 Strebulaev, I (2025). What it takes to
+Merama se tornaram unicórnios em 2021, ano do                                   build a unicorn.
+
+boom global7. Esse ritmo acelerado está associado a                             7
+                                                                                 Strebulaev, I (2025). What it takes to
+fatores como:                                                                   build a unicorn.
+
+
+
+
+                                                                                                                     9
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+• pico de fundos de venture capital em 20218,
+gerando maior liquidez;
+• aumento da demanda por e-commerce durante a
+pandemia, que acelerou a transformação digital9;
+• taxas de juros mais baixas, que tornaram
+investimentos de maior risco mais atrativos10.
+  Essas três empresas também precisaram de um
+número inferior de rodadas para alcançar o status
+de unicórnio. Considerando esse indicador, o C6
+Bank e a Wildlife Studios precisaram de apenas
+uma rodada, enquanto a Ebanx precisou de duas.
+Ebanx e Wildlife estão alinhadas à média de sete
+anos para se tornarem unicórnios; já o C6 apresenta
+comportamento atípico, tanto em número de rodadas                            8
+                                                                              SPECTRA INVEST. Performance of
+                                                                             Brazilian private equity and venture
+quanto em tempo11.                                                           capital funds 1994–2022. Disponível
+                                                                             em: https://spectrainvest.com/
+                                                                             estudo/performance-of-brazilian-
+                                                                             private-equity-and-venture-capital-
+                                                                             funds-1994-2022/. Acesso em: 30
+                                                                             maio 2025.
+
+                                                                             9
+                                                                               CNN BRASIL. Investimentos em
+                                                                             startups têm recorde histórico em
+                                                                             2021. Disponível em: https://www.
+                                                                             cnnbrasil.com.br/economia/financas/
+                                                                             investimentos-em-startups-tem-
+                                                                             recorde-historico-em-2021/. Acesso
+                                                                             em: 11 jul. 2025.
+
+                                                                             10
+                                                                               INFOMONEY. Investimento em
+                                                                             startups brasileiras ultrapassa R$
+                                                                             50 bilhões em 2021. Disponível em:
+                                                                             https://www.infomoney.com.br/
+                                                                             negocios/investimento-em-startups-
+                                                                             brasileiras-ultrapassa-r-50-bilhoes-
+                                                                             em-2021/#:~:text=Mesmo%20
+                                                                             assim%2C%20o%20investimento%20
+                                                                             nas,US%24%20637%20bilh%C3%B5e-
+                                                                             s%20em%202021. Acesso em: 12 jul.
+                                                                             2025.
+
+                                                                             11
+                                                                               CRUNCHBASE. Disponível em:
+                                                                             http://www.crunchbase.com.
+                                                                             Acesso em: 5 jul. 2025.
+
+
+10
+Figura 5: Número de rodadas para se tornar um unicórnio
+
+
+
+
+Nota: subamostra de 25 startups. Fontes: Crunchbase | Strebulaev, I (2025).
+What it takes to build a unicorn.
+
+
+
+  No Brasil, 88% das startups atingem o status de unicórnio da série C em
+diante, enquanto 77% das startups do resto do mundo realizam esse movimento
+a partir da mesma série C. (Figura 6). Isso indica que, no restante do mundo, há
+uma proporção maior de unicórnios formados em estágios anteriores, enquanto
+no Brasil a formação de unicórnios costuma ocorrer em fases mais avançadas.
+
+
+Figura 6: Estágio em que virou unicórnio
+
+
+
+
+             Séries       Séries       Séries       Séries        Séries      Séries
+
+
+
+
+Nota: Subamostra de 25 startups. Fontes: Crunchbase | Estadão | Exame | Infomoney | IstoÉ
+Dinheiro | PR Newswire
+                                                                                            11
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+2.4 Distribuição geográfica
+  A maior parte dos unicórnios brasileiros está
+localizada no estado de São Paulo, com 19
+empresas, seguido por Rio de Janeiro e Paraná,
+com três unicórnios cada, além de Minas Gerais,
+com dois unicórnios (Figura 7). Espírito Santo e
+Ceará contam com uma startup unicórnio cada.
+                                                                             13
+                                                                               INPI, Assessoria de Assuntos
+  Essa distribuição é consistente com estatísticas                           Econômicos, BADEPI v10.0.
+de propriedade industrial do INPI13, segundo as
+                                                                             14
+                                                                               LIGA VENTURES. Balanço do
+quais as capitais de São Paulo, Rio de Janeiro,                              ecossistema de startups no Brasil
+Minas Gerais e Paraná lideram o número de                                    em 2024: avanços e tendências.
+                                                                             Disponível em: https://liga.ventures/
+depósitos de patentes no país. Trata-se, também,                             insights/artigos/balanco-do-
+dos principais polos de inovação brasileiros, como                           ecossistema-de-startups-no-brasil-
+                                                                             em-2024-avancos-e-tendencias/.
+mapeados pela Liga Ventures14.                                               Acesso em: 13 jul. 2025.
+
+
+
+Figura 7: Distribuição geográfica dos unicórnios
+
+
+
+
+                                                                        1
+
+
+
+
+                                                            2
+                                                                             Nota: C6 Bank, Cloudwalk, Dock
+                                                                    1        e Facily confirmaram as cidades
+                                                   19           3            de origem via contato direto.
+                                                                             Subamostra de 29 unicórnios. Fonte:
+                                             3
+                                                                             Ascenty | Canal Tech | CNN Brasil |
+                                                                             Correio Braziliense | Cubo | Época
+                                                                             Negócios | Estadão | Estado de
+                                                                             Minas | Exame | Forbes | InfoMoney
+                                                                             | iFood | MadeiraMadeira | StoneCo |
+                                                                             Wildlife Studios
+
+
+12
+  Essa distribuição está alinhada, também, com a            15
+                                                              AGÊNCIA SEBRAE. Sebrae Startups
+                                                            Report Brasil 2024. Disponível em:
+realidade dos estados e regiões que concentram
+                                                            https://digital.sebraestartups.com.br/
+mais startups no Brasil15. A região Sudeste conta           sebrae-startups-report-brasil-2024
+                                                            Acesso em: 19 ago. 2025.
+com 6.527 startups (Tabela 1); Entre elas, 25 são
+unicórnios, o que significa que 0,38% de startups           16
+                                                              AGÊNCIA SEBRAE. Sebrae Startups
+                                                            Report Brasil 2024. Disponível em:
+da região atingiram esse patamar. Em comparação,
+                                                            https://digital.sebraestartups.com.br/
+0,08% das startups da região Sul são unicórnios e           sebrae-startups-report-brasil-2024
+                                                            Acesso em: 19 ago. 2025.
+0,02% das startups da região Nordeste alcançaram
+esse status16. Em outras palavras, surgem mais
+startups no Sudeste, onde elas apresentam maior
+probabilidade de se tornarem unicórnios*.
+
+                                                            * Estes dados foram calculados
+                                                            a partir de uma subamostra de
+                                                            20 startups, pois não foi possível
+                                                            confirmar a cidade e/ou estado de
+                                                            origem de todos os 30 unicórnios
+                                                            deste relatório.
+
+
+
+
+Tabela 1: Número de startups por região
+
+
+Região                    Número de Startups   Unicórnios
+
+Sul                       3.802                3
+
+Sudeste                   6.507                25
+
+Norte                     1.807                0
+
+Nordeste                  4.248                1
+
+Centro-oeste              1.672                0
+
+Fonte: Sebrae
+
+
+
+
+                                                                                                 13
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+2.5 Setores dos unicórnios
+  Fintech é o setor que mais concentra unicórnios brasileiros (40%), seguido
+por logística e e-commerce (ambas com 17%). Os demais setores foram
+agrupados como “outros” e representam 26% do total (Figura 8).
+
+Figura 8: Distribuição de unicórnios por setor
+
+
+
+
+       E-commerce         Outros       Fintech      Logística                Nota: Total de 30 unicórnios. Fontes:
+                                                                             LinkedIn e sites oficiais das startups
+
+
+
+
+  O setor de fintechs se destaca não apenas pelo volume de unicórnios, mas
+também pela diversidade de subsetores e modelos de negócios (Figura 9). Isso
+está ligado à sofisticação do mercado financeiro brasileiro e à atuação ativa
+dos órgãos reguladores (CVM e Banco Central do Brasil), incluindo a existência
+de um sandbox regulatório, que permite aos bancos e fintechs testarem novos
+produtos financeiros em ambiente controlado17.
+
+
+
+
+                                                                             17
+                                                                               BANCO CENTRAL DO BRASIL.
+                                                                             Sandbox regulatório. Disponível
+                                                                             em: https://www.bcb.gov.br/
+                                                                             estabilidadefinanceira/sandbox.
+                                                                             Acesso em: 15 jul. 2025
+
+
+14
+Figura 9: Detalhamento setor — Fintech
+
+
+
+
+Nota: total de 30 unicórnios. Fontes: LinkedIn e sites oficiais das startups
+
+
+
+
+  O setor de e-commerce também cresce com
+intensidade entre os unicórnios brasileiros.
+De acordo com o MDIC (Ministério do
+                                                                               18
+                                                                                 STARTUPS.COM.BR. Para logtechs,
+Desenvolvimento, Indústria, Comércio e Serviços),                              crescimento do setor está só
+entre 2016 e 2024 o volume do e-commerce                                       começando. Disponível em: https://
+                                                                               startups.com.br/negocios/logistica/
+cresceu cerca de 6,6 vezes. Em 2020, primeiro                                  para-logtechs-crescimento-do-setor-
+ano da pandemia18, houve uma “virada”: o setor                                 esta-so-comecando/.
+                                                                               Acesso em: 17 jul. 2025.
+dobrou de tamanho em relação ao ano anterior19,
+impulsionado pela transformação digital20, devido                              19
+                                                                                 POWER BI. Dashboard do comércio
+                                                                               eletrônico nacional. Disponível em:
+à restrição de circulação da população.                                        https://app.powerbi.com. Acesso em:
+                                                                               29 jul. 2025
+
+                                                                               20
+                                                                                 CNN BRASIL. Investimentos em
+                                                                               startups têm recorde histórico em
+                                                                               2021. Disponível em: https://www.
+                                                                               cnnbrasil.com.br/economia/financas/
+                                                                               investimentos-em-startups-tem-
+                                                                               recorde-historico-em-2021/.
+                                                                               Acesso em: 11 jul. 2025
+
+
+
+                                                                                                                15
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+Figura 10: Detalhamento do setor de e-commerce
+
+
+
+
+Nota: Total de 30 unicórnios. Fontes: LinkedIn e sites oficiais das startups
+
+
+
+
+   O setor de logística também ganhou protagonismo                             21
+                                                                                 EXAME. Opinião: e-commerce
+                                                                               brasileiro precisa se preocupar
+com o avanço do e-commerce no Brasil, sobretudo
+                                                                               com logística inteligente e novas
+a partir da pandemia de COVID-1921 22, quando a                                tecnologias. Disponível em: https://
+                                                                               exame.com/bussola/opiniao-e-
+circulação de pessoas foi fortemente limitada. À
+                                                                               commerce-brasileiro-precisa-se-
+medida que o setor de e-commerce expande, mais                                 preocupar-com-logistica-inteligente-
+                                                                               e-novas-tecnologias/.
+oportunidades surgem para logtechs. Ainda há
+                                                                               Acesso em: 10 jul. 2025.
+amplas oportunidades no setor: 35% das empresas
+                                                                               22
+                                                                                 STARTUPS.COM.BR. Para logtechs,
+declaram não utilizar tecnologia na prestação de
+                                                                               crescimento do setor está só
+serviços e muitas das demais não investem em                                   começando. Disponível em: https://
+                                                                               startups.com.br/negocios/logistica/
+aprimoramento contínuo, o que torna o setor fértil
+                                                                               para-logtechs-crescimento-do-setor-
+para novos negócios23.                                                         esta-so-comecando/.
+                                                                               Acesso em: 17 jul. 2025.
+
+                                                                               23
+                                                                                 STARTUPS.COM.BR. Para logtechs,
+                                                                               crescimento do setor está só
+                                                                               começando. Disponível em: https://
+                                                                               startups.com.br/negocios/logistica/
+                                                                               para-logtechs-crescimento-do-setor-
+                                                                               esta-so-comecando/.
+                                                                               Acesso em: 17 jul. 2025
+
+16
+Figura 11: Detalhamento do setor de logística
+
+
+
+
+                                                                               Mobilidade
+                                                                                Urbana 2
+
+
+
+Nota: Total de 30 unicórnios. Fontes: LinkedIn e sites oficiais das startups
+
+
+
+  O setor de proptech, que traz inovação para
+a construção civil e o mercado imobiliário,
+conta com dois unicórnios. Essa indústria vem
+crescendo de forma expressiva no Brasil: entre
+2020 e 2025, o número de startups aumentou
+215%. Esse movimento foi impulsionado pelas
+próprias proptechs, que reduziram burocracias nas
+operações, eliminaram a necessidade de fiador
+ou caução em aluguéis e diminuíram o tempo de
+fechamento de contratos em 62,5%24. Os demais
+setores agrupados em “outros” contam com apenas
+                                                                                  24
+                                                                                    DEXOHALL CONSTRUTORA.
+uma startup cada.
+                                                                                  Proptechs revolucionam o mercado
+                                                                                  imobiliário brasileiro: como as startups
+                                                                                  estão transformando a compra, venda
+                                                                                  e aluguel de imóveis. Disponível em:
+                                                                                  https://dexohallconstrutora.com.br/
+                                                                                  proptechs-revolucionam-o-mercado-
+                                                                                  imobiliario-brasileiro-como-as-
+                                                                                  startups-estao-transformando-a-
+                                                                                  compra-venda-e-aluguel-de-imoveis.
+                                                                                  Acesso em: 18 jul. 2025.
+
+
+
+                                                                                                                       17
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+Figura 12: Detalhamento dos outros setores
+
+
+
+
+                                                                                 GameTech/
+                                                                               Entretenimento 1
+
+                                                                                  Healttech 1
+                                                                                 Identity Tech/
+                                                                                  Segurança 1
+                                                                                 Infraestrutura
+                                                                                (Data Center) 1
+                                                                                Martech/Edtech/
+                                                                               Creator economy 1
+
+
+                                                                                  Proptech 2
+
+
+
+Nota: Total de 30 unicórnios. Fontes: LinkedIn e sites oficiais das startups
+
+
+
+  Do ponto de vista temporal, não são observadas
+“ondas setoriais” claramente definidas ao considerar
+a data de fundação dos unicórnios: não há um único
+setor com crescimento significativamente superior
+aos demais (Figura 13) Ainda assim, fintech, logística
+e e-commerce se sobressaem.
+  Desde o surgimento dos primeiros unicórnios
+brasileiros, houve ao menos um unicórnio por ano
+em fintech. No e-commerce, observa-se um pico
+em 2021, ano posterior ao início da pandemia25,
+quando a demanda por comércio eletrônico
+disparou (Figura 14)
+
+
+                                                                                     25
+                                                                                       STARTUPS.COM.BR. Para logtechs,
+                                                                                     crescimento do setor está só
+                                                                                     começando. Disponível em: https://
+                                                                                     startups.com.br/negocios/logistica/
+                                                                                     para-logtechs-crescimento-do-setor-
+                                                                                     esta-so-comecando/.
+                                                                                     Acesso em: 17 jul. 2025.
+
+
+18
+Figura 13: Evolução dos setores — ano de fundação da startup
+
+
+
+
+                                                                                                        Outros
+
+                                                                                                        Logística
+
+
+
+
+Nota: Total de 30 unicórnios. Fontes: Bloomberg Linea | Crunchbase | LinkedIn | PR Newswire e sites oficiais das startups
+
+
+
+Figura 14: Evolução dos setores — ano em que a startup virou unicórnio
+
+
+
+
+                                                                                                        Logística
+
+                                                                                                        Outros
+
+
+
+
+Nota: Total de 30 unicórnios. Fontes: Estadão | Exame.com | IstoÉ Dinheiro |
+LinkedIn | PR Newswire e sites oficiais das startups
+
+
+
+
+                                                                                                                      19
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+4. Time fundador
+  A maioria dos unicórnios brasileiros (77%) foi
+fundada por times com pelo menos dois fundadores                                 26
+                                                                                   ECONSTOR. Disponível em:
+(Figura 15). A média é de 2,3 fundadores por startup,                            https://www.econstor.eu/
+                                                                                 handle/10419/20007.
+e a moda são times com três fundadores. Equipes                                  Acesso em: 19 jul. 2025.
+fundadoras tendem a ter maior chance de sucesso
+                                                                                 27
+                                                                                   Coakley, J., Lazos, A., &
+do que empreendedores solos, tanto pela divisão de                               Liñares‐Zegarra, J. M. (2022).
+responsabilidades quanto pela complementaridade                                  Equity crowdfunding founder
+                                                                                 teams: Campaign success and
+de competências26 27.                                                            venture failure. British Journal of
+                                                                                 Management, 33(1), 286-305.
+
+
+
+
+Figura 15: Número de fundadores por startup
+
+
+
+
+Nota: Total de 71 fundadores. Fontes: Alumni USP | Estadão | iFood | Infomoney
+| LinkedIn | Nubank | Portal 27 | QI Tech | Suno | Tapis Rouge
+
+
+
+  “Serial founders” foram definidos como indivíduos que já haviam fundado pelo
+menos uma startup antes da atual28.
+  Foi possível mapear a trajetória profissional de 65 fundadores. Desses, 34%
+podem ser classificados como serial founders, pois já tinham criado ao menos
+uma startup antes do unicórnio atual. Os outros 66% são first-time founders, que
+fundaram apenas o unicórnio em questão. Esses percentuais estão alinhados com
+as estatísticas dos EUA29.
+
+20
+
+
+                                                                                                        Ilustração: Samillustra
+  Estudos de Shaw e Sørensen (2017) sugerem que          28
+                                                           SHAW, Kathryn L.; SØRENSEN,
+                                                         Anders. The Productivity Advantage
+times liderados por serial founders são 39% mais
+                                                         of Serial Entrepreneurs. National
+produtivos do que os demais e têm desempenho             Bureau of Economic Research
+                                                         Working Paper Series, vol. 23320, abr.
+de vendas de produtos e serviços 67% superior30, o
+                                                         2017. Disponível em: http://www.nber.
+que indica que, independentemente do sucesso das         org/papers/w23320.pdf. Acesso em:
+                                                         27 dez. 2023.
+startups anteriores, a experiência acumulada contribui
+positivamente para a performance (Figura 16).            29
+                                                           Strebulaev, I (2025). What it takes
+                                                         to build a unicorn
+
+                                                         30
+                                                           SHAW, Kathryn L.; SØRENSEN,
+                                                         Anders. The Productivity Advantage
+                                                         of Serial Entrepreneurs. Disponível
+Figura 16: Número de startups criadas pelos              em: http://www.nber.org/papers/
+empreendedores antes de fundar o unicórnio               w23320.pdf. Acesso em: 21 jul. 2025
+
+
+
+
+N
+
+
+
+
+                                    E
+
+
+Nota: Subamostra de 65 fundadores. Fonte: LinkedIn
+
+
+
+
+   A Figura 17 mostra a composição dos times de
+liderança. A maioria dos unicórnios brasileiros          31
+                                                           GOMPERS et al. Skill vs. Luck in
+(59%) tem ao menos um serial founder no time de          Entrepreneurship and Venture Capital:
+                                                         Evidence from Serial Entrepreneurs.
+fundadores, e 23% das startups são compostas
+                                                         Disponível em: https://www.hbs.
+exclusivamente por serial founders. Isso reforça         edu/ris/Publication%20Files/
+                                                         w12592_6fe189ce-72d8-4228-a8d6-
+que fundadores experientes têm uma probabilidade
+                                                         d0df80e35026.pdf.
+significativa de se envolver com unicórnios31 e, em      Acesso em: 18 jun. 2025.
+
+
+
+                                                                                             21
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+muitos casos, conseguem captar mais recursos. Nos                                 32
+                                                                                    Strebulaev, I (2025). What it takes
+                                                                                  to build a unicorn.
+Estados Unidos, 40% dos fundadores de unicórnios
+são serial founders32, uma proporção muito próxima
+à observada no Brasil (42%).
+
+Figura 17: Percentual do time que é serial founder
+
+
+
+
+Nota: Subamostra de 66 total fundadores. Fontes: Strebulaev, I (2025). What it takes to build a unicorn para unicórnios
+dos EUA. Fontes: Alumni USP | Estadão | iFood | Infomoney | LinkedIn | Nubank | Portal 27 | QI Tech | Suno | Tapis Rouge
+
+
+
+
+   Apenas 7% dos unicórnios brasileiros têm
+fundadores do sexo feminino (Figura 18). Do total de
+71 fundadores, apenas três são mulheres e somente
+dois unicórnios contam com liderança feminina,
+ambos no setor de fintechs. Não há unicórnios
+com time fundador exclusivamente feminino. Para
+efeito de comparação, o Female Founders Report
+(2021)33 aponta que 9,8% das startups brasileiras têm
+liderança feminina, o que indica que, mesmo nesse                                 33
+                                                                                    DISTRITO. Female Founders Report.
+                                                                                  Disponível em: https://materiais.
+universo já desigual, os unicórnios são ainda menos
+                                                                                  distrito.me/report/female-founders-
+representativos em termos de gênero.                                              report. Acesso em: 23 jul. 2025.
+
+
+22
+Figura 18: Percentual de times com liderança feminina
+
+
+
+
+Nota: Total de 71 fundadores. Fontes: Strebulaev, I (2025). What it takes to build a unicorn para unicórnios dos
+EUA. Alumni USP | Estadão | iFood | LinkedIn | Nubank | Portal 27 | QI Tech | Suno | Tapis Rouge
+
+
+
+
+  Cerca de 30% dos unicórnios têm participação de estrangeiros no time de
+fundadores (Figura 19). Os demais contam exclusivamente com brasileiros. Nos
+EUA, 44% dos fundadores são estrangeiros (Strebulaev, 2025)34, enquanto, no
+Brasil, a proporção é de 19% do total de fundadores*. Isso sugere que o país ainda
+é menos atrativo para empreendedores de fora, seja por fatores regulatórios, de
+mercado ou de ambiente de negócios.
+
+
+
+
+                                                                                    34
+                                                                                      Strebulaev, I (2025). What it takes
+                                                                                    to build a unicorn.
+
+
+
+                                                                                    *
+                                                                                     Subamostra de 68 fundadores.
+
+
+
+
+                                                                                                                        23
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+Figura 19: Percentual de unicórnios com presença de fundador estrangeiro
+
+
+
+
+                                                                             Nota: Total de 30 unicórnios.
+                                                                             Fontes: Ascenty | Estado de Minas |
+                                                                             Epoca Negócios | Estadão | Exame
+                                                                             | Fast Company Brasil | Forbes |
+                                                                             G4 Educação | Gazeta do Povo |
+                                                                             Infomoney | IstoÉ Dinheiro | LinkedIn
+                                                                             | Na Prática | Neofeed | Projeto Draft
+                                                                             | Reportei | Startse | Suno | Veja |
+                                                                             Trends CE
+
+
+
+  As instituições de ensino mais frequentes na graduação dos fundadores são:
+USP, FGV-EAESP, Mackenzie, PUC-Minas, PUC-PR e UFRJ, todas com pelo menos
+duas menções. Em alguns casos, os fundadores cursaram duas graduações,
+reforçando a combinação de formações em áreas distintas.
+
+
+Figura 20: Faculdades de graduação dos fundadores
+
+                                                                             Nota: Total de 46 fundadores.
+                                                                             Três fundadores cursaram duas
+                                                                             faculdades. Fontes: LinkedIn |
+                                                                             Ascenty | Forbes | Fundação Getúlio
+                                                                             Vargas | Galapagos Capital | Único |
+                                                                             Suno | TapisRouge
+
+
+
+
+24
+  Os cursos foram agrupados em três grandes blocos: STEM, administração e
+economia (ADM/ECO) e outros. O grupo STEM concentra 49% dos fundadores,
+seguido por ADM/ECO, com 37%. Os cursos classificados como “outros” incluem,
+por exemplo, direito, cinema, marketing e música (Figura 21).
+
+Figura 21: Cursos na graduação
+
+
+                                                                           Nota: Total de
+                                                                           46 fundadores.
+                                                                           Três fundadores
+  f                                                                        cursaram duas
+                                                                           faculdades. Fontes:
+                                                                           LinkedIn |Ascenty |
+                                                                           Forbes | Fundação
+                                                                           Getúlio Vargas |
+                                                                           Galapagos Capital
+                                                                           | Único | Suno |
+                                                                           Tapis Rouge
+
+
+
+
+  A maioria dos fundadores era empreendedora de “primeira viagem” e sem
+experiência prévia em cargos C-level. Isso indica que o ecossistema não exige um
+currículo executivo tradicional para que alguém tenha a oportunidade de criar um
+unicórnio.
+
+Figura 22: Experiência dos fundadores
+
+
+
+
+                      e
+                                         e
+
+                                                       Nota: Total de 47 fundadores. Fontes:
+                                                       Ascenty | Fundação Getúlio Vargas |
+                                                       Galapagos Capital | LinkedIn | Sebrae
+                                                       | Suno | Tapis Rouge | Unico
+
+
+
+
+                                                                                         25
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+4. Conclusões
+  O panorama dos unicórnios brasileiros revela um ecossistema
+que amadureceu de forma acelerada na última década. O país
+consolidou-se como o sexto em número de unicórnios no mundo,
+reflexo direto da expansão do mercado de venture capital.
+Observa-se um tempo médio de sete anos e cinco rodadas de
+capital para alcançar o status de unicórnio, patamares próximos da
+média global. Casos como C6 Bank, Daki e Merama são exceções
+que, em contextos específicos de liquidez abundante, experiência
+prévia dos fundadores e condições macroeconômicas favoráveis,
+conseguiram encurtar significativamente esse ciclo.
+
+  A concentração setorial é marcante: fintechs lideram com folga,
+apoiadas na sofisticação do mercado financeiro e na atuação
+regulatória do Banco Central do Brasil e da CVM, enquanto
+e-commerce e logística foram impulsionados pela transformação
+digital e pelas mudanças de consumo durante a pandemia. Outros
+setores, como proptechs, healthtechs e edtechs, mostram que o
+ecossistema começa a se diversificar, ainda que a massa crítica
+esteja concentrada em poucos segmentos. Do ponto de vista
+geográfico, São Paulo concentra mais da metade dos unicórnios,
+reafirmando seu papel de polo de inovação, embora outros
+estados comecem a despontar.
+
+
+
+26
+  O perfil dos fundadores também revela tendências importantes:
+times compostos em média por 2,3 fundadores, 34% de serial
+founders e apenas 7% de mulheres. Há, portanto, uma combinação
+de experiência acumulada que fortalece o sucesso, além de uma
+lacuna de diversidade de gênero e formação acadêmica que limita
+o potencial de inovação. Ainda assim, a pluralidade de trajetórias
+profissionais sugere espaço para ampliar perfis e backgrounds, o
+que pode ser um vetor de crescimento futuro.
+
+
+   Após o ciclo de expansão observado em 2021, o ambiente de
+financiamento tornou-se mais seletivo: investidores passaram
+a priorizar resiliência financeira, sustentabilidade do modelo de
+negócios e práticas de governança, em detrimento de estratégias
+centradas exclusivamente em crescimento. Os próximos
+unicórnios brasileiros tendem a surgir de empreendimentos mais
+robustos, com fundamento sólidos, modelos diversificados e maior
+capacidade de atravessar ciclos econômicos adversos.
+
+
+  Em síntese, os unicórnios brasileiros funcionam como um
+termômetro do empreendedorismo de alto crescimento no país:
+espelham tanto a maturidade de setores consolidados quanto
+a emergência de novas oportunidades. Monitorar sua evolução
+é fundamental não apenas para compreender o estágio do
+ecossistema de startups, mas também para antecipar tendências
+que moldarão o futuro do empreendedorismo e da economia
+digital no Brasil.
+
+
+
+
+                                                                     27
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+5. Informações-chave dos
+unicórnios brasileiros35
+
+                                         Startup                             99
+                                         Ano de fundação                     2012
+                                         Ano em que se tornou unicórnio      2018
+                                                                             Ariel Lambrecht, Paulo Veras,
+                                         Time de fundadores
+                                                                             Renato Freitas
+                                         Setor (Subsetor)                    Logística (mobilidade urbana)
+                                                                             A 99 conecta motoristas e
+                                                                             passageiros, e é conhecida
+                                                                             como uma das maiores
+                                         Sobre a 99                          empresas de mobilidade urbana
+                                                                             brasileiras. Além disso, oferece
+                                                                             serviços de entrega e produtos
+                                                                             financeiros a seus parceiros.
+                                         Site                                99app.com
+
+
+
+
+                                         Startup                             Arco Educação
+                                         Ano de fundação                     2004
+                                         Ano em que se tornou unicórnio      2018
+                                                                             Ari de Sá Neto, Oto de Sá
+                                         Time de fundadores
+                                                                             Cavalcante
+                                         Setor (Subsetor)                    Outros (edtech)
+                                                                             A Arco Educação propõe
+                                                                             revolucionar o ensino por meio
+                                                                             da tecnologia e inovação, com
+                                         Sobre a Arco Educação
+                                                                             um sistema operacional que
+                                                                             visa a impactar tanto alunos
+                                                                             quanto educadores.
+                                         Site                                arcoeducacao.com.br
+
+
+
+
+28
+Startup                          Ascenty
+Ano de fundação                  2010
+Ano em que se tornou unicórnio   2018
+Time de fundadores               Christopher Torto
+                                 Outros (infraestrutura — data
+Setor (Subsetor)
+                                 center)
+                                 A Ascenty é responsável
+                                 pela construção e gestão de
+                                 Data Centers, ou seja, locais
+                                 onde servidores e dados das
+Sobre a Ascernty
+                                 empresas são armazenados.
+                                 Consolidou-se como a maior
+                                 empresa deste ramo na
+                                 América Latina.
+Site                             ascenty.com
+
+
+
+Startup                          C6 Bank
+Ano de fundação                  2018
+Ano em que se tornou unicórnio   2020
+                                 Marcelo Kalim, Carlos Fonseca,
+Time de fundadores
+                                 Luiz Marcelo Calicchio
+Setor (Subsetor)                 Fintech (banking)
+                                 O C6 Bank é um banco
+                                 digital que oferece soluções
+                                 financeiras para pessoas
+Sobre a C6 Bank
+                                 jurídicas e físicas. Em seu
+                                 aplicativo há mais de 90
+                                 produtos e serviços.
+Site                             c6bank.com.br
+
+
+
+Startup                          CloudWalk
+Ano de fundação                  2013
+Ano em que se tornou unicórnio   2021
+Time de fundadores               Luis Silva
+Setor (Subsetor)                 Fintech (meios de pagamento)
+                                 A CloudWalk é uma fintech
+                                 de pagamentos que oferece
+                                 plataforma financeira incluindo
+                                 produtos e software de
+Sobre a CloudWalk
+                                 pagamentos. Sua proposta
+                                 é democratizar a indústria
+                                 financeira com soluções
+                                 eficazes e seguras.
+Site                             cloudwalk.io
+
+
+                                                                 29
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+                                         Startup                             Creditas
+                                         Ano de fundação                     2012
+                                         Ano em que se tornou unicórnio      2020
+                                         Time de fundadores                  Sergio Furio
+                                         Setor (Subsetor)                    Fintech (banking)
+                                                                             A Creditas oferece serviços
+                                                                             financeiros como seguros,
+                                         Sobre a Creditas                    investimentos e crédito por
+                                                                             meio do uso de salário, veículos
+                                                                             ou imóveis como garantia.
+                                         Site                                creditas.com
+
+
+
+                                         Startup                             Daki
+                                         Ano de fundação                     2020
+                                         Ano em que se tornou unicórnio      2021
+                                                                             Alex Bretzner, Rafael Vasto,
+                                         Time de fundadores
+                                                                             Rodrigo Maroja
+                                         Setor (Subsetor)                    Logística (e-commerce)
+                                                                             A Daki é um e-commerce
+                                                                             que, por meio da operação
+                                                                             de pequenos centros de
+                                         Sobre a Daki                        distribuição localizados em
+                                                                             grandes cidades, oferece
+                                                                             entregas em poucos minutos
+                                                                             com preço de supermercado.
+                                         Site                                soudaki.com
+
+
+
+
+                                         Startup                             Dock
+                                         Ano de fundação                     2014
+                                         Ano em que se tornou unicórnio      2022
+                                         Time de fundadores                  Antonio Soares
+                                         Setor (Subsetor)                    Fintech (Infraestrutura)
+                                                                             A Dock é uma fintech que atua
+                                                                             como bank as a service, ou
+                                                                             seja, fornece infraestrutura
+                                         Sobre a Dock                        de serviços financeiros para
+                                                                             os seus clientes. Entre seus
+                                                                             produtos, destacam-se cartões,
+                                                                             pagamentos e conta digital.
+                                         Site                                dock.tech
+
+
+
+
+30
+Startup                          Ebanx
+Ano de fundação                  2012
+Ano em que se tornou unicórnio   2019
+                                 Alphonse Voigt, João Del Valle,
+Time de fundadores
+                                 Wagner Ruiz
+Setor (Subsetor)                 Fintech (pagamentos)
+                                 A Ebanx é uma empresa de
+                                 tecnologia de pagamentos
+                                 internacionais focada na África,
+                                 América Latina e Ásia. Foi
+Sobre a Ebanx                    responsável pela criação de
+                                 uma tecnologia de pagamentos
+                                 que conecta as maiores
+                                 empresas globais com milhões
+                                 de consumidores.
+Site                             ebanx.com
+
+
+
+Startup                          Facily
+Ano de fundação                  2018
+Ano em que se tornou unicórnio   2021
+                                 Diego Dzodan, Luciano Freitas,
+Time de fundadores
+                                 Vitor Zaninotto
+Setor (Subsetor)                 E-commerce (social commerce)
+                                 Ao promover compras coletivas,
+                                 a Facily oferece uma ampla
+                                 variedade de produtos com
+Sobre a Facily
+                                 preços competitivos. É a
+                                 primeira social commerce da
+                                 América Latina.
+Site                             Facily.com
+
+
+Startup                          Frete.com
+Ano de fundação                  2011
+Ano em que se tornou unicórnio   2021
+Time de fundadores               Federico Vega
+Setor (Subsetor)                 Logística (frete)
+                                 A Frete.com é a maior
+                                 plataforma de logística
+                                 rodoviária de cargas da
+                                 América Latina e sua missão é
+Sobre a Frete.com                tornar o frete simples, eficiente
+                                 e seguro, por meio do uso
+                                 de tecnologia para conectar
+                                 as transportadoras aos
+                                 caminhoneiros.
+Site                             fretebras.com.br
+                                                                   31
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+                                         Startup                             Hotmart
+                                         Ano de fundação                     2011
+                                         Ano em que se tornou unicórnio      2021
+                                                                             João Pedro Resende, Mateus
+                                         Time de fundadores
+                                                                             Bicalho
+                                                                             Outros (martech / edtech /
+                                         Setor (Subsetor)
+                                                                             creator economy)
+                                                                             A Hotmart é uma plataforma
+                                                                             global especializada em
+                                                                             produtos digitais. Por meio
+                                         Sobre a Hotmart                     dela, produtores, especialistas
+                                                                             e criadores de conteúdo
+                                                                             conseguem gerenciar seus
+                                                                             produtos com facilidade.
+                                         Site                                hotmart.com
+
+
+                                         Startup                             iFood
+                                         Ano de fundação                     2011
+                                         Ano em que se tornou unicórnio      2018
+                                                                             Eduardo Baer, Felipe Ramos
+                                         Time de fundadores                  Fioravante, Guilherme Bonifácio,
+                                                                             Patrick Sigrist
+                                         Setor (Subsetor)                    Logística (foodtech)
+                                                                             O iFood é uma foodtech e o
+                                                                             maior aplicativo especializado
+                                                                             em entregas e delivery online
+                                         Sobre o iFood                       na América Latina. Por meio
+                                                                             da plataforma, consumidores
+                                                                             conseguem acesso a restaurantes
+                                                                             e lojas, de modo intuitivo.
+                                         Site                                ifood.com.br
+
+
+
+                                         Startup                             Loft
+                                         Ano de fundação                     2018
+                                         Ano em que se tornou unicórnio      2020
+                                         Time de fundadores                  Florian Hagenbuch, Mate Pencz
+                                         Setor (Subsetor)                    Outros (proptech)
+                                                                             A Loft facilita a compra,
+                                                                             venda e aluguel de imóveis.
+                                                                             Criou soluções tecnológicas e
+                                                                             financeiras para facilitar a rotina
+                                         Sobre a Loft
+                                                                             das imobiliárias. Com isso,
+                                                                             tanto pessoas físicas quanto
+                                                                             imobiliárias são beneficiadas
+                                                                             com seus produtos.
+                                         Site                                loft.com
+32
+Startup                          MadeiraMadeira
+Ano de fundação                  2009
+Ano em que se tornou unicórnio   2021
+                                 Daniel Scandian, Marcelo
+Time de fundadores
+                                 Scandian
+Setor (Subsetor)                 E-commerce
+                                 A MadeiraMadeira tornou-se
+                                 a maior loja on-line de itens
+                                 para o lar da América Latina
+Sobre a MadeiraMadeira           ao oferecer uma experiência
+                                 de compra não apenas on-line,
+                                 mas também por meio de seu
+                                 aplicativo e em lojas físicas.
+Site                             madeiramadeira.com.br
+
+
+
+Startup                          Merama
+Ano de fundação                  2020
+Ano em que se tornou unicórnio   2021
+                                 Felipe Delgado, Guilherme
+Time de fundadores               Nosralla, Renato Andrade, Sujay
+                                 Tyle
+Setor (Subsetor)                 E-commerce (brand aggregator)
+                                 A Merama é uma plataforma que
+                                 adquire e acelera e-commerces.
+Sobre a Merama                   Sua missão é se tornar o maior
+                                 e o melhor grupo de marcas da
+                                 América Latina.
+Site                             merama.io
+
+
+
+Startup                          Mercado Bitcoin
+Ano de fundação                  2013
+Ano em que se tornou unicórnio   2021
+                                 Gustavo Chamati, Mauricio
+Time de fundadores
+                                 Chamati
+Setor (Subsetor)                 Fintech (cripto / blockchain)
+                                 A proposta do Mercado Bitcoin
+                                 é estar entre as plataformas de
+                                 criptoativos mais seguras do
+                                 mundo e viabilizar tecnologias
+Sobre o Mercado Bitcoin
+                                 para oferecer diversos ativos
+                                 digitais, incluindo renda fixa
+                                 e renda variável digitais, e
+                                 criptomoedas.
+Site                             mercadobitcoin.com.br
+
+                                                                 33
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+                                         Startup                             Neon
+                                         Ano de fundação                     2016
+                                         Ano em que se tornou unicórnio      2022
+                                         Time de fundadores                  Pedro Conrade
+                                         Setor (Subsetor)                    Fintech (banking)
+                                                                             O Neon é um banco digital que
+                                                                             foca em pequenas empresas e
+                                                                             pessoas físicas no Brasil. Com
+                                         Sobre o Neon
+                                                                             isso, sua meta é simplificar,
+                                                                             de maneira intuitiva, a vida
+                                                                             financeira de seus clientes.
+                                         Site                                neon.com.br
+
+
+
+
+                                         Startup                             Nubank
+                                         Ano de fundação                     2013
+                                         Ano em que se tornou unicórnio      2018
+                                                                             Edward Wible , Cristina
+                                         Time de fundadores
+                                                                             Junqueira, David Vélez
+                                         Setor (Subsetor)                    Fintech (banking)
+                                                                             O Nubank é um dos maiores
+                                                                             bancos digitais do mundo. Com
+                                         Sobre o Nubank                      tecnologia proprietária, busca
+                                                                             desenvolver produtos e serviços
+                                                                             inovadores e sem burocracia.
+                                         Site                                nubank.com.br
+
+
+
+
+                                         Startup                             Olist
+                                         Ano de fundação                     2015
+                                         Ano em que se tornou unicórnio      2021
+                                         Time de fundadores                  Tiago Dalvi
+                                         Setor (Subsetor)                    E-commerce (marketplace)
+                                                                             A Olist é uma plataforma de
+                                                                             vendas online para pequenos
+                                                                             e médios negócios. Por ela,
+                                                                             são oferecidas soluções de
+                                         Sobre a Olist                       ERP e integração entre vários
+                                                                             marketplaces e os lojistas,
+                                                                             buscando simplificar o dia a dia
+                                                                             e potencializar o aumento da
+                                                                             receita.
+                                         Site                                olist.com
+
+
+34
+Startup                          PagBank
+Ano de fundação                  2006
+Ano em que se tornou unicórnio   2018
+                                 Sergio Costa, Armando Hilel,
+Time de fundadores
+                                 Leonardo Pascoal
+Setor (Subsetor)                 Fintech (banking)
+                                 O PagBank é uma plataforma de
+                                 serviços financeiros que oferece
+                                 soluções bancárias inovadoras,
+                                 automatizando processos de
+Sobre o PagBank                  compra, venda e transferência,
+                                 com foco em simplicidade e
+                                 segurança, além de conta digital
+                                 e produtos financeiros para
+                                 pessoas físicas.
+Site                             pagbank.com.br
+
+
+Startup                          Pismo
+Ano de fundação                  2016
+Ano em que se tornou unicórnio   2023
+                                 Daniela Binatti, Juliana Motta,
+Time de fundadores
+                                 Marcelo Parise, Ricardo Josua
+Setor (Subsetor)                 Fintech (infraestrutura)
+                                 A Pismo é uma fintech que
+                                 fornece uma plataforma de
+                                 processamento para bancos,
+Sobre a Pismo                    empresas de pagamentos e outras
+                                 fintechs. Sua meta é ajudar seus
+                                 clientes a revolucionarem os
+                                 serviços bancários e pagamentos.
+Site                             pismo.io
+
+
+Startup                          QI Tech
+Ano de fundação                  2018
+Ano em que se tornou unicórnio   2024
+                                 Marcelo Bentivoglio, Marcelo
+Time de fundadores
+                                 Buosi, Pedro Mac Dowell
+                                 Fintech (infraestrutura de
+Setor (Subsetor)
+                                 crédito)
+                                 A QI Tech oferece soluções
+                                 de infraestrutura bancária e
+                                 de crédito. Com isso, outras
+                                 empresas financeiras como
+Sobre a QI Tech
+                                 fintechs, bancos digitais etc.
+                                 acessam todas as ferramentas
+                                 necessárias para impulsionar seus
+                                 serviços financeiros.
+Site                             qitech.com.br                     35
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+                                         Startup                             QuintoAndar
+                                         Ano de fundação                     2012
+                                         Ano em que se tornou unicórnio      2019
+                                         Time de fundadores                  André Penha, Gabriel Braga
+                                         Setor (Subsetor)                    Outros (proptech)
+                                                                             O QuintoAndar é uma proptech
+                                                                             líder no setor imobiliário digital
+                                                                             da América Latina. Sua proposta
+                                                                             é alugar e vender imóveis de um
+                                         Sobre o QuintoAndar
+                                                                             jeito simples, inclusive fazendo
+                                                                             análise de crédito do inquilino,
+                                                                             permitindo que ele faça o
+                                                                             aluguel sem fiador.
+                                         Site                                quintoandar.com.br
+
+
+
+                                         Startup                             Stone
+                                         Ano de fundação                     2013
+                                         Ano em que se tornou unicórnio      2018
+                                         Time de fundadores                  Eduardo Pontes, André Street
+                                                                             Fintech (adquirência /
+                                         Setor (Subsetor)
+                                                                             pagamentos)
+                                                                             A Stone oferece soluções
+                                                                             de pagamento desde os
+                                                                             microempreendedores até grandes
+                                         Sobre a Stone                       empresas. Com isso, ela permite
+                                                                             que toda a gestão seja integrada
+                                                                             com a maquininha, a conta PJ e o
+                                                                             cartão no mesmo aplicativo.
+                                         Site                                stone.com.br
+
+
+
+                                         Startup                             Unico idtech
+                                         Ano de fundação                     2007
+                                         Ano em que se tornou unicórnio      2021
+                                                                             Rui Jordão, Diego Martins,
+                                         Time de fundadores
+                                                                             Paulo Alencastro
+                                                                             Outros (identity tech /
+                                         Setor (Subsetor)
+                                                                             segurança)
+                                                                             A Unico idtech é uma startup
+                                                                             de tecnologia focada em
+                                                                             identidade digital, protegendo
+                                         Sobre a Unico idtech                os dados dos usuários
+                                                                             enquanto comprova e autentica
+                                                                             a identidade de uma pessoa em
+                                                                             um ambiente virtual.
+                                         Site                                unico.io
+36
+Startup                          VTEX
+Ano de fundação                  2000
+Ano em que se tornou unicórnio   2020
+                                 Geraldo Thomaz, Mariano
+Time de fundadores
+                                 Gomide de Faria
+Setor (Subsetor)                 E-commerce (SaaS)
+                                 A VTEX é uma plataforma
+                                 de e-commerce que facilita
+                                 a criação, gerenciamento e
+Sobre a VTEX
+                                 crescimento de vendas de lojas
+                                 online tanto para varejistas
+                                 quanto grandes empresas.
+Site                             vtex.com
+
+
+
+
+Startup                          Wellhub
+Ano de fundação                  2012
+Ano em que se tornou unicórnio   2019
+                                 Cesar Carvalho, João Barbosa,
+Time de fundadores
+                                 Vinicius Ferriani
+Setor (Subsetor)                 Outros (healthtech)
+                                 A Wellhub (também conhecida
+                                 como Gympass) conecta
+                                 colaboradores a uma grande rede
+Sobre a Wellhub
+                                 de academias além de aplicativos
+                                 de mindfulness, terapia, nutrição e
+                                 qualidade do sono.
+Site                             wellhub.com
+
+
+
+Startup                          Wildlife Studios
+Ano de fundação                  2011
+Ano em que se tornou unicórnio   2019
+                                 Arthur Lazarte, Victor Lazarte,
+Time de fundadores
+                                 Michael Mac-Vicar
+                                 Outros (gametech /
+Setor (Subsetor)
+                                 entretenimento)
+                                 A Wildlife Studios é uma das
+                                 dez maiores desenvolvedoras
+                                 de jogos mobile do mundo em
+Sobre a Wildlife Studios         número de downloads. Com
+                                 escritórios em diversos países,
+                                 cria e lança jogos em várias
+                                 categorias.
+Site                             wildlifestudios.com
+
+                                                                   37
+O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+Relatório: Unicórnios brasileiros: quem são e de onde vêm
+
+
+
+
+35
+  Dados sobre as startups:
+99. Disponível em: https://99app.com/. Acesso em: 15 maio 2025.
+ARCO EDUCAÇÃO. Disponível em: https://arcoeducacao.com.br/. Acesso em: 9 jun. 2025.
+ASCENTY. Disponível em: https://ascenty.com/. Acesso em: 6 maio 2025.
+C6 BANK. Disponível em: https://www.c6bank.com.br/. Acesso em: 4 jun. 2025.
+CLOUDWALK. Disponível em: https://www.cloudwalk.io/. Acesso em: 22 maio 2025.
+CREDITAS. Disponível em: https://www.creditas.com/. Acesso em: 26 maio 2025.
+DOCK. Disponível em: https://dock.tech/. Acesso em: 12 junho 2025.
+EBANX. Disponível em: https://www.ebanx.com/. Acesso em: 6 maio 2025.
+FACILY. LinkedIn. Disponível em: https://br.linkedin.com/company/facily. Acesso em: 27 junho 2025.
+FRETEBRAS. Disponível em: https://www.fretebras.com.br/. Acesso em: 3 jun. 2025.
+GRUPO QUINTOANDAR. Disponível em: https://grupoquintoandar.com/. Acesso em: 10 junho 2025.
+HOTMART. Disponível em: https://hotmart.com/. Acesso em: 5 jun. 2025.
+IFOOD. Disponível em: https://www.ifood.com.br/. Acesso em: 19 maio 2025.
+LOFT. Disponível em: https://www.loft.com.br/. Acesso em: 10 junho 2025.
+LOGGI. Disponível em: https://www.loggi.com/. Acesso em: 13 junho 2025.
+MADEIRA MADEIRA. Disponível em: https://madeiramadeira.com.br/. Acesso em: 13 junho 2025.
+MERAMA. Disponível em: https://www.merama.io/. Acesso em: 18 junho 2025.
+MERCADO BITCOIN. Disponível em: https://www.mercadobitcoin.com.br/. Acesso em: 24 junho 2025.
+NEON. Disponível em: https://neon.com.br/. Acesso em: 16 maio 2025.
+NUBANK. Disponível em: https://nubank.com.br/. Acesso em: 29 maio 2025.
+OLIST. Disponível em: https://olist.com/. Acesso em: 17 junho 2025.
+PAGBANK. Disponível em: https://pagbank.com.br/. Acesso em: 23 maio 2025.
+PISMO. Disponível em: https://www.pismo.io/. Acesso em: 2 jun. 2025.
+QI TECH. Disponível em: https://qitech.com.br/. Acesso em: 18 junho 2025.
+SOUDAKI. Disponível em: https://soudaki.com/. Acesso em: 27 junho 2025.
+STONE. Disponível em: https://www.stone.com.br/. Acesso em: 14 maio 2025.
+UNICO. Disponível em: https://unico.io/. Acesso em: 13 junho 2025.
+VTEX. Disponível em: https://vtex.com/. Acesso em: 10 junho 2025.
+WELLHUB. Disponível em: https://wellhub.com/. Acesso em: 3 jun. 2025.
+WILDLIFE STUDIOS. Disponível em: https://wildlifestudios.com/. Acesso em: 29 maio 2025.
+
+
+38
+Ficha Técnica
+Pessoas envolvidas
+     ANDREA MARIA ACCIOLY FONSECA MINARDI
+     Insper
+
+
+     CHARLES KIRSCHBAUM
+     Insper
+
+
+     GISELA MACEDO
+     Insper
+
+
+     RODRIGO AMANTEA
+     Insper
+
+
+Contatos
+     hub@insper.edu.br
+     Hub de Inovação e Empreendedorismo Paulo Cunha
+ O B S E R VAT Ó R I O D E I N O VA Ç Ã O E E M P R E E N D E D O R I S M O
+
+
+
+
+Rua Quatá, 200 • Vila Olímpia • São Paulo • SP • Brasil • CEP 04546-042 • Tel (11) 4504-2400
+
+             insper       insperedu        insper        insper-edu        insperedu
+

@@ -10,9 +10,9 @@ import * as vscode from 'vscode';
  *   BETTER_MARK_API_KEY=rv_... npm run set-api-key
  *
  * A chave fica no armazenamento criptografado pelo sistema operacional, que é
- * o mesmo lugar usado pelo comando "Better Mark: Configurar API key".
+ * o mesmo lugar usado pelo comando "Paste as Markdown: Configurar API key".
  */
-suite('Better Mark — configurar API key', () => {
+suite('Paste as Markdown — configurar API key', () => {
 	test('grava a chave vinda do ambiente', async function () {
 		this.timeout(30000);
 

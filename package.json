@@ -1,7 +1,7 @@
 {
-  "name": "better-mark",
-  "displayName": "Better Mark",
-  "description": "Fixes messy Markdown: headings, lists and inline code. Optional AI pass that never changes your words.",
+  "name": "paste-as-markdown",
+  "displayName": "Paste as Markdown — Text to Clean Markdown",
+  "description": "Turn messy text into clean Markdown in one click: paste AI output, web clips or PDF dumps. No account, no API key.",
   "version": "0.6.0",
   "publisher": "vitor",
   "license": "MIT",
@@ -14,7 +14,10 @@
   ],
   "keywords": [
     "markdown",
+    "paste",
+    "text to markdown",
     "format",
+    "convert",
     "readme",
     "lists",
     "headings"
@@ -26,37 +29,37 @@
       {
         "command": "better-mark.menu",
         "title": "Format… (choose a mode)",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       },
       {
         "command": "better-mark.format",
         "title": "Fix formatting (no AI)",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       },
       {
         "command": "better-mark.formatWithAi",
         "title": "Improve with AI (keep my words)",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       },
       {
         "command": "better-mark.restructure",
         "title": "Rebuild loose text into Markdown (AI)",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       },
       {
         "command": "better-mark.configureApiKey",
         "title": "Set API key",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       },
       {
         "command": "better-mark.showStats",
         "title": "Show current configuration",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       },
       {
         "command": "better-mark.helloWorld",
         "title": "Hello World",
-        "category": "Better Mark"
+        "category": "Paste as Markdown"
       }
     ],
     "menus": {

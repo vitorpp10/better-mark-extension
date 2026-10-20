@@ -28,7 +28,7 @@ export function registerStatusBarItem(context: vscode.ExtensionContext): void {
 	item.text = ICON;
 	item.tooltip = new vscode.MarkdownString(
 		[
-			'**Better Mark**',
+			'**Paste as Markdown**',
 			'',
 			'Click to fix the Markdown formatting of this file.',
 			'',
