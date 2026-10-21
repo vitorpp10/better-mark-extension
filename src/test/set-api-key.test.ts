@@ -22,7 +22,7 @@ suite('Markdownify — configurar API key', () => {
 			return;
 		}
 
-		const extension = vscode.extensions.getExtension('vitor.better-mark');
+		const extension = vscode.extensions.getExtension('vitor.markdownify');
 		assert.ok(extension, 'extensão não encontrada');
 		await extension.activate();
 

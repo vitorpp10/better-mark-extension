@@ -1,460 +1,144 @@
-# better-mark
+# Markdownify
 
-Extensão de VS Code que aplica **semântica de Markdown** no texto que você já escreveu:
-títulos, listas, código inline — e, opcionalmente, uma camada de **IA** para reestruturar
-parágrafos que nenhuma regra determinística resolve.
+**Turn messy text into clean Markdown in one click.**
 
-A ideia: você seleciona o texto, clica no botão ✨ e o Markdown fica arrumado.
-Sem abrir o ChatGPT, sem gastar tokens, sem colar nada em outro lugar.
+You already wrote the text. It just doesn't look like Markdown yet — headings that
+aren't headings, lists without markers, `timeout_ms` without backticks.
 
----
+Select it, click ✨, done. No ChatGPT tab, no account, no API key.
 
-## Status atual
-
-| Nível | O que é | Estado |
-| --- | --- | --- |
-| **Nível 1** | Títulos e listas, 100% offline | ✅ completo |
-| **Nível 2A** | Código inline determinístico (`` `Termo`: ``, `` `npm install` ``) | ✅ completo |
-| **Nível 2B** | Formatação por IA (DeepSeek, Gemini, GLM, Nemotron, OpenAI) | ✅ implementado |
-| Fase 4 | Testes, erros, cancelamento, documentação | 🟡 parcial |
-| Fase 5 | Publicação no Marketplace | ⬜ não iniciado |
-
-**Vitest:** 172 testes passando · **tsc:** limpo · **eslint:** limpo · **integração:** 4 passando
+Built for people who write a lot of READMEs, notes and docs — and lose minutes
+every time fixing formatting by hand.
 
 ---
 
-## Como rodar
+## Before / After
 
-```bash
-npm install          # dependências
-npm run compile      # build da extensão (tsc → out/)
-npm test             # 172 testes unitários do motor (não precisa abrir o VS Code)
-npm run lint         # eslint
-npm run check        # typecheck + lint
-```
-
-Para testar dentro do VS Code: abra o projeto e pressione **F5**
-(abre o *Extension Development Host*). Depois, em um arquivo `.md`:
-
-- clique no ícone **✨** na barra do editor, ou
-- `Ctrl+Alt+M`, ou
-- `Ctrl+Shift+P` → **Better Mark: Formatar seleção**.
-
-### Testar sem abrir o VS Code
-
-```bash
-node ./scripts/format-sample.mjs README.md          # mostra o diff
-node ./scripts/format-sample.mjs README.md --write  # grava
-node ./scripts/format-sample.mjs README.md --inline # liga as menções a código
-```
-
----
-
-## Comandos
-
-Há **um botão na barra do editor** e **um ✒️ na barra de status**. Os dois
-abrem o mesmo menu. A barra de status mostra só o símbolo (o tooltip explica),
-para não competir com os itens nativos do VS Code.
-
-| Comando | O que faz |
+| You paste this | You get this |
 | --- | --- |
-| `better-mark.menu` | **Abre o menu de modos.** É o botão que aparece no editor. |
-| `better-mark.format` | Corrige a formatação **sem IA** (Níveis 1 + 2A). Offline. |
-| `better-mark.formatWithAi` | Melhora com IA **preservando suas palavras**. |
-| `better-mark.restructure` | Reconstrói **texto solto** em Markdown (IA reestrutura). |
-| `better-mark.configureApiKey` | Guarda a API key no **SecretStorage** do VS Code. |
-| `better-mark.showStats` | Abre um resumo da configuração atual (útil para diagnosticar). |
+| `Processo de build` on its own line | `# Processo de build` |
+| `* item` / `1) item` | `- item` / `1. item` |
+| 4 spaces of PDF indent | A proper nested list |
+| `Dependências: SFML` | `**Dependências:** SFML` |
+| `O timeout_ms é 30000` | O `` `timeout_ms` `` é 30000 |
 
-> **Idioma da interface:** tudo o que o usuário final vê (notificações, erros,
-> menu) está em **inglês**, porque a extensão é publicada para uso global.
-> Comentários, testes e esta documentação seguem em português.
-
-### Os modos, lado a lado
-
-O menu pergunta primeiro **se seu texto já é Markdown**:
-
-| | Fix formatting (offline) | + AI polish | Rebuild loose text |
-| --- | --- | --- | --- |
-| **Para que serve** | Qualquer markdown | Qualquer markdown | Texto **sem formato** (PDF, site, chat) |
-| **Títulos e listas** | ✅ | ✅ | ✅ |
-| **Recuo de PDF** | ✅ | ✅ | ✅ |
-| **Rótulos em negrito** | ✅ | ✅ | ✅ |
-| **Código inline** | ✅ | ✅ + dedução | ✅ + dedução |
-| **Suas palavras** | Nunca mudam | Nunca mudam — **validado** | Podem ser reescritas |
-| **Garantia** | Determinística | `compareWords` rejeita se 1 palavra mudar | `validateContentPreserved` |
-| **Rede** | Não usa | Usa | Usa |
-
-O modo reestruturante pede **confirmação em popup**, porque é o único que pode
-reescrever seu texto.
-
-### O offline resolve quase tudo
-
-Esta é a parte que mais evoluiu. O motor offline começou fraco — só sabia
-trocar `* item` por `- item` — e por isso o modo "com IA" parecia
-indispensável. Depois de reforçado, ele entrega praticamente o mesmo resultado
-de um README real, **de graça e sem risco**:
+Real example, text copied from a PDF:
 
 ```
-ANTES (texto colado de um PDF):
+ANTES
     Sistema operacional: Linux (testado).
     Dependências: SFML. Instale via (por exemplo, sudo apt install libsfml-dev).
-    Fonts e assets: a pasta assets/ contém fontes.
     app/jogo.cpp: lógica principal.
+```
 
-DEPOIS:
+```
+DEPOIS
 - **Sistema operacional:** Linux (testado).
 - **Dependências:** SFML. Instale via (por exemplo, `sudo apt install` libsfml-dev).
-- **Fonts e assets:** a pasta `assets/` contém fontes.
 - `app/jogo.cpp`: lógica principal.
 ```
 
-Quatro regras fazem isso:
-
-| Regra | O que resolve |
-| --- | --- |
-| **Recuo** | 4 espaços de PDF viram lista, respeitando sub-níveis (8 espaços) |
-| **Títulos** | Linha curta e independente vira `#`, com heurísticas de prosa |
-| **Rótulos** | `Chave: valor` → `**Chave:** valor`, dentro de listas também |
-| **Código inline** | Comandos, caminhos, extensões, constantes e assets ganham crase |
-
-A IA virou um **refinamento opcional**, não a peça central.
-
 ---
 
-## Nível 1 — regras
+## How it works
 
-A parte mais importante do projeto não é a regex: é decidir **o que não deve mudar**.
+Click the **✨** button in the editor title bar (or `Ctrl+Alt+M`) and pick a mode:
 
-### Títulos
-
-Vira título:
-
-```
-Processo de build     →     # Processo de build
-```
-
-**Não** vira título:
-
-```
-Este é um parâmetro normal e comprido que explica porque o serviço falhou.
-Health check failed because the database is unavailable
-Primeira linha do parágrafo
-segunda linha do mesmo parágrafo
-* item de lista curto
-```
-
-As regras aplicadas, em ordem:
-
-1. nunca reescrever linha que já é título (`#`, `##`…);
-2. nunca transformar item de lista em título;
-3. só a **primeira** linha de um bloco pode virar título (continuação de
-   parágrafo não conta);
-4. a linha não pode terminar em `. ! ? , ; :`;
-5. `rotulo: valor` é prosa, não título;
-6. conectivos de frase (*because*, *que*, *porque*, *and*…) desqualificam;
-7. mais de 10 palavras desqualifica;
-8. proporção e horário (`16:9`, `10:30`) não são título.
-
-O nível do título é **inferido** do documento: se já existe `## Seção`, o novo
-título também vira `##`. Dá para forçar com `betterMark.format.headingLevel`.
-
-### Listas
-
-```
-* item      →  - item
-+ item      →  - item
-1) item     →  1. item
-1- item     →  1. item
-1] item     →  1. item
-1} item     →  1. item
--   item    →  - item     (espaçamento irregular)
-  * item    →    - item   (indentação preservada)
-```
-
-### Blocos protegidos
-
-Estas regiões **nunca** são tocadas: blocos ```` ``` ````, front matter (`---`),
-tabelas, HTML e citações (`>`). Reescrever citação é trabalho da IA, não de regex.
-
----
-
-## Nível 2A — código inline (offline)
-
-Rótulos que parecem código ganham crase:
-
-```
-timeout_ms: 30000   →   `timeout_ms`: 30000
-GET /users: rota    →   `GET /users`: rota
-index.ts: arquivo   →   `index.ts`: arquivo
-npm run build: cmd  →   `npm run build`: cmd
-```
-
-E palavras de prosa **não** ganham:
-
-```
-Baixar: npm install     →   Baixar: npm install      (intacto)
-Resultado: markdown     →   Resultado: markdown      (intacto)
-```
-
-> Este foi um falso positivo real: a primeira versão marcava `Baixar:` e
-> `Conceito:` como código. A lista de palavras de prosa existe por causa disso.
-
-Menções a código no meio da frase (desligado por padrão, por ser mais agressivo):
-
-```
-Antes de rodar o projeto você precisa executar npm install.
-→ Antes de rodar o projeto você precisa executar `npm install`.
-```
-
-Ligue com `betterMark.level2.inlineCodeMentions`.
-
----
-
-## Nível 2B — IA
-
-### Arquitetura
-
-O provedor fica atrás de uma interface única, para a extensão não virar
-"a extensão da River":
-
-```
-seleção
-   ↓
-[1] shieldProtectedBlocks   → tira código/tabela/front matter da vista da IA
-   ↓                          e põe sentinelas no lugar
-[2] formatMarkdown          → roda Nível 1+2A na prosa (grátis e confiável)
-   ↓
-[3] AiProvider              → a IA reestrutura só a prosa
-   ↓
-[4] restoreProtectedBlocks  → devolve os blocos originais intactos
-   ↓
-[5] validação               → tamanho, recusa, estrutura protegida
-   ↓
-markdown final (ou NADA, se alguma validação reprovar)
-```
-
-Adicionar um provedor novo = implementar `AiProvider` e registrar em
-`src/ai/registry.ts`. Nada mais no código precisa saber que ele existe.
-
-### Por que a blindagem existe (e por que o prompt não basta)
-
-No primeiro teste real, o modelo **destruiu** um documento: um bloco ```` ```ts ````
-virou `# ts`, uma tabela perdeu os pipes, `2- item` ficou sem normalizar e dois
-parágrafos foram fundidos em um. Tudo isso com um prompt que dizia
-"preserve blocos de código e tabelas exatamente como estão".
-
-**Modelos desobedecem.** Por isso a defesa principal não é o prompt: é a IA
-**nunca ver** o que é frágil. Os blocos viram `<!-- BM-PROTECTED-0 -->`, e se o
-modelo apagar, duplicar ou corromper um marcador, **a resposta inteira é
-descartada** e o arquivo não é tocado.
-
-Somado a isso, o motor determinístico roda **antes** da IA — então os casos que
-o modelo errava (`2- item`) já chegam resolvidos.
-
-O prompt (`src/ai/prompt.ts`, ~7000 caracteres) é a segunda linha de defesa:
-define o que é título, o que é lista, quando deduzir ênfase, e traz uma lista
-de proibições nomeadas — cada uma correspondendo a um erro já observado.
-
-São **quatro barreiras** independentes:
-
-| # | Barreira | Garante |
+| Mode | For | Your words |
 | --- | --- | --- |
-| 1 | `shieldProtectedBlocks` | A IA não vê código, tabela, front matter ou citação |
-| 2 | `restoreProtectedBlocks` | Se um marcador sumir, a resposta é descartada |
-| 3 | `compareWords` | A IA não pode mudar nenhuma palavra |
-| 4 | `compareProtectedStructure` | O conteúdo frágil sobreviveu, verificado de forma independente |
+| **Fix formatting** (offline) | Text that's already Markdown | Never touched |
+| **+ AI polish** | Same, but harder cases | Never touched — **verified** |
+| **Rebuild loose text** | Raw text from a PDF, site or chat | Can be rewritten (asks first) |
 
-O pior caso é "a IA não fez nada". Nunca "a IA estragou seu README".
+**The offline engine runs first, always.** Headings, lists, indentation, bold
+labels and inline code are handled by rules — free, instant, offline. AI is a
+refinement on top, not the core.
 
-### Dedução de formatação inline
+**Nothing to configure.** The default provider is a built-in proxy: the API key
+lives on our server, never in the `.vsix`. Install, click, done.
 
-A IA não corrige só estrutura: ela **deduz** formatação a partir das pistas do
-texto, como o Claude faria.
+> Want your own key? Set `betterMark.ai.provider` to `deepseek`, `gemini`,
+> `openai`, `glm` or `nemotron` and run **Markdownify: Set API key**.
+> It goes to VS Code's SecretStorage, encrypted by your OS.
 
-```
-ANTES:  Primeiro instale as dependencias. Atencao: nunca faca isso em producao.
-        O arquivo fica em src/core/formatter.ts e o timeout_ms e 30000.
+---
 
-DEPOIS: Primeiro instale as dependencias. **Atencao**: nunca faca isso em producao.
-        O arquivo fica em `src/core/formatter.ts` e o `timeout_ms` e 30000.
-```
+## Why you can trust it with your README
 
-Três níveis de intensidade em `betterMark.ai.emphasis`:
+The AI **never sees** your code blocks, tables, front matter or blockquotes.
+They're replaced by markers before the request and restored after. If the model
+mangles a single marker, the whole answer is thrown away.
 
-| Valor | Comportamento |
-| --- | --- |
-| `deduce` | Deduz negrito, itálico e código a partir das pistas (padrão) |
-| `safe` | Só padrões inequívocos |
-| `off` | Não acrescenta ênfase; apenas corrige estrutura |
+On top of that, four independent barriers run before anything is written:
 
-**A garantia que torna isso seguro:** em nenhum modo a IA pode mudar as
-palavras. Depois que ela responde, `compareWords` remove toda a formatação dos
-dois lados e compara palavra por palavra. Se algo mudou — mesmo uma correção de
-acento — **a resposta inteira é descartada** e o arquivo não é tocado.
-
-```
-ANTES:  O texto está normal
-DEPOIS: O texto está alterado
-        → REJEITADO: palavra 3: "normal" → "alterado"
-
-ANTES:  Atencao: algo
-DEPOIS: **Atenção**: algo
-        → REJEITADO: a IA não pode "corrigir" ortografia
-```
-
-Você pode deixar a IA deduzir sem medo de ela reescrever seu texto.
-
-### Funciona sem configurar nada
-
-O provedor padrão é o **`proxy`**: a extensão fala com um servidor do Better
-Mark, e a chave da API vive lá. Você instala, abre um Markdown, clica — sem
-criar conta, sem gerar chave, sem colar nada.
-
-```
-extensão ──► servidor do Better Mark ──► River AI
-   ↑                 ↑
-sem chave      chave só aqui
-```
-
-Por que um servidor: o `.vsix` é um arquivo que qualquer um abre. Uma chave
-embutida nele vazaria em dias, e o custo cairia na conta do autor. O servidor
-é a única forma de dar "instale e use" sem expor a chave.
-
-O servidor fica em [`better-mark-server`](https://github.com/) — proxy Node
-puro, com limite diário por instalação e o prompt montado do lado do servidor
-(para que um cliente modificado não possa mandar um prompt caro).
-
-**Quer usar sua própria chave?** Dá também: troque `betterMark.ai.provider`
-para `river`, `deepseek`, `openai`, `gemini`, `glm` ou `nemotron` e rode
-*Better Mark: Set API key*. O proxy é o padrão, não uma obrigação.
-
-### Configurar a API key (opcional)
-
-**Recomendado** — o comando guarda no SecretStorage do VS Code, que é
-criptografado pelo sistema operacional:
-
-```
-Ctrl+Shift+P → Better Mark: Configurar API key
-```
-
-Alternativa (menos segura, fica em texto puro no `settings.json`):
-
-```jsonc
-{
-  "betterMark.ai.provider": "deepseek",
-  "betterMark.ai.model": "deepseek-chat",
-  "betterMark.ai.apiKey": "sua-chave"
-}
-```
-
-A chave **nunca** fica no código-fonte.
-
-### Provedores suportados
-
-| `betterMark.ai.provider` | Endpoint | Modelo padrão |
+| # | Barrier | Guarantees |
 | --- | --- | --- |
-| `river` | `api.river.ai/v1` | `deepseek-ai/DeepSeek-V4.1-Flash` |
-| `deepseek` | `api.deepseek.com/v1` | `deepseek-chat` |
-| `gemini` | `generativelanguage.googleapis.com` | `gemini-2.0-flash` |
-| `glm` | `open.bigmodel.cn/api/paas/v4` | `glm-4-flash` |
-| `nemotron` | `integrate.api.nvidia.com/v1` | `nvidia/llama-3.3-nemotron-super-49b-v1` |
-| `openai` | `api.openai.com/v1` | `gpt-4o-mini` |
+| 1 | Shield | The AI never sees fragile content |
+| 2 | Restore | A missing marker discards the whole answer |
+| 3 | `compareWords` | Not a single word may change |
+| 4 | `compareProtectedStructure` | Code and tables survived, checked separately |
 
-`betterMark.ai.baseUrl` permite apontar para um proxy ou gateway próprio.
+> **The worst case is "the AI did nothing". Never "the AI wrecked your README".**
 
-### Segurança da resposta
+This isn't theoretical. On the first real test, a model turned a ```` ```ts ````
+block into `# ts` and dropped the pipes from a table — with a prompt that
+explicitly said not to. Models disobey. So the defense isn't the prompt: it's
+the AI never receiving what's fragile.
 
-Antes de escrever no documento, a resposta passa por `validateAiResult`:
-
-- resposta vazia → rejeitada;
-- menos de 50% do tamanho original → rejeitada (*a IA apagou conteúdo*);
-- mais de 250% → rejeitada (*a IA inventou conteúdo*);
-- começa com "Desculpe, não posso…" → rejeitada.
-
-Se a validação reprovar, **o arquivo não é alterado** e você vê o motivo.
-Um formatador que destrói o README é pior do que um que falha.
+Try it: ask the AI to "fix" `O texto está normal` into `O texto está alterado`.
+It gets rejected, and nothing changes.
 
 ---
 
-## Configuração
+## What gets cleaned up
 
-| Setting | Padrão | Descrição |
+**Headings** — a short standalone line becomes a heading. Prose doesn't:
+
+```
+Processo de build                                    →  # Processo de build
+Este é um parâmetro que explica porque falhou.       →  (unchanged)
+```
+
+**Lists** — `*`, `+`, `1)`, `1-`, `1]`, irregular spacing, PDF indent.
+
+**Bold labels** — `Chave: valor` → `**Chave:** valor`, inside lists too.
+
+**Inline code** — commands, paths, extensions and constants get backticks.
+Prose words don't (`Baixar:` stays `Baixar:`).
+
+**Left alone, always** — code blocks, tables, front matter, HTML, blockquotes.
+
+---
+
+## Settings
+
+| Setting | Default | Description |
 | --- | --- | --- |
-| `betterMark.format.headingLevel` | `0` | Nível do título. `0` = inferir do documento. |
-| `betterMark.format.protectBlocks` | `true` | Preservar código, tabelas, front matter, HTML, citações. |
-| `betterMark.level2.inlineCodeTerms` | `true` | `` `Termo`: `` nos rótulos de código. |
-| `betterMark.level2.inlineCodeMentions` | `true` | Crase em arquivos, caminhos e comandos citados. |
-| `betterMark.ai.provider` | `deepseek` | Provedor de IA. |
-| `betterMark.ai.model` | `""` | Modelo. Vazio = padrão do provedor. |
-| `betterMark.ai.apiKey` | `""` | Prefira o comando de configuração. |
-| `betterMark.ai.baseUrl` | `""` | Endpoint alternativo. |
-| `betterMark.ai.timeoutMs` | `30000` | Timeout da chamada (5 s–120 s). |
-| `betterMark.ai.emphasis` | `deduce` | `deduce` / `safe` / `off` — quanta ênfase a IA pode inferir. |
-| `betterMark.ai.instructions` | `""` | Instruções extras para a IA. |
+| `betterMark.format.headingLevel` | `0` | Heading level. `0` = infer from the document. |
+| `betterMark.format.protectBlocks` | `true` | Preserve code, tables, front matter. |
+| `betterMark.level2.inlineCodeTerms` | `true` | Backticks on `` `Termo`: `` labels. |
+| `betterMark.level2.inlineCodeMentions` | `true` | Backticks on files, paths and commands. |
+| `betterMark.ai.provider` | `proxy` | AI provider. Works out of the box. |
+| `betterMark.ai.emphasis` | `deduce` | `deduce` / `safe` / `off`. |
+| `betterMark.ai.timeoutMs` | `30000` | Request timeout. |
 
 ---
 
-## Estrutura do projeto
+## Requirements
 
-```
-src/
-├── extension.ts              ponto de entrada: só registra comandos
-├── core/                     MOTOR PURO — não importa `vscode`, testável por CLI
-│   ├── formatter.ts          pipeline (scan → rules → join)
-│   ├── scanner.ts            marca blocos protegidos
-│   ├── text.ts               utilidades de texto
-│   ├── types.ts              tipos compartilhados
-│   ├── rules/
-│   │   ├── headings.ts       Nível 1 — o que é título de verdade
-│   │   ├── lists.ts          Nível 1 — padronização de listas
-│   │   └── inline-code.ts    Nível 2A — código inline
-│   └── __tests__/
-├── ai/                       Nível 2B — provedores atrás de uma interface
-│   ├── provider.ts           interface, erros, stripCodeFence
-│   ├── prompt.ts             prompt do sistema (longo, com proibições)
-│   ├── shield.ts             blindagem de blocos frágeis + validação
-│   ├── formatter.ts          orquestra: blindar → offline → IA → validar
-│   ├── registry.ts           ponto único de resolução de provedor
-│   ├── openai-compatible.ts  DeepSeek, GLM, Nemotron, OpenAI
-│   ├── gemini.ts             dialeto próprio do Gemini
-│   └── __tests__/
-├── vscode/                   cola com o editor
-│   ├── commands.ts           comandos e mensagens de erro
-│   └── config.ts             leitura de settings + SecretStorage
-└── test/                     testes de integração (rodam dentro do VS Code)
-```
-
-A separação `core` (puro) / `vscode` (impuro) é o que permite testar as regras
-com `npm test` sem abrir o VS Code.
+VS Code 1.90.0 or later. No account, no API key, no configuration.
 
 ---
 
-## Testes
+## Contributing
 
-```bash
-npm test                  # unitários (vitest) — motor + camada de IA
-npm run test:integration  # integração (baixa um VS Code e roda dentro dele)
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md). Issues and PRs welcome.
 
-Os testes de integração precisam de display. Em servidor/CI sem tela, use `xvfb-run`.
+The one rule that matters: `src/core/` **never** imports `vscode`, so the whole
+formatting engine is testable without opening the editor.
 
 ---
 
-## Roadmap
+## License
 
-- [x] Fase 0 — extensão mínima, comando, botão no `editor/title`
-- [x] Fase 1 — Nível 1: título, listas, testes, README real
-- [x] Fase 2 — Nível 2A: código inline determinístico
-- [x] Fase 3 — IA: provider, configuração de chave, timeout, validação
-- [ ] Fase 4 — GIF de demonstração, cobertura, mensagens de erro afinadas
-- [ ] Fase 5 — `.vsix` e publicação no Marketplace
-
-## Não-objetivos (por enquanto)
-
-Nível 3, backend, pagamento, licenciamento, analytics e otimização para o
-Marketplace. O problema agora não é monetização: é provar que a ferramenta
-funciona e que alguém quer usá-la.
-
-## Licença
-
-MIT
+[MIT](LICENSE)

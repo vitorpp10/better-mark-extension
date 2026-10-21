@@ -1,11 +1,38 @@
-.vscode/**
-.vscode-test/**
+# O que NÃO entra no .vsix publicado.
+#
+# Regra de ouro: o pacote leva apenas o que a extensão precisa para RODAR.
+# O código-fonte viaja compilado (em `out/`), não em TypeScript.
+
+# --- Código-fonte e build ---
 src/**
-.gitignore
-.yarnrc
-vsc-extension-quickstart.md
+**/*.ts
+**/*.map
 **/tsconfig.json
 **/eslint.config.mjs
-**/*.map
-**/*.ts
+
+# --- Pesquisa de mercado (22 MB de PDFs e HTML) ---
+# Sem esta regra, tudo isto iria dentro do .vsix publicado.
+research_mercado/**
+
+# --- Material interno ---
+docs/**
+scripts/**
+diario-dev-by-vitor/**
+CONTRIBUTING.md
+teste-manual.md
+vsc-extension-quickstart.md
+
+# --- Configuração de desenvolvimento e testes ---
+.vscode/**
+.vscode-test/**
+**/__tests__/**
+# Os testes de integração são compilados para out/test/, então `src/**` não os
+# pega: precisam ser excluídos pelo caminho de saída.
+out/test/**
 **/.vscode-test.*
+.gitignore
+.yarnrc
+
+# --- Metadados de repositório ---
+.github/**
+.gitattributes

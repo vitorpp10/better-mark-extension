@@ -11,7 +11,7 @@ import * as vscode from 'vscode';
  */
 suite('Markdownify — integração', () => {
 	test('a extensão está ativa e registrou os comandos', async () => {
-		const extension = vscode.extensions.getExtension('vitor.better-mark');
+		const extension = vscode.extensions.getExtension('vitor.markdownify');
 		assert.ok(extension, 'extensão não encontrada');
 
 		await extension.activate();

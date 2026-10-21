@@ -19,3 +19,14 @@ src/**/*.d.ts
 
 # Documento de teste manual (contém a sua chave? não — mas evita subir junto)
 /teste-manual.md
+
+# Material de estudo de mercado (22 MB de PDFs e HTML). É pesquisa local,
+# não faz parte do produto — e sem isto iria parar no .vsix publicado.
+/research_mercado/
+
+# Boilerplate do gerador de extensões do VS Code.
+/vsc-extension-quickstart.md
+
+# Arquivos de teste manual (resultado de colar texto real)
+/a.md
+/teste.md

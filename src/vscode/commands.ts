@@ -14,6 +14,7 @@ import { formatSelection } from '../core/formatter';
 import { AiError } from '../ai/provider';
 import { AiFormatter } from '../ai/formatter';
 import { getAiSettings, getFormatOptions, setApiKey, clearApiKey } from './config';
+import { isKeylessProvider } from '../ai/registry';
 
 /** Resultado de localizar o alvo do comando. */
 type Target =
@@ -108,9 +109,13 @@ async function runAiFormat(
 	const { editor, range, text } = target;
 	const settings = await getAiSettings(context);
 
-	if (!settings.apiKey) {
+	// Só exige chave quando o provedor realmente precisa de uma. O padrão
+	// (`proxy`) é keyless: a chave vive no servidor do Markdownify, e pedir
+	// chave aqui contradiria a promessa de "instale e use".
+	// O `ai/formatter.ts` repete esta checagem como rede de segurança.
+	if (!settings.apiKey && !isKeylessProvider(settings.providerId)) {
 		const action = await vscode.window.showWarningMessage(
-			'Markdownify: no API key configured.',
+			`Markdownify: "${settings.providerId}" needs an API key.`,
 			'Set API key',
 		);
 		if (action === 'Set API key') {
@@ -156,83 +161,53 @@ async function runAiFormat(
 /**
  * Comando central: um único botão que abre o menu de modos.
  *
- * POR QUE UM MENU: três botões separados na barra do editor poluem a
- * interface e o usuário não sabe qual escolher. Um botão só, com descrição
- * do risco de cada modo, deixa a decisão explícita no momento da escolha.
+ * POR QUE UM MENU SÓ: antes eram duas telas (offline vs. IA, depois preserve
+ * vs. restructure). O usuário tinha que classificar o próprio texto antes de
+ * ver a opção que queria. Agora as três opções aparecem de uma vez, cada uma
+ * dizendo o que faz e qual o risco — a decisão fica em um clique.
  */
 export function registerFormatMenuCommand(context: vscode.ExtensionContext): void {
 	const ai = new AiFormatter((message) => console.log(`[better-mark] ${message}`));
 
 	const disposable = vscode.commands.registerCommand('better-mark.menu', async () => {
-		type Mode = {
-			label: string;
-			detail: string;
-			offline?: boolean;
-			mode?: 'preserve' | 'restructure';
-		};
-
-		// DOIS modos, e não três. Antes havia "sem IA" e "IA preservando"
-		// separados, mas o resultado era quase idêntico — porque o motor
-		// offline ainda era fraco. Agora que ele resolve títulos, listas,
-		// recuo de PDF, rótulos em negrito e código inline, a IA virou um
-		// refinamento opcional sobre o mesmo resultado, não um modo à parte.
-		const offlineFirst = await vscode.window.showQuickPick(
+		const picked = await vscode.window.showQuickPick(
 			[
 				{
 					label: '$(check) Fix formatting',
 					detail:
 						'Offline: headings, lists, PDF indentation, bold labels and inline code. Free, instant, never touches your words.',
-					value: 'offline',
+					value: 'offline' as const,
 				},
 				{
 					label: '$(sparkle) Fix formatting + AI polish',
 					detail:
 						'Same as above, then the AI adds emphasis and code the text hints at. Validated word by word: if a word changes, the result is discarded.',
-					value: 'ai',
+					value: 'preserve' as const,
+				},
+				{
+					label: '$(wand) Rebuild loose text',
+					detail:
+						'RECOMMENDED for text copied from a PDF, site or chat. The AI rebuilds headings, lists and paragraphs, and may reword. Asks for confirmation first.',
+					value: 'restructure' as const,
 				},
 			],
 			{
-				title: 'Markdownify — fix formatting',
-				placeHolder: 'Offline handles almost everything; AI polishes further',
+				title: 'Markdownify — choose a mode',
+				placeHolder: 'Already Markdown? Pick the first. Raw text from a PDF or chat? Pick the last.',
 				matchOnDetail: true,
 			},
 		);
-
-		if (!offlineFirst) {
-			return;
-		}
-
-		if (offlineFirst.value === 'offline') {
-			await vscode.commands.executeCommand('better-mark.format');
-			return;
-		}
-
-		const modes: Mode[] = [
-			{
-				label: '$(check) Keep my words',
-				detail:
-					'Use when the text is already Markdown: the AI may only add formatting, never change a word.',
-				mode: 'preserve',
-			},
-			{
-				label: '$(wand) Rebuild loose text',
-				detail:
-					'Use for text copied from a PDF, site or chat with no formatting at all. The AI rebuilds headings, lists and paragraphs, and may reword more.',
-				mode: 'restructure',
-			},
-		];
-
-		const picked = await vscode.window.showQuickPick(modes, {
-			title: 'Markdownify — AI polish',
-			placeHolder: 'Is your text already Markdown, or loose text from a PDF?',
-			matchOnDetail: true,
-		});
 
 		if (!picked) {
 			return;
 		}
 
-		if (picked.mode === 'restructure') {
+		if (picked.value === 'offline') {
+			await vscode.commands.executeCommand('better-mark.format');
+			return;
+		}
+
+		if (picked.value === 'restructure') {
 			const confirm = await vscode.window.showWarningMessage(
 				'Rebuild mode lets the AI restructure your text, which changes more than the other modes. Continue?',
 				{ modal: true },
@@ -243,7 +218,7 @@ export function registerFormatMenuCommand(context: vscode.ExtensionContext): voi
 			}
 		}
 
-		await runAiFormat(context, ai, picked.mode ?? 'preserve');
+		await runAiFormat(context, ai, picked.value);
 	});
 
 	context.subscriptions.push(disposable);

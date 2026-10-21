@@ -31,11 +31,11 @@ import {
 /**
  * Endereço padrão do proxy.
  *
- * Durante o desenvolvimento aponta para o servidor local. Na publicação
- * passa a apontar para o domínio do deploy — trocar aqui é a única mudança
- * necessária para a extensão publicada.
+ * Aponta para o servidor publicado — é o que faz a extensão funcionar sem
+ * nenhuma configuração. Para desenvolver contra o servidor local, troque
+ * temporariamente para 'http://localhost:8787'.
  */
-export const DEFAULT_PROXY_URL = 'http://localhost:8787';
+export const DEFAULT_PROXY_URL = 'https://better-mark-server.onrender.com';
 
 export class ProxyProvider implements AiProvider {
 	readonly id = 'proxy';

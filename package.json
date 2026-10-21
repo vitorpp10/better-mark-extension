@@ -56,11 +56,6 @@
         "command": "better-mark.showStats",
         "title": "Show current configuration",
         "category": "Markdownify"
-      },
-      {
-        "command": "better-mark.helloWorld",
-        "title": "Hello World",
-        "category": "Markdownify"
       }
     ],
     "menus": {
@@ -98,7 +93,7 @@
       }
     ],
     "configuration": {
-      "title": "Better Mark",
+      "title": "Markdownify",
       "properties": {
         "betterMark.format.headingLevel": {
           "type": "number",
@@ -128,8 +123,9 @@
         },
         "betterMark.ai.provider": {
           "type": "string",
-          "default": "river",
+          "default": "proxy",
           "enum": [
+            "proxy",
             "river",
             "deepseek",
             "gemini",
@@ -138,13 +134,15 @@
             "openai"
           ],
           "enumDescriptions": [
-            "River AI (api.river.ai/v1) — gateway compatível com OpenAI",
-            "Google Gemini (AI Studio)",
-            "GLM / Zhipu AI",
-            "Nemotron via NVIDIA NIM",
-            "OpenAI"
+            "Markdownify (recomendado) — funciona sem configurar nada. A chave fica no servidor do Markdownify, nunca na sua máquina.",
+            "River AI (api.river.ai/v1) — use a sua própria chave",
+            "DeepSeek — use a sua própria chave",
+            "Google Gemini (AI Studio) — use a sua própria chave",
+            "GLM / Zhipu AI — use a sua própria chave",
+            "Nemotron via NVIDIA NIM — use a sua própria chave",
+            "OpenAI — use a sua própria chave"
           ],
-          "description": "Provedor de IA usado pelo comando de formatação com IA."
+          "description": "Provedor de IA usado pelo comando de formatação com IA. O padrão (proxy) funciona sem nenhuma configuração."
         },
         "betterMark.ai.model": {
           "type": "string",
@@ -154,7 +152,7 @@
         "betterMark.ai.apiKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "API key do provedor. **Prefira o comando `Better Mark: Configurar API key`**, que guarda a chave no SecretStorage criptografado do VS Code em vez de texto puro no `settings.json`.",
+          "markdownDescription": "API key do provedor. **Prefira o comando `Markdownify: Set API key`**, que guarda a chave no SecretStorage criptografado do VS Code em vez de texto puro no `settings.json`.",
           "scope": "machine"
         },
         "betterMark.ai.baseUrl": {
@@ -220,5 +218,14 @@
   "overrides": {
     "diff": "^8.0.4",
     "serialize-javascript": "^7.0.6"
-  }
+  },
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vitorpp10/markdownify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vitorpp10/markdownify/issues"
+  },
+  "homepage": "https://github.com/vitorpp10/markdownify#readme"
 }

@@ -1,5 +1,5 @@
 /**
- * better-mark — extensão VS Code.
+ * markdownify — extensão VS Code.
  *
  * Ponto de entrada. Responsabilidade única: registrar comandos e limpar
  * recursos. A lógica vive em:
@@ -46,7 +46,7 @@ export interface BetterMarkApi {
 }
 
 export function activate(context: vscode.ExtensionContext): BetterMarkApi {
-	console.log('better-mark ativa.');
+	console.log('markdownify ativa.');
 
 	registerFormatMenuCommand(context);
 	registerFormatCommand(context);
@@ -56,13 +56,6 @@ export function activate(context: vscode.ExtensionContext): BetterMarkApi {
 	registerShowStatsCommand(context);
 	registerStatusBarItem(context);
 
-	// Guarda contra o erro mais comum: rodar em arquivo que não é Markdown.
-	context.subscriptions.push(
-		vscode.commands.registerCommand('better-mark.helloWorld', () => {
-			void vscode.window.showInformationMessage('Markdownify: extensão ativa. Use o botão ✨ no editor.');
-		}),
-	);
-
 	context.subscriptions.push(
 		vscode.window.onDidChangeActiveTextEditor((editor) => {
 			setMarkdownContext(editor);
@@ -70,7 +63,7 @@ export function activate(context: vscode.ExtensionContext): BetterMarkApi {
 	);
 	setMarkdownContext(vscode.window.activeTextEditor);
 
-	console.log(`better-mark: idiomas suportados → ${SUPPORTED_LANGUAGES.join(', ')}`);
+	console.log(`markdownify: idiomas suportados → ${SUPPORTED_LANGUAGES.join(', ')}`);
 
 	// Retornar a API faz o VS Code publicá-la em `extension.exports`.
 	const api: BetterMarkApi = {
