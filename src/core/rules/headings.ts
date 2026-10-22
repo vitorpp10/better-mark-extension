@@ -166,6 +166,24 @@ function startsWithCommand(text: string): boolean {
 }
 
 /**
+ * marcador de pagina de PDF? (`Pagina 1 de 12`, `Page 3 of 10`, `12/30`).
+ *
+ * extraido de PDF, o numero de pagina vem como linha propria e isolada —
+ * exatamente o padrao que a heuristica de titulo adora. num documento de 12
+ * paginas isso gera 12 titulos falsos, todos no mesmo nivel das secoes reais.
+ */
+const PAGE_MARKER_RES = [
+	/^(pagina|page|pag|pág)\s*\d+(\s*(de|of|\/)\s*\d+)?$/i,
+	/^\d+\s*(\/|de|of)\s*\d+$/i,
+	/^[-—–\s]*\d{1,3}[-—–\s]*$/,
+];
+
+function isPageMarker(text: string): boolean {
+	const t = text.trim();
+	return PAGE_MARKER_RES.some((re) => re.test(t));
+}
+
+/**
  * a linha tem "cara de titulo"?
  *
  * caso que passa: `Health check`, `Database health check`, `Como usar`,
@@ -233,6 +251,17 @@ export function isHeadingLike(text: string): boolean {
 	if (plain.includes('\n')) {
 		return false;
 	}
+	// html/tag solta nao e titulo. `<img src="..." />` de badge virou
+	// `# <img ...>` na bateria 3 — e renderiza quebrado.
+	if (/^</.test(plain)) {
+		return false;
+	}
+	// cabecalho/rodape de pagina de PDF (`Pagina 1 de 12`, `Page 3 of 10`,
+	// `12/30`). virou `# Pagina 1 de 12` na bateria 3, e num PDF de 12
+	// paginas isso da 12 titulos falsos no mesmo nivel das secoes.
+	if (isPageMarker(plain)) {
+		return false;
+	}
 	// precisa ter pelo menos uma letra ou numero.
 	if (!/[\p{L}\p{N}]/u.test(plain)) {
 		return false;
@@ -251,6 +280,14 @@ export function isHeadingLike(text: string): boolean {
 	// linha comprida comecando com minuscula: quase certamente continuacao
 	// de frase ou texto corrido.
 	if (plain.length > PROSE_LENGTH && /^[a-zà-öø-ÿ]/.test(plain)) {
+		return false;
+	}
+	// FRASE INTEIRA em minusculas, sem nenhuma maiuscula. titulo de verdade
+	// tem inicial maiuscula ou e todo maiusculo. `just a single line of
+	// text` virou `# just a single line of text` na bateria 3 — e qualquer
+	// linha solta de prosa caia nisso. so vale pra 3+ palavras: titulo de
+	// uma ou duas palavras minusculas (`configuracao rapida`) ainda passa.
+	if (plain.split(/\s+/).length >= 3 && !/[A-ZÀ-Þ]/.test(plain)) {
 		return false;
 	}
 	// palavra unica toda em maiuscula: e SIGLA ou rotulo solto, nao titulo.

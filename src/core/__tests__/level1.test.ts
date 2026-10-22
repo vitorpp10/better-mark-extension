@@ -334,3 +334,53 @@ describe('Nível 1 — bateria 2: proteção do que já está certo', () => {
 		expect(fmt('Como usar\n')).toBe('# Como usar\n');
 	});
 });
+
+// bateria 3 (22/10): 35 casos cobrindo tipos de texto do mundo real —
+// PDF, chat de IA, doc técnica, jurídico, ata, acadêmico, bordas. Estes são
+// os falsos positivos de título que sobraram. Todos promoviam PROSA a
+// cabeçalho de seção, que é o pior erro possível num formatador.
+describe('Nível 1 — bateria 3: prosa que NÃO pode virar título', () => {
+	const fmt = (texto: string) => formatMarkdown(texto).text;
+
+	it('frase em minúsculas não vira título', () => {
+		// "just a single line of text" virava "# just a single line of text".
+		// qualquer linha solta de prosa caía nisso.
+		expect(fmt('just a single line of text')).toBe('just a single line of text');
+	});
+
+	it('instrução com comando NÃO vira título (a crase é outro nível)', () => {
+		// a crase em `npm install` é do nível 2; aqui o que importa é que a
+		// linha não foi promovida a cabeçalho.
+		expect(fmt('rode npm install\n')).not.toContain('#');
+	});
+
+	it('título de 1 ou 2 palavras minúsculas ainda passa', () => {
+		// a regra exige 3+ palavras, então estes continuam válidos
+		expect(fmt('configuracao\n')).toBe('# configuracao\n');
+		expect(fmt('como usar\n')).toBe('# como usar\n');
+	});
+
+	it('título com inicial maiúscula continua virando título', () => {
+		expect(fmt('System requirements\n')).toBe('# System requirements\n');
+		expect(fmt('Infrastructure setup\n')).toBe('# Infrastructure setup\n');
+	});
+
+	it('marcador de página de PDF não vira título', () => {
+		// num PDF de 12 páginas isso gerava 12 títulos falsos, todos no mesmo
+		// nível das seções reais.
+		expect(fmt('Pagina 1 de 12\n')).toBe('Pagina 1 de 12\n');
+		expect(fmt('Page 3 of 10\n')).toBe('Page 3 of 10\n');
+		expect(fmt('12/30\n')).toBe('12/30\n');
+	});
+
+	it('tag HTML solta não vira título', () => {
+		// badge de README virava "# <img src=... />" e renderizava quebrado
+		const badge = '<img src="https://img.shields.io/badge/build-passing-green" />\n';
+		expect(fmt(badge)).toBe(badge);
+	});
+
+	it('documento com cabeçalho de página mantém a hierarquia', () => {
+		const t = 'RELATORIO ANUAL 2026\n\nPagina 1 de 12\n\nIntroducao\n\nTexto aqui.\n';
+		expect(fmt(t)).toBe('# RELATORIO ANUAL 2026\n\nPagina 1 de 12\n\n# Introducao\n\nTexto aqui.\n');
+	});
+});

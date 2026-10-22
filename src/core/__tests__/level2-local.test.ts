@@ -116,8 +116,13 @@ describe('Nível 2A — menções a código', () => {
 		);
 	});
 
-	it('menção dentro de linha curta isolada vira título com crase', () => {
-		expect(formatMarkdown('rode npm install\n', L2).text).toBe('# rode `npm install`\n');
+	it('comando dentro de linha curta ganha crase, mas NÃO vira título', () => {
+		// comportamento antigo promovia a título (# rode `npm install`). isso
+		// estava errado: a linha é uma INSTRUÇÃO, não um rótulo de seção — e
+		// título começando com minúscula e verbo não existe na prática.
+		// corrigido na bateria 3 (22/10), junto com "just a single line of
+		// text" que virava título pelo mesmo motivo.
+		expect(formatMarkdown('rode npm install\n', L2).text).toBe('rode `npm install`\n');
 	});
 });
 
