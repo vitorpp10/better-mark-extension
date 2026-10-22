@@ -1,17 +1,22 @@
-    System requirements
+# introducao
 
-    The user must be able to log in with email and password.
-    The system must show a visual alert when an error occurs.
-    The administrator can export reports as CSV.
+o sistema foi projetado pra atender pequenas empresas
+ele precisa ser rapido e escalavel
 
-    Infrastructure setup
+- primeira funcionalidade
+- segunda funcionalidade
+- terceira funcionalidade
+1. quarto item
+2. quinto item
 
-    The database will be hosted on MongoDB.
-    Disk storage of 50 GB with 30 GB free.
-    Operating system based on Linux Kernel 5.
+# configuracao
 
-    Code example
+# hash sem espaco
 
-    function initSystem() {
-      return true;
-    }
+# para instalar execute `npm install` express cors dotenv
+
+# o arquivo fica em `src/core/formatter.ts`
+
+# conclusao
+
+# o sistema se mostrou viavel

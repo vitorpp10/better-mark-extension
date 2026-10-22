@@ -284,10 +284,15 @@ export function isHeadingLike(text: string): boolean {
 	}
 	// FRASE INTEIRA em minusculas, sem nenhuma maiuscula. titulo de verdade
 	// tem inicial maiuscula ou e todo maiusculo. `just a single line of
-	// text` virou `# just a single line of text` na bateria 3 — e qualquer
-	// linha solta de prosa caia nisso. so vale pra 3+ palavras: titulo de
-	// uma ou duas palavras minusculas (`configuracao rapida`) ainda passa.
+	// text` virou `# just a single line of text` na bateria 3. so vale pra
+	// 3+ palavras: titulo de uma ou duas palavras minusculas ainda passa.
 	if (plain.split(/\s+/).length >= 3 && !/[A-ZÀ-Þ]/.test(plain)) {
+		return false;
+	}
+	// uma ou duas palavras, toda em minusculas: rotulo solto de prosa,
+	// nao titulo. `configuracao` sozinho virava `# configuracao`,
+	// `viavel` virava `# viavel` na bateria 3.
+	if (plain.split(/\s+/).length <= 2 && !/[A-ZÀ-Þ]/.test(plain)) {
 		return false;
 	}
 	// palavra unica toda em maiuscula: e SIGLA ou rotulo solto, nao titulo.
