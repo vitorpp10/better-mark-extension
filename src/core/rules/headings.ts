@@ -23,7 +23,20 @@ import type { FormatContext, FormatOptions } from '../types';
 import { isBlank, stripInlineFormatting } from '../text';
 import { isListItem } from '../scanner';
 
-const EXISTING_HEADING_RE = /^ {0,3}(#{1,6})(\s|$)/;
+/**
+ * ja e titulo? aceita com espaco (`# x`) e tambem colado (`#x`).
+ *
+ * o colado e markdown invalido, mas acontece muito de copiar de site. antes
+ * a gente exigia espaco aqui, entao o `#titulo` caia no caminho de "linha
+ * que parece titulo" e saia como `# #titulo` — dobrando o jogo da velha.
+ * bug real, achado na bateria de 22/10.
+ *
+ * o `#` e greedy e o `(?!\#)` garante que a contagem pare no fim da sequencia:
+ * sem ele, `### Stack` casaria como um `#` so e o resto viraria conteudo.
+ */
+const EXISTING_HEADING_RE = /^ {0,3}(#{1,6})(?!\#)(?=\s|$|\S)/;
+/** colado sem espaco: `#titulo` — precisa de conserto, mas ja e titulo. */
+const GLUED_HEADING_RE = /^ {0,3}(#{1,6})(?!\#)(\S)/;
 const MAX_HEADING_LENGTH = 80;
 /**
  * a partir desse tamanho a linha "ja e uma frase": 80 e o limite duro do
@@ -79,10 +92,19 @@ export const headingsRule = {
 		}
 
 		// ja e titulo: registra o nivel pra inferir os proximos e nao mexe.
+		// se veio colado (`#titulo`), conserta o espaco em vez de deixar
+		// passar — markdown invalido nao deve sair do formatador.
 		const existing = line.match(EXISTING_HEADING_RE);
 		if (existing) {
 			ctx.state.existingLevels.push(existing[1].length);
 			ctx.state.headingEmitted = true;
+
+			const glued = line.match(GLUED_HEADING_RE);
+			if (glued) {
+				const indent = line.slice(0, line.length - line.trimStart().length);
+				return `${indent}${glued[1]} ${line.trimStart().slice(glued[1].length)}`;
+			}
+
 			return line;
 		}
 
@@ -119,14 +141,40 @@ export const headingsRule = {
 };
 
 /**
+ * comecou com verbo de terminal? entao e comando, nao titulo.
+ *
+ * lista curta de proposito: so o que aparece em doc de dev. se crescer
+ * demais vira falso negativo (titulo de verdade barrado), entao mantem
+ * enxuto.
+ */
+const CLI_VERBS = new Set([
+	'npm', 'npx', 'yarn', 'pnpm', 'bun',
+	'node', 'deno', 'python', 'python3', 'pip', 'pip3', 'poetry',
+	'git', 'docker', 'docker-compose', 'kubectl', 'helm', 'terraform',
+	'make', 'cmake', 'cargo', 'rustc', 'go', 'dotnet', 'mvn', 'gradle',
+	'apt', 'apt-get', 'yum', 'dnf', 'pacman', 'brew', 'snap',
+	'sudo', 'ssh', 'scp', 'curl', 'wget', 'chmod', 'chown', 'mkdir',
+	'ls', 'cd', 'cp', 'mv', 'rm', 'cat', 'grep', 'find', 'tar', 'unzip',
+	'java', 'javac', 'gcc', 'clang', 'bash', 'sh', 'zsh',
+	'composer', 'php', 'ruby', 'gem', 'rails', 'flutter', 'adb',
+]);
+
+function startsWithCommand(text: string): boolean {
+	const primeira = text.trim().split(/\s+/)[0]?.toLowerCase() ?? '';
+	const limpa = primeira.replace(/[^a-z0-9._-]/g, '');
+	return CLI_VERBS.has(limpa);
+}
+
+/**
  * a linha tem "cara de titulo"?
  *
  * caso que passa: `Health check`, `Database health check`, `Como usar`,
  * `Configuracao da API`, `Nivel 1`.
  *
  * caso que NAO passa: paragrafo (longo ou terminado em pontuacao de frase),
- * lista, bloco, linha de rotulo (`Baixar: algo`) e — bug corrigido na v0.3.0
- * — frase de prosa que contem formatacao inline.
+ * lista, bloco, linha de rotulo (`Baixar: algo`), comando de terminal
+ * (`npm install`, bug da bateria de 22/10) e — bug corrigido na v0.3.0 —
+ * frase de prosa que contem formatacao inline.
  */
 export function isHeadingLike(text: string): boolean {
 	// linha INDENTADA nao e titulo. recuo no inicio significa lista,
@@ -165,6 +213,22 @@ export function isHeadingLike(text: string): boolean {
 	if (/^\d+:\d+/.test(plain)) {
 		return false;
 	}
+	// comando de terminal nao e titulo. `npm install express` e
+	// `node server.js` viravam `# npm install express` na bateria de 22/10.
+	// o sinal e: comeca com um verbo de CLI conhecido.
+	if (startsWithCommand(plain)) {
+		return false;
+	}
+	// linha que comeca com minuscula E tem cara de continuação de frase:
+	// ja coberto abaixo pela regra de comprimento, mas `npm`/`node` sao
+	// minusculos e curtos, entao a checagem acima e o que resolve.
+	//
+	// e-mail, arroba de mencao e URL: linha com `@` ou link solto e prosa
+	// ou contato, nunca titulo. `Agradecimentos ao @barreto` virou titulo
+	// na bateria.
+	if (/[@]/.test(plain) || /^\S+:\/\//.test(plain)) {
+		return false;
+	}
 	// nao pode conter quebra interna.
 	if (plain.includes('\n')) {
 		return false;
@@ -187,6 +251,14 @@ export function isHeadingLike(text: string): boolean {
 	// linha comprida comecando com minuscula: quase certamente continuacao
 	// de frase ou texto corrido.
 	if (plain.length > PROSE_LENGTH && /^[a-zà-öø-ÿ]/.test(plain)) {
+		return false;
+	}
+	// palavra unica toda em maiuscula: e SIGLA ou rotulo solto, nao titulo.
+	// `MIT` sozinho virava `# MIT` (bug da bateria 2, 22/10). titulo de
+	// verdade com uma palavra maiuscula existe ("README"), mas e raro o
+	// bastante pra perder — e o estrago de promover `MIT`/`TODO`/`WIP` a
+	// titulo e maior.
+	if (/^[A-Z][A-Z0-9._-]{1,9}$/.test(plain)) {
 		return false;
 	}
 	return true;

@@ -241,3 +241,96 @@ describe('Nível 1 — texto colado de PDF/site (recuo de 4 espaços)', () => {
 		expect(result).toContain('    so uma linha aqui');
 	});
 });
+
+// bugs achados na bateria de 22/10 (12 textos de tipos diferentes).
+// os 4 primeiros vinham da mesma causa: EXISTING_HEADING_RE exigia espaco
+// depois do "#", entao o markdown colado caia no caminho de "linha que
+// parece titulo" e saia com o jogo da velha dobrado.
+describe('Nível 1 — bugs da bateria de 22/10', () => {
+	const fmt = (texto: string) => formatMarkdown(texto).text;
+
+	it('hash colado ganha espaço em vez de dobrar', () => {
+		expect(fmt('#titulo sem espaco\n')).toBe('# titulo sem espaco\n');
+	});
+
+	it('hash colado em vários níveis mantém o nível', () => {
+		expect(fmt('##Segunda secao\n')).toBe('## Segunda secao\n');
+		expect(fmt('###Terceira\n')).toBe('### Terceira\n');
+	});
+
+	it('comando de terminal não vira título', () => {
+		expect(fmt('npm install express cors dotenv\n')).toBe('npm install express cors dotenv\n');
+		expect(fmt('node server.js\n')).toBe('node server.js\n');
+		expect(fmt('sudo apt install libsfml-dev\n')).toBe('sudo apt install libsfml-dev\n');
+		expect(fmt('git commit -m "fix"\n')).toBe('git commit -m "fix"\n');
+	});
+
+	it('menção com @ não vira título', () => {
+		expect(fmt('Agradecimentos especiais ao @barreto e ao time\n')).toBe(
+			'Agradecimentos especiais ao @barreto e ao time\n',
+		);
+	});
+
+	it('título de verdade com verbo comum continua virando título', () => {
+		// "Como usar" e "Instalação" não são comandos
+		expect(fmt('Como usar\n')).toBe('# Como usar\n');
+		expect(fmt('Instalacao\n')).toBe('# Instalacao\n');
+	});
+
+	it('título com 3 níveis não perde os "#" extras', () => {
+		expect(fmt('### Stack: ferramentas\n')).toBe('### Stack: ferramentas\n');
+	});
+});
+
+// bateria 2 (22/10): casos de borda. O que importa aqui e que o motor NAO
+// estrague o que ja esta certo — tabela, codigo cercado, front matter,
+// citacao e HTML tem que sair intactos.
+describe('Nível 1 — bateria 2: proteção do que já está certo', () => {
+	const fmt = (texto: string) => formatMarkdown(texto).text;
+
+	it('tabela formatada fica intacta', () => {
+		const t = '# Relatorio\n\n| Nome | Valor |\n| --- | --- |\n| A | 1 |\n\nFim.\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('bloco de código cercado fica intacto', () => {
+		const t = '# Exemplo\n\n```python\ndef soma(a, b):\n    return a + b\n```\n\nFim.\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('front matter fica intacto', () => {
+		const t = '---\ntitle: Meu Post\ndate: 2026-10-22\n---\n\n# Conteudo\n\nTexto.\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('citação fica intacta', () => {
+		const t = '# Analise\n\n> A simplicidade e o ultimo grau.\n\nConcordo.\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('HTML fica intacto', () => {
+		const t = '# Pagina\n\n<div class="aviso">\n  <p>Cuidado!</p>\n</div>\n\nTexto.\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('lista aninhada fica intacta', () => {
+		const t = '# Estrutura\n\n- Frontend\n  - React\n  - Vue\n- Backend\n  - Node\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('markdown já perfeito não muda nada', () => {
+		const t = '# Titulo\n\nParagrafo.\n\n## Secao\n\n- um\n- dois\n\n`codigo` e **negrito**.\n';
+		expect(fmt(t)).toBe(t);
+	});
+
+	it('sigla sozinha não vira título', () => {
+		// `MIT` sozinho virava `# MIT`
+		expect(fmt('MIT\n')).toBe('MIT\n');
+		expect(fmt('TODO\n')).toBe('TODO\n');
+	});
+
+	it('título de verdade com uma palavra continua virando título', () => {
+		expect(fmt('Instalacao\n')).toBe('# Instalacao\n');
+		expect(fmt('Como usar\n')).toBe('# Como usar\n');
+	});
+});
