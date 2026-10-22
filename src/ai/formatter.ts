@@ -106,7 +106,7 @@ export class AiFormatter {
 		const shielded = shieldProtectedBlocks(text);
 		this.log(
 			`blindagem: ${shielded.blocks.length} bloco(s) protegido(s) ` +
-				`(${shielded.blocks.map((b) => b.kind).join(', ') || 'nenhum'})`,
+				`(${shielded.blocks.map((b) => b.kind).join(', ') || 'none'})`,
 		);
 
 		// [2] o deterministico roda PRIMEIRO: e gratis, e confiavel, e resolve
@@ -115,7 +115,7 @@ export class AiFormatter {
 			...settings.formatOptions,
 			protectBlocks: true,
 		});
-		this.log(`pré-formatação offline: ${preFormatted.changedLines} linha(s)`);
+		this.log(`offline pre-format: ${preFormatted.changedLines} line(s)`);
 
 		// se so tem bloco protegido, nao tem oq a ia fazer.
 		if (preFormatted.text.trim().length === 0) {
@@ -157,7 +157,7 @@ export class AiFormatter {
 			if (!restored.ok) {
 				throw new AiError(
 					'bad-response',
-					`A IA não preservou os marcadores de bloco protegido ` +
+					`The AI did not preserve the protected block markers ` +
 						`(${describeRestoreFailure(restored)}). Nothing was changed.`,
 				);
 			}
@@ -410,11 +410,11 @@ export function compareWords(before: string, after: string): { ok: boolean; reas
 		if (beforeWords[i] !== afterWords[i]) {
 			const de = beforeWords[i] ?? '(fim)';
 			const para = afterWords[i] ?? '(fim)';
-			return { ok: false, reason: `palavra ${i + 1}: "${de}" → "${para}"` };
+			return { ok: false, reason: `word ${i + 1}: "${de}" -> "${para}"` };
 		}
 	}
 
-	return { ok: false, reason: 'diferença estrutural no texto' };
+	return { ok: false, reason: 'structural difference in the text' };
 }
 
 /** tolerancia de encolhimento: a ia nao pode sumir com o conteudo. */
@@ -431,7 +431,7 @@ const MAX_LENGTH_RATIO = 2.5;
 export function validateAiResult(original: string, candidate: string): ValidationResult {
 	const trimmed = candidate.trim();
 	if (trimmed.length === 0) {
-		return { ok: false, reason: 'resposta vazia' };
+		return { ok: false, reason: 'empty response' };
 	}
 
 	const originalTrimmed = original.trim();
@@ -441,10 +441,10 @@ export function validateAiResult(original: string, candidate: string): Validatio
 
 	const ratio = trimmed.length / originalTrimmed.length;
 	if (ratio < MIN_LENGTH_RATIO) {
-		return { ok: false, reason: `resposta muito curta (${Math.round(ratio * 100)}% do original)` };
+		return { ok: false, reason: `response too short (${Math.round(ratio * 100)}% of the original)` };
 	}
 	if (ratio > MAX_LENGTH_RATIO) {
-		return { ok: false, reason: `resposta muito longa (${Math.round(ratio * 100)}% do original)` };
+		return { ok: false, reason: `response too long (${Math.round(ratio * 100)}% of the original)` };
 	}
 
 	if (/^(desculpe|sinto muito|i'?m sorry|não posso|i cannot)/i.test(trimmed)) {
@@ -453,7 +453,7 @@ export function validateAiResult(original: string, candidate: string): Validatio
 
 	// o modelo nao pode devolver codigo-fonte em vez do markdown pedido.
 	if (/^(def |function |class |import |const |let |var )/m.test(trimmed) && !/^#/m.test(trimmed)) {
-		return { ok: false, reason: 'a resposta parece código-fonte, não Markdown' };
+		return { ok: false, reason: 'the response looks like source code, not Markdown' };
 	}
 
 	return { ok: true };

@@ -33,7 +33,7 @@ export class GeminiProvider implements AiProvider {
 
 	async format(request: AiFormatRequest, config: AiProviderConfig): Promise<AiFormatResponse> {
 		if (!config.apiKey) {
-			throw new AiError('missing-key', 'Nenhuma API key configurada para o Gemini.');
+			throw new AiError('missing-key', 'No API key configured for Gemini.');
 		}
 
 		const base = (config.baseUrl ?? 'https://generativelanguage.googleapis.com/v1beta').replace(/\/+$/, '');
@@ -67,12 +67,12 @@ export class GeminiProvider implements AiProvider {
 			});
 		} catch (error) {
 			if (request.signal?.aborted) {
-				throw new AiError('cancelled', 'Requisição cancelada.', error);
+				throw new AiError('cancelled', 'Request cancelled.', error);
 			}
 			if (controller.signal.aborted) {
-				throw new AiError('timeout', `Timeout de ${config.timeoutMs}ms excedido.`, error);
+				throw new AiError('timeout', `Timeout of ${config.timeoutMs}ms exceeded.`, error);
 			}
-			throw new AiError('network', 'Não foi possível conectar ao Gemini.', error);
+			throw new AiError('network', 'Could not connect to Gemini.', error);
 		} finally {
 			clearTimeout(timeout);
 			request.signal?.removeEventListener('abort', onAbort);
@@ -83,7 +83,7 @@ export class GeminiProvider implements AiProvider {
 		try {
 			parsed = text.length > 0 ? (JSON.parse(text) as GeminiResponse) : {};
 		} catch (error) {
-			throw new AiError('bad-response', `Resposta não é JSON válido: ${text.slice(0, 200)}`, error);
+			throw new AiError('bad-response', `Response is not valid JSON: ${text.slice(0, 200)}`, error);
 		}
 
 		if (!response.ok) {
@@ -103,7 +103,7 @@ export class GeminiProvider implements AiProvider {
 			.join('');
 
 		if (typeof content !== 'string' || content.trim().length === 0) {
-			throw new AiError('bad-response', 'Resposta sem conteúdo de texto.', parsed);
+			throw new AiError('bad-response', 'Response has no text content.', parsed);
 		}
 
 		return {

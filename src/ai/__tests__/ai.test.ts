@@ -56,13 +56,13 @@ describe('validateAiResult', () => {
 	it('rejeita resposta muito curta (IA apagou conteúdo)', () => {
 		const result = validateAiResult('um texto bem longo '.repeat(20), 'curto');
 		expect(result.ok).toBe(false);
-		expect(result.reason).toContain('curta');
+		expect(result.reason).toContain('short');
 	});
 
 	it('rejeita resposta muito longa (IA inventou conteúdo)', () => {
 		const result = validateAiResult('curto', 'texto inventado '.repeat(50));
 		expect(result.ok).toBe(false);
-		expect(result.reason).toContain('longa');
+		expect(result.reason).toContain('long');
 	});
 
 	it('rejeita recusa do modelo', () => {

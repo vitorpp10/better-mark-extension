@@ -97,7 +97,7 @@ export class ProxyProvider implements AiProvider {
 			};
 
 			if (typeof data.markdown !== 'string' || data.markdown.length === 0) {
-				throw new AiError('bad-response', 'Proxy devolveu resposta vazia.');
+				throw new AiError('bad-response', 'Proxy returned an empty response.');
 			}
 
 			return {
@@ -118,13 +118,13 @@ export class ProxyProvider implements AiProvider {
 				throw new AiError(
 					request.signal?.aborted ? 'cancelled' : 'timeout',
 					request.signal?.aborted
-						? 'Operação cancelada.'
+						? 'Operation cancelled.'
 						: 'O servidor do Markdownify demorou demais para responder.',
 				);
 			}
 			throw new AiError(
 				'network',
-				'Não foi possível falar com o servidor do Markdownify. Ele está rodando?',
+				'Could not reach the Markdownify server. Is it running?',
 			);
 		} finally {
 			request.signal?.removeEventListener('abort', onAbort);
@@ -139,21 +139,21 @@ export class ProxyProvider implements AiProvider {
 			const retry = response.headers.get('X-RateLimit-Reset');
 			const quando = retry
 				? new Date(Number(retry) * 1000).toLocaleString()
-				: 'mais tarde';
+				: 'later';
 			return new AiError(
 				'rate-limit',
-				`Limite diário de formatações com IA atingido. Tente de novo em ${quando}.`,
+				`Daily limit of AI formats reached. Try again in ${quando}.`,
 			);
 		}
 
 		if (response.status === 413) {
-			return new AiError('bad-response', 'O texto é grande demais para o servidor.');
+			return new AiError('bad-response', 'The text is too large for the server.');
 		}
 
 		if (response.status === 502 || response.status === 504) {
 			return new AiError(
 				'network',
-				'O servidor do Markdownify não conseguiu falar com o provedor de IA.',
+				'The Markdownify server could not reach the AI provider.',
 			);
 		}
 

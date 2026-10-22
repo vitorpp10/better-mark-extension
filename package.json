@@ -95,25 +95,25 @@
           "default": 0,
           "minimum": 0,
           "maximum": 6,
-          "markdownDescription": "Nível do título gerado (`#`, `##`...). `0` (padrão) **infere** o nível a partir dos títulos já existentes no trecho; se não houver nenhum, usa `#`.",
+          "markdownDescription": "Heading level to generate (`#`, `##`...). `0` (default) **infers** the level from headings already present in the selection; if there are none, uses `#`.",
           "scope": "language-overridable"
         },
         "betterMark.format.protectBlocks": {
           "type": "boolean",
           "default": true,
-          "description": "Nunca alterar blocos de código, tabelas, front matter, HTML e citações. Recomendado manter ligado.",
+          "description": "Never alter code blocks, tables, front matter, HTML and blockquotes. Recommended to keep on.",
           "scope": "language-overridable"
         },
         "betterMark.level2.inlineCodeTerms": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Nível 2A: transformar rótulos de definição em código inline (`Conceito:` → `` `Conceito`: ``).",
+          "markdownDescription": "Level 2A: turn definition labels into inline code (`Concept:` → `` `Concept`: ``).",
           "scope": "language-overridable"
         },
         "betterMark.level2.inlineCodeMentions": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Nível 2A: colocar crase em arquivos, caminhos e comandos citados no texto (`npm install` → `` `npm install` ``). **Ligado por padrão.**",
+          "markdownDescription": "Level 2A: wrap files, paths and cited commands in backticks (`npm install` → `` `npm install` ``). **On by default.**",
           "scope": "language-overridable"
         },
         "betterMark.ai.provider": {
@@ -129,38 +129,38 @@
             "openai"
           ],
           "enumDescriptions": [
-            "Markdownify (recomendado) — funciona sem configurar nada. A chave fica no servidor do Markdownify, nunca na sua máquina.",
-            "River AI (api.river.ai/v1) — use a sua própria chave",
-            "DeepSeek — use a sua própria chave",
-            "Google Gemini (AI Studio) — use a sua própria chave",
-            "GLM / Zhipu AI — use a sua própria chave",
-            "Nemotron via NVIDIA NIM — use a sua própria chave",
-            "OpenAI — use a sua própria chave"
+            "Markdownify (recommended) — works with no setup. The key stays on the Markdownify server, never on your machine.",
+            "River AI (api.river.ai/v1) — use your own key",
+            "DeepSeek — use your own key",
+            "Google Gemini (AI Studio) — use your own key",
+            "GLM / Zhipu AI — use your own key",
+            "Nemotron via NVIDIA NIM — use your own key",
+            "OpenAI — use your own key"
           ],
-          "description": "Provedor de IA usado pelo comando de formatação com IA. O padrão (proxy) funciona sem nenhuma configuração."
+          "description": "AI provider used by the AI formatting command. The default (proxy) works with no configuration."
         },
         "betterMark.ai.model": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Modelo usado. Vazio = padrão do provedor (ex.: `deepseek-ai/DeepSeek-V4.1-Flash`, `deepseek-chat`, `gemini-2.0-flash`)."
+          "markdownDescription": "Model to use. Empty = provider default (e.g. `deepseek-ai/DeepSeek-V4.1-Flash`, `deepseek-chat`, `gemini-2.0-flash`)."
         },
         "betterMark.ai.apiKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "API key do provedor. **Prefira o comando `Markdownify: Set API key`**, que guarda a chave no SecretStorage criptografado do VS Code em vez de texto puro no `settings.json`.",
+          "markdownDescription": "Provider API key. **Prefer the `Markdownify: Set API key` command**, which stores the key in the VS Code encrypted SecretStorage instead of plain text in `settings.json`.",
           "scope": "machine"
         },
         "betterMark.ai.baseUrl": {
           "type": "string",
           "default": "",
-          "description": "URL base alternativa (para proxies, gateways ou modelos locais compatíveis com OpenAI). Vazio = padrão do provedor."
+          "description": "Alternative base URL (for proxies, gateways or local OpenAI-compatible models). Empty = provider default."
         },
         "betterMark.ai.timeoutMs": {
           "type": "number",
           "default": 30000,
           "minimum": 5000,
           "maximum": 120000,
-          "description": "Tempo máximo de espera pela resposta da IA, em milissegundos."
+          "description": "Maximum time to wait for the AI response, in milliseconds."
         },
         "betterMark.ai.emphasis": {
           "type": "string",
@@ -171,16 +171,16 @@
             "off"
           ],
           "enumDescriptions": [
-            "Deduz negrito, itálico e código a partir das pistas do texto (padrão).",
-            "Só padrões inequívocos: avisos e termos técnicos óbvios.",
-            "Não acrescenta ênfase nenhuma; apenas corrige estrutura."
+            "Infers bold, italic and code from the text cues (default).",
+            "Only unambiguous patterns: warnings and obvious technical terms.",
+            "Adds no emphasis at all; only fixes structure."
           ],
-          "markdownDescription": "Quanta liberdade a IA tem para deduzir formatação inline. O texto NUNCA é reescrito em nenhum modo — a validação rejeita a resposta se alguma palavra mudar."
+          "markdownDescription": "How much freedom the AI has to infer inline formatting. The text is NEVER rewritten in any mode — validation rejects the response if any word changes."
         },
         "betterMark.ai.instructions": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Instruções extras para a IA, somadas ao prompt interno. Ex.: `Responda em português e use títulos nível 2`."
+          "markdownDescription": "Extra instructions for the AI, added to the internal prompt. E.g. `Answer in English and use level 2 headings`."
         }
       }
     }

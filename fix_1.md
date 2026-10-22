@@ -1,4 +1,4 @@
-# introducao
+introducao
 
 o sistema foi projetado pra atender pequenas empresas
 ele precisa ser rapido e escalavel
@@ -9,14 +9,14 @@ ele precisa ser rapido e escalavel
 1. quarto item
 2. quinto item
 
-# configuracao
+configuracao
 
 # hash sem espaco
 
-# para instalar execute `npm install` express cors dotenv
+para instalar execute `npm install` express cors dotenv
 
-# o arquivo fica em `src/core/formatter.ts`
+o arquivo fica em `src/core/formatter.ts`
 
-# conclusao
+conclusao
 
-# o sistema se mostrou viavel
+o sistema se mostrou viavel

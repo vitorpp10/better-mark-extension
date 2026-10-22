@@ -45,7 +45,7 @@ export abstract class OpenAiCompatibleProvider implements AiProvider {
 
 	async format(request: AiFormatRequest, config: AiProviderConfig): Promise<AiFormatResponse> {
 		if (!config.apiKey) {
-			throw new AiError('missing-key', `Nenhuma API key configurada para ${this.label}.`);
+			throw new AiError('missing-key', `No API key configured for ${this.label}.`);
 		}
 
 		const baseUrl = (config.baseUrl ?? this.defaultBaseUrl()).replace(/\/+$/, '');
@@ -64,7 +64,7 @@ export abstract class OpenAiCompatibleProvider implements AiProvider {
 		const raw = await this.post(url, config, body, request.signal);
 		const content = raw.choices?.[0]?.message?.content;
 		if (typeof content !== 'string' || content.trim().length === 0) {
-			throw new AiError('bad-response', 'Resposta sem conteúdo de texto.', raw);
+			throw new AiError('bad-response', 'Response has no text content.', raw);
 		}
 
 		return {
@@ -104,12 +104,12 @@ export abstract class OpenAiCompatibleProvider implements AiProvider {
 			});
 		} catch (error) {
 			if (signal?.aborted) {
-				throw new AiError('cancelled', 'Requisição cancelada pelo usuário.', error);
+				throw new AiError('cancelled', 'Request cancelled by the user.', error);
 			}
 			if (controller.signal.aborted) {
-				throw new AiError('timeout', `Timeout de ${config.timeoutMs}ms excedido.`, error);
+				throw new AiError('timeout', `Timeout of ${config.timeoutMs}ms exceeded.`, error);
 			}
-			throw new AiError('network', 'Não foi possível conectar ao provedor.', error);
+			throw new AiError('network', 'Could not connect to the provider.', error);
 		} finally {
 			clearTimeout(timeout);
 			signal?.removeEventListener('abort', onAbort);
@@ -120,7 +120,7 @@ export abstract class OpenAiCompatibleProvider implements AiProvider {
 		try {
 			parsed = text.length > 0 ? (JSON.parse(text) as ChatResponse) : {};
 		} catch (error) {
-			throw new AiError('bad-response', `Resposta não é JSON válido: ${text.slice(0, 200)}`, error);
+			throw new AiError('bad-response', `Response is not valid JSON: ${text.slice(0, 200)}`, error);
 		}
 
 		if (!response.ok) {

@@ -268,28 +268,28 @@ export function registerShowStatsCommand(context: vscode.ExtensionContext): void
 		const editor = vscode.window.activeTextEditor;
 
 		const lines = [
-			'# Markdownify — configuração atual',
+			'# Markdownify — current settings',
 			'',
-			'## Nível 1 / 2A (offline)',
+			'## Level 1 / 2A (offline)',
 			'',
-			`- Nível do título: ${format.headingLevel === 0 ? 'inferido do documento' : `h${format.headingLevel}`}`,
-			`- Proteger blocos: ${format.protectBlocks ? 'sim' : 'NÃO (arriscado)'}`,
-			`- Código inline em rótulos: ${format.inlineCodeTerms ? 'sim' : 'não'}`,
-			`- Código inline em menções: ${format.inlineCodeMentions ? 'sim' : 'não'}`,
+			`- Heading level: ${format.headingLevel === 0 ? 'inferred from document' : `h${format.headingLevel}`}`,
+			`- Protect blocks: ${format.protectBlocks ? 'yes' : 'NO (risky)'}`,
+			`- Inline code in labels: ${format.inlineCodeTerms ? 'yes' : 'no'}`,
+			`- Inline code in mentions: ${format.inlineCodeMentions ? 'yes' : 'no'}`,
 			'',
-			'## Nível 2B (IA)',
+			'## Level 2B (AI)',
 			'',
-			`- Provedor: \`${ai.providerId}\``,
-			`- Modelo: \`${ai.model}\``,
-			`- API key: ${ai.apiKey ? 'configurada' : 'AUSENTE'}`,
+			`- Provider: \`${ai.providerId}\``,
+			`- Model: \`${ai.model}\``,
+			`- API key: ${ai.apiKey ? 'configured' : 'MISSING'}`,
 			`- Timeout: ${ai.timeoutMs} ms`,
-			`- Base URL: ${ai.baseUrl ?? 'padrão do provedor'}`,
+			`- Base URL: ${ai.baseUrl ?? 'provider default'}`,
 			'',
-			'## Editor ativo',
+			'## Active editor',
 			'',
-			`- Arquivo: ${editor ? `\`${editor.document.fileName}\`` : 'nenhum'}`,
-			`- Idioma: ${editor?.document.languageId ?? '—'}`,
-			`- Seleção: ${editor ? `${editor.document.getText(editor.selection).length} caractere(s)` : '—'}`,
+			`- File: ${editor ? `\`${editor.document.fileName}\`` : 'none'}`,
+			`- Language: ${editor?.document.languageId ?? '—'}`,
+			`- Selection: ${editor ? `${editor.document.getText(editor.selection).length} character(s)` : '—'}`,
 		];
 
 		const document = await vscode.workspace.openTextDocument({
@@ -326,8 +326,8 @@ function reportAiError(context: vscode.ExtensionContext, error: unknown): void {
 		return;
 	}
 
-	console.error('[better-mark] erro inesperado', error);
+	console.error('[better-mark] unexpected error', error);
 	void vscode.window.showErrorMessage(
-		`Markdownify: erro inesperado — ${error instanceof Error ? error.message : String(error)}`,
+		`Markdownify: unexpected error — ${error instanceof Error ? error.message : String(error)}`,
 	);
 }

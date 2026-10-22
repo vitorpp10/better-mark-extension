@@ -354,10 +354,18 @@ describe('Nível 1 — bateria 3: prosa que NÃO pode virar título', () => {
 		expect(fmt('rode npm install\n')).not.toContain('#');
 	});
 
-	it('título de 1 ou 2 palavras minúsculas ainda passa', () => {
-		// a regra exige 3+ palavras, então estes continuam válidos
-		expect(fmt('configuracao\n')).toBe('# configuracao\n');
-		expect(fmt('como usar\n')).toBe('# como usar\n');
+	it('palavra ou frase curta em minúsculas NÃO vira título', () => {
+		// o usuário reportou isso em uso real: `introducao`, `configuracao`
+		// e `conclusao` viravam `# ...` e poluíam o documento inteiro.
+		// título de verdade tem inicial maiúscula, então nada se perde.
+		expect(fmt('configuracao\n')).toBe('configuracao\n');
+		expect(fmt('conclusao\n')).toBe('conclusao\n');
+		expect(fmt('como usar\n')).toBe('como usar\n');
+	});
+
+	it('título com inicial maiúscula continua passando', () => {
+		expect(fmt('Configuracao\n')).toBe('# Configuracao\n');
+		expect(fmt('Como usar\n')).toBe('# Como usar\n');
 	});
 
 	it('título com inicial maiúscula continua virando título', () => {
