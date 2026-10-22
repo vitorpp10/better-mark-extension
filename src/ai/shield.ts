@@ -193,24 +193,79 @@ export function restoreProtectedBlocks(shielded: ShieldedText, modelOutput: stri
  * verificacao independente da recolocacao: confere que a quantidade e o
  * conteudo dos blocos frageis sobreviveram. serve de segunda barreira caso o
  * modelo devolva os sentinelas mas mexa no conteudo em volta.
+ *
+ * `allowNewBlocks` existe por causa do bug do texto recuado (achado em 22/10):
+ * texto colado de PDF vem TODO com 4 espacos no inicio. o markdown le isso
+ * como bloco de codigo, mas sem cerca o scanner nao ve bloco nenhum — entao a
+ * contagem antes e 0. quando a ia faz o trabalho certo e CERCA o codigo que
+ * estava solto, a contagem vira 1 e a barreira reprovava uma resposta
+ * correta. no modo `restructure` criar estrutura E o trabalho da ia, entao
+ * bloco NOVO e permitido. bloco original sumir ou mudar continua sendo erro.
+ *
+ * no modo `preserve` a comparacao segue estrita: la a ia nao deve mexer na
+ * estrutura, so nos marcadores.
  */
-export function compareProtectedStructure(before: string, after: string): { ok: boolean; reason?: string } {
+export function compareProtectedStructure(
+	before: string,
+	after: string,
+	options: { allowNewBlocks?: boolean } = {},
+): { ok: boolean; reason?: string } {
 	const a = shieldProtectedBlocks(before);
 	const b = shieldProtectedBlocks(after);
 
-	if (a.blocks.length !== b.blocks.length) {
+	const novos = b.blocks.length - a.blocks.length;
+	if (novos > 0 && !options.allowNewBlocks) {
 		return {
 			ok: false,
 			reason: `protected block count changed (${a.blocks.length} → ${b.blocks.length})`,
 		};
 	}
-
+	if (novos < 0) {
+		return {
+			ok: false,
+			reason: `protected block count changed (${a.blocks.length} → ${b.blocks.length})`,
+		};
+	}
+	if (novos > 0) {
+		// bloco novo so e aceitavel se os ORIGINAIS continuam intactos, na
+		// mesma ordem. sem isso a ia poderia "criar" bloco e sumir com um
+		// original no meio.
+		return originaisIntactos(a, b);
+	}
+	
 	for (let i = 0; i < a.blocks.length; i++) {
 		if (a.blocks[i].lines.join('\n') !== b.blocks[i].lines.join('\n')) {
 			return { ok: false, reason: `protected block #${i} (${a.blocks[i].kind}) was modified` };
 		}
 	}
 
+	return { ok: true };
+}
+
+/**
+ * com blocos NOVOS no fim, confere que cada bloco original ainda existe —
+ * na mesma ordem e com o mesmo conteudo. procura como subsequencia, porque os
+ * novos podem aparecer entre os originais.
+ */
+function originaisIntactos(a: ShieldedText, b: ShieldedText): { ok: boolean; reason?: string } {
+	let cursor = 0;
+	for (let i = 0; i < a.blocks.length; i++) {
+		const alvo = a.blocks[i].lines.join('\n');
+		let achou = -1;
+		for (let j = cursor; j < b.blocks.length; j++) {
+			if (b.blocks[j].lines.join('\n') === alvo) {
+				achou = j;
+				break;
+			}
+		}
+		if (achou === -1) {
+			return {
+				ok: false,
+				reason: `protected block #${i} (${a.blocks[i].kind}) was removed or modified`,
+			};
+		}
+		cursor = achou + 1;
+	}
 	return { ok: true };
 }
 

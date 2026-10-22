@@ -187,3 +187,66 @@ describe('blindagem — cenário exato do bug em produção', () => {
 		expect(compareProtectedStructure(real, restored.text).ok).toBe(true);
 	});
 });
+
+// bug real, achado em 22/10 enquanto a gente gravava o GIF de demonstração.
+// texto colado de PDF vem TODO recuado com 4 espaços: o markdown lê como
+// bloco de código, mas sem cerca o scanner não vê bloco nenhum. quando a IA
+// faz o trabalho certo e CERCA o código solto, a contagem subia de 0 pra 1 e
+// a barreira reprovava uma resposta correta — no caso de uso principal da
+// extensão. `allowNewBlocks` libera isso só no modo restructure.
+describe('compareProtectedStructure — bloco novo no restructure', () => {
+	// típico de PDF: tudo recuado, código solto no meio
+	const textoPdf = [
+		'    System requirements',
+		'',
+		'    The user must be able to log in.',
+		'',
+		'    Code example',
+		'',
+		'    function initSystem() {',
+		'      return true;',
+		'    }',
+		'',
+	].join('\n');
+
+	// resposta correta da IA: virou lista e cercou o código
+	const respostaIa = [
+		'# System requirements',
+		'',
+		'- The user must be able to log in.',
+		'',
+		'# Code example',
+		'',
+		'```javascript',
+		'function initSystem() {',
+		'  return true;',
+		'}',
+		'```',
+		'',
+	].join('\n');
+
+	it('aceita bloco novo quando allowNewBlocks (restructure)', () => {
+		const r = compareProtectedStructure(textoPdf, respostaIa, { allowNewBlocks: true });
+		expect(r.ok).toBe(true);
+	});
+
+	it('recusa bloco novo sem allowNewBlocks (preserve segue estrito)', () => {
+		const r = compareProtectedStructure(textoPdf, respostaIa);
+		expect(r.ok).toBe(false);
+		expect(r.reason).toContain('count changed');
+	});
+
+	it('bloco original removido continua sendo erro mesmo com allowNewBlocks', () => {
+		const comCerca = 'Veja:\n\n```js\nconst a = 1;\n```\n';
+		const semCerca = '# Veja\n\n- nada\n';
+		const r = compareProtectedStructure(comCerca, semCerca, { allowNewBlocks: true });
+		expect(r.ok).toBe(false);
+	});
+
+	it('bloco original modificado continua sendo erro mesmo com allowNewBlocks', () => {
+		const antes = 'A:\n\n```js\nconst a = 1;\n```\n\nB:\n\n```py\nx = 2\n```\n';
+		const depois = 'A:\n\n```js\nconst a = 999;\n```\n\nB:\n\n```py\nx = 2\n```\n\n```sh\nls\n```\n';
+		const r = compareProtectedStructure(antes, depois, { allowNewBlocks: true });
+		expect(r.ok).toBe(false);
+	});
+});

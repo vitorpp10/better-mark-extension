@@ -172,7 +172,14 @@ export class AiFormatter {
 			}
 
 			// segunda barreira, independente: a estrutura fragil sobreviveu?
-			const structure = compareProtectedStructure(text, restored.text);
+			//
+			// `allowNewBlocks` so no `restructure`. texto recuado de PDF nao
+			// tem bloco nenhum pro scanner, entao quando a ia CERCA o codigo
+			// que estava solto a contagem sobe de 0 pra 1 — e isso e o
+			// trabalho dela, nao um erro. bug real, achado em 22/10.
+			const structure = compareProtectedStructure(text, restored.text, {
+				allowNewBlocks: (settings.mode ?? 'preserve') === 'restructure',
+			});
 			if (!structure.ok) {
 				throw new AiError(
 					'bad-response',
