@@ -1,22 +1,22 @@
 /**
- * Nível 1 — Títulos.
+ * nivel 1 — titulos.
  *
- * A pergunta central não é "como fazer regex?", é:
- * **quais linhas realmente são um título?**
+ * a pergunta central nao e "como fazer regex?", e:
+ * **quais linhas realmente sao um titulo?**
  *
- * Regras (todas precisam passar — a lista de "não deve mudar" é tão
- * importante quanto a de "deve mudar"):
+ * regras (todas precisam passar — a lista do "nao deve mudar" vale tanto
+ * quanto a do "deve mudar"):
  *
- *  DEVE virar título:
- *   - linha curta (≤ 80 colunas), sem pontuação final de frase
- *   - primeira linha de uma seção, seguida por linha em branco ou por conteúdo
+ *  DEVE virar titulo:
+ *   - linha curta (<= 80 colunas), sem pontuacao final de frase
+ *   - primeira linha de uma secao, seguida por linha em branco ou por conteudo
  *
- *  NÃO DEVE mudar:
- *   - parágrafos longos ou com pontuação final (. ! ? , ; :)
- *   - linhas que já são título (`#`, `##`...)
- *   - itens de lista, citações, tabelas, código
- *   - linhas de continuação de um parágrafo anterior
- *   - a maioria das linhas de um bloco (apenas a primeira vira título)
+ *  NAO DEVE mudar:
+ *   - paragrafo longo ou com pontuacao final (. ! ? , ; :)
+ *   - linha que ja e titulo (`#`, `##`...)
+ *   - item de lista, citacao, tabela, codigo
+ *   - linha de continuacao de um paragrafo anterior
+ *   - a maioria das linhas de um bloco (so a primeira vira titulo)
  */
 
 import type { FormatContext, FormatOptions } from '../types';
@@ -26,38 +26,38 @@ import { isListItem } from '../scanner';
 const EXISTING_HEADING_RE = /^ {0,3}(#{1,6})(\s|$)/;
 const MAX_HEADING_LENGTH = 80;
 /**
- * A partir deste tamanho a linha "já é uma frase": 80 é o limite duro do
- * markdown, mas frases reais começam bem antes. Sem isso, subtítulos
- * descritivos como "Health check failed because the database is unavailable"
- * virariam `#` — exatamente o falso positivo que queremos evitar.
+ * a partir desse tamanho a linha "ja e uma frase": 80 e o limite duro do
+ * markdown, mas frase real comeca bem antes. sem isso, subtitulo descritivo
+ * como "Health check failed because the database is unavailable" viraria
+ * `#` — exatamente o falso positivo que a gente quer evitar.
  */
 const PROSE_LENGTH = 60;
 
 /**
- * Conectivos que praticamente só aparecem em frase, nunca em título.
- * "and"/"but"/"because" em inglês e os equivalentes em português.
+ * conectivo que praticamente so aparece em frase, nunca em titulo.
+ * "and"/"but"/"because" em ingles e os equivalentes em portugues.
  */
 const PROSE_CONNECTIVES =
 	/\b(because|and|but|however|although|therefore|que|porque|pois|quando|enquanto|embora|portanto|porém)\b/i;
 
 /**
- * Número de palavras acima do qual a linha é prosa, não título.
- * Títulos de verdade são curtos; 10 palavras já é generoso.
+ * numero de palavras acima do qual a linha e prosa, nao titulo.
+ * titulo de verdade e curto; 10 palavra ja e generoso.
  */
 const MAX_HEADING_WORDS = 10;
-/** Marcador de item de lista em qualquer nível. */
+/** marcador de item de lista em qualquer nivel. */
 const ORDERED_OR_BULLET_RE = /^([ \t]*)([-*+]|\d{1,9}[.)\]\-}])[ \t]+/;
 
 /**
- * True quando a linha contém ênfase inline (`**negrito**`, `__negrito__`,
- * `*itálico*`, `_itálico_`, `~~tachado~~`).
+ * true quando a linha tem enfase inline (`**negrito**`, `__negrito__`,
+ * `*italico*`, `_italico_`, `~~tachado~~`).
  *
- * Usado como VETO de título: um título raramente tem ênfase, mas uma frase
- * de prosa frequentemente tem. Sem este veto, "Vamos usar o **negrito**
- * aqui" virava "# Vamos usar o negrito aqui".
+ * usado como VETO de titulo: titulo raramente tem enfase, mas frase de prosa
+ * frequentemente tem. sem esse veto, "Vamos usar o **negrito** aqui" virava
+ * "# Vamos usar o negrito aqui".
  *
- * Cuidado com `*` de lista: um item `* comprado` NÃO é itálico. Por isso o
- * par de asteriscos precisa estar dentro da linha, com conteúdo entre eles.
+ * cuidado com `*` de lista: um item `* comprado` NAO e italico. por isso o
+ * par de asterisco precisa ta dentro da linha, com conteudo entre eles.
  */
 export function hasInlineEmphasis(text: string): boolean {
 	const body = text.replace(/^[ \t]*([-*+]|\d{1,9}[.)\]\-}])[ \t]+/, '');
@@ -78,7 +78,7 @@ export const headingsRule = {
 			return line;
 		}
 
-		// Já é título: registra o nível para inferir os próximos e não mexe.
+		// ja e titulo: registra o nivel pra inferir os proximos e nao mexe.
 		const existing = line.match(EXISTING_HEADING_RE);
 		if (existing) {
 			ctx.state.existingLevels.push(existing[1].length);
@@ -86,26 +86,26 @@ export const headingsRule = {
 			return line;
 		}
 
-		// Nunca transformar item de lista em título.
+		// nunca transforma item de lista em titulo.
 		if (isListItem(line)) {
 			return line;
 		}
 
-		// Só a PRIMEIRA linha de um bloco pode virar título. Se a linha
-		// anterior é texto (não vazia, não lista), isto é continuação.
+		// so a PRIMEIRA linha de um bloco pode virar titulo. se a linha
+		// anterior e texto (nao vazia, nao lista), isso e continuacao.
 		if (index > 0 && !isBlank(doc[index - 1])) {
 			return line;
 		}
 
-		// Um título nunca é seguido imediatamente por texto sem linha em branco:
-		// isso é o padrão de um parágrafo sendo "fatiado".
+		// titulo nunca e seguido direto por texto sem linha em branco:
+		// isso e o padrao de um paragrafo sendo "fatiado".
 		if (index + 1 < doc.length && !isBlank(doc[index + 1])) {
 			return line;
 		}
 
-		// A DECISÃO usa a linha CRUA, não a aparada: o recuo é parte da
-		// informação ("  texto" é lista/continuação, não título). Só o
-		// conteúdo aparado é que vai para o heading emitido.
+		// a DECISAO usa a linha CRUA, nao a aparada: o recuo e parte da
+		// informacao ("  texto" e lista/continuacao, nao titulo). so o
+		// conteudo aparado e que vai pro heading emitido.
 		if (!isHeadingLike(line)) {
 			return line;
 		}
@@ -119,29 +119,29 @@ export const headingsRule = {
 };
 
 /**
- * Uma linha é "cara de título"?
+ * a linha tem "cara de titulo"?
  *
- * Casos que passam: `Health check`, `Database health check`, `Como usar`,
- * `Configuração da API`, `Nível 1`.
+ * caso que passa: `Health check`, `Database health check`, `Como usar`,
+ * `Configuracao da API`, `Nivel 1`.
  *
- * Casos que NÃO passam: parágrafos (longos ou terminados em pontuação de
- * frase), listas, blocos, linhas de rótulo (`Baixar: algo`) e — bug corrigido
- * na v0.3.0 — frases de prosa que contêm formatação inline.
+ * caso que NAO passa: paragrafo (longo ou terminado em pontuacao de frase),
+ * lista, bloco, linha de rotulo (`Baixar: algo`) e — bug corrigido na v0.3.0
+ * — frase de prosa que contem formatacao inline.
  */
 export function isHeadingLike(text: string): boolean {
-	// Linha INDENTADA não é título. Um recuo no início significa lista,
-	// continuação de item ou bloco — nunca um heading. Sem este veto,
+	// linha INDENTADA nao e titulo. recuo no inicio significa lista,
+	// continuacao de item ou bloco — nunca um heading. sem esse veto,
 	// "    so uma linha aqui" (indentada) virava "# so uma linha aqui",
-	// promovendo um trecho de texto colado a título do documento.
+	// promovendo um trecho de texto colado a titulo do documento.
 	if (/^[ \t]/.test(text)) {
 		return false;
 	}
 
-	// BUG CORRIGIDO: antes usávamos `stripInlineFormatting` e decidíamos sobre
-	// o texto "limpo". Assim, "Vamos usar o **negrito** aqui" virava
-	// "# Vamos usar o negrito aqui" — uma frase de prosa promovida a título.
-	// Título de verdade quase nunca tem ênfase, então a presença de
-	// formatação inline é um sinal FORTE de prosa. Verificamos no texto cru.
+	// BUG CORRIGIDO: antes usava `stripInlineFormatting` e decidia sobre o
+	// texto "limpo". assim, "Vamos usar o **negrito** aqui" virava
+	// "# Vamos usar o negrito aqui" — frase de prosa promovida a titulo.
+	// titulo de verdade quase nunca tem enfase, entao formatacao inline e
+	// sinal FORTE de prosa. verifica no texto cru.
 	if (hasInlineEmphasis(text)) {
 		return false;
 	}
@@ -150,41 +150,41 @@ export function isHeadingLike(text: string): boolean {
 	if (plain.length === 0 || plain.length > MAX_HEADING_LENGTH) {
 		return false;
 	}
-	// Título não termina em pontuação de frase nem em vírgula/dois-pontos.
+	// titulo nao termina em pontuacao de frase nem em virgula/dois-pontos.
 	if (/[.!?,;:]$/.test(plain)) {
 		return false;
 	}
-	// Linha com `rotulo: valor` é definição/prosa, não título. Um título
-	// verdadeiro com dois-pontos no meio (`API: guia rápido`) também cai
-	// aqui — é uma perda aceitável para não estragar texto corrido.
+	// linha com `rotulo: valor` e definicao/prosa, nao titulo. titulo
+	// verdadeiro com dois-pontos no meio (`API: guia rapido`) tambem cai
+	// aqui — perda aceitavel pra nao estragar texto corrido.
 	if (/^[^\s:][^:]{0,39}:\s+\S/.test(plain)) {
 		return false;
 	}
-	// Proporção/medida (`16:9 proporcao`, `3:2 tela`) e horário (`10:30
-	// reunião`) têm dois-pontos colado, sem espaço — o teste acima não pega.
+	// proporcao/medida (`16:9 proporcao`, `3:2 tela`) e horario (`10:30
+	// reuniao`) tem dois-pontos colado, sem espaco — o teste acima nao pega.
 	if (/^\d+:\d+/.test(plain)) {
 		return false;
 	}
-	// Não pode conter quebras internas.
+	// nao pode conter quebra interna.
 	if (plain.includes('\n')) {
 		return false;
 	}
-	// Precisa ter pelo menos uma letra ou número.
+	// precisa ter pelo menos uma letra ou numero.
 	if (!/[\p{L}\p{N}]/u.test(plain)) {
 		return false;
 	}
 
-	// --- Daqui para baixo: heurísticas de "isto é prosa, não título" ---
-	// Nenhuma delas depende do tamanho: uma frase curta com conectivo
-	// ("Health check failed because the database is gone") também é prosa.
+	// --- daqui pra baixo: heuristica de "isso e prosa, nao titulo" ---
+	// nenhuma depende do tamanho: frase curta com conectivo
+	// ("Health check failed because the database is gone") tambem e prosa.
 	if (PROSE_CONNECTIVES.test(plain)) {
 		return false;
 	}
-	// Muitas palavras = frase. Títulos são curtos.
+	// muita palavra = frase. titulo e curto.
 	if (plain.split(/\s+/).length > MAX_HEADING_WORDS) {
 		return false;
 	}
-	// Linha comprida começando com minúscula: quase certamente continuação
+	// linha comprida comecando com minuscula: quase certamente continuacao
 	// de frase ou texto corrido.
 	if (plain.length > PROSE_LENGTH && /^[a-zà-öø-ÿ]/.test(plain)) {
 		return false;
@@ -193,10 +193,10 @@ export function isHeadingLike(text: string): boolean {
 }
 
 /**
- * Decide o nível do heading.
+ * decide o nivel do heading.
  *
  * - `options.headingLevel` entre 1 e 6 vence;
- * - `0` (padrão) = inferir do documento: usa o menor nível já presente;
+ * - `0` (padrao) = infere do documento: usa o menor nivel ja presente;
  * - sem nenhum heading no trecho, usa 1.
  */
 function resolveLevel(ctx: FormatContext, options: Required<FormatOptions>): number {
@@ -210,5 +210,5 @@ function resolveLevel(ctx: FormatContext, options: Required<FormatOptions>): num
 	return 1;
 }
 
-/** Reexportado para os testes explorarem a regex de item de lista. */
+/** reexportado pros testes explorarem a regex de item de lista. */
 export { ORDERED_OR_BULLET_RE };

@@ -67,7 +67,7 @@ describe('restoreProtectedBlocks — recolocação', () => {
 		const original = ['Antes', '', '```ts', 'x', '```', '', 'Depois'].join('\n');
 		const shielded = shieldProtectedBlocks(original);
 
-		// Modelo "comeu" o bloco de código.
+		// modelo "comeu" o bloco de codigo.
 		const sabotado = 'Antes\n\nDepois';
 		const restored = restoreProtectedBlocks(shielded, sabotado);
 
@@ -88,7 +88,7 @@ describe('restoreProtectedBlocks — recolocação', () => {
 	it('detecta sentinela CORROMPIDO pelo modelo', () => {
 		const original = ['```ts', 'x', '```'].join('\n');
 		const shielded = shieldProtectedBlocks(original);
-		// Modelo "embelezou" o marcador: virou título.
+		// modelo "embelezou" o marcador: virou titulo.
 		const sabotado = '## <!-- BM PROTECTED 0 -->';
 		const restored = restoreProtectedBlocks(shielded, sabotado);
 
@@ -147,7 +147,7 @@ describe('compareProtectedStructure — segunda barreira', () => {
 });
 
 describe('blindagem — cenário exato do bug em produção', () => {
-	// Este é o texto que a IA destruiu antes da blindagem existir.
+	// esse e o texto que a IA destruiu antes da blindagem existir.
 	const real = [
 		'Código de exemplo',
 		'',
@@ -177,7 +177,7 @@ describe('blindagem — cenário exato do bug em produção', () => {
 	it('mesmo com resposta sabotada, a estrutura volta intacta ou é rejeitada', () => {
 		const shielded = shieldProtectedBlocks(real);
 
-		// Modelo devolve lixo em volta, mas mantém os sentinelas.
+		// modelo devolve lixo em volta, mas mantem os sentinelas.
 		const resposta = `${SENTINEL(0)}\n\n${SENTINEL(1)}`;
 		const restored = restoreProtectedBlocks(shielded, resposta);
 

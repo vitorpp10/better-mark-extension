@@ -34,17 +34,12 @@
       },
       {
         "command": "better-mark.format",
-        "title": "Fix formatting (no AI)",
+        "title": "Fix formatting (no AI, instant)",
         "category": "Markdownify"
       },
       {
         "command": "better-mark.formatWithAi",
-        "title": "Improve with AI (keep my words)",
-        "category": "Markdownify"
-      },
-      {
-        "command": "better-mark.restructure",
-        "title": "Rebuild loose text into Markdown (AI)",
+        "title": "Format with AI (rebuilds everything)",
         "category": "Markdownify"
       },
       {

@@ -1,19 +1,19 @@
 /**
- * Pipeline de formatação.
+ * pipeline de formatacao.
  *
  *   texto
  *     ↓
- *   scanProtected   (marca código, front matter, tabelas, citações, HTML)
+ *   scanProtected   (marca codigo, front matter, tabelas, citacoes, HTML)
  *     ↓
- *   para cada linha:
- *       rule: lists          → padroniza `*`/`+`/`1)` para `-`/`1.`
- *       rule: headings       → decide o que É título de verdade
- *       rule: inline-code    → `Termo:` → `` `Termo`: `` (Nível 2A)
+ *   pra cada linha:
+ *       rule: lists          -> padroniza `*`/`+`/`1)` pra `-`/`1.`
+ *       rule: headings       -> decide oq E titulo de verdade
+ *       rule: inline-code    -> `Termo:` -> `` `Termo`: `` (nivel 2A)
  *     ↓
  *   join + preserva EOL
  *
- * O motor é PURO: não importa `vscode` e não toca em arquivo nenhum.
- * Isso é o que permite testar as regras por CLI sem abrir o VS Code.
+ * o motor e PURO: nao importa `vscode` e nao toca em arquivo nenhum.
+ * e isso que deixa testar as regras por CLI sem abrir o VS Code.
  */
 
 import type { DocumentLines, FormatOptions, FormatResult, FormatState, Rule } from './types';
@@ -24,7 +24,7 @@ import { listsRule } from './rules/lists';
 import { inlineCodeRule } from './rules/inline-code';
 import { indentRule } from './rules/indent';
 
-/** Ordem importa: listas antes de títulos, títulos antes de crase. */
+/** ordem importa: listas antes de titulos, titulos antes de crase. */
 export const DEFAULT_RULES: readonly Rule[] = [
 	indentRule,
 	listsRule,
@@ -32,7 +32,7 @@ export const DEFAULT_RULES: readonly Rule[] = [
 	inlineCodeRule,
 ];
 
-/** Opções padrão, já resolvidas (evita `undefined` espalhado nas regras). */
+/** opcoes padrao ja resolvidas (evita `undefined` espalhado nas regras). */
 export const DEFAULT_OPTIONS: Required<FormatOptions> = {
 	headingLevel: 0,
 	inlineCodeTerms: false,
@@ -41,15 +41,15 @@ export const DEFAULT_OPTIONS: Required<FormatOptions> = {
 };
 
 export interface FormatMarkdownResult extends FormatResult {
-	/** Linhas que NÃO foram tocadas por serem bloco protegido. */
+	/** linhas que NAO foram tocadas por serem bloco protegido. */
 	preservedLines: number;
 }
 
 /**
- * Formata um trecho de markdown.
+ * formata um trecho de markdown.
  *
- * @param text    texto original (seleção do usuário)
- * @param options opções; as ausentes caem em `DEFAULT_OPTIONS`
+ * @param text    texto original (selecao do user)
+ * @param options opcoes; as ausentes caem em `DEFAULT_OPTIONS`
  */
 export function formatMarkdown(text: string, options: FormatOptions = {}): FormatMarkdownResult {
 	const opts: Required<FormatOptions> = { ...DEFAULT_OPTIONS, ...options };
@@ -71,8 +71,8 @@ export function formatMarkdown(text: string, options: FormatOptions = {}): Forma
 		const original = doc.lines[i];
 		const kind = opts.protectBlocks ? scan.protectedKind[i] : null;
 
-		// Exposto às regras: algumas (como a de recuo) precisam saber que estão
-		// dentro de um bloco frágil e não devem mexer em nada.
+		// exposto pras regras: algumas (tipo a de recuo) precisam saber que tao
+		// dentro de um bloco fragil e nao devem mexer em nada.
 		ctx.state.insideProtected = kind !== null;
 
 		if (kind !== null) {
@@ -114,11 +114,11 @@ function newState(): FormatState {
 }
 
 /**
- * Formata apenas linhas que o usuário selecionou de verdade.
+ * formata so as linhas que o user selecionou de verdade.
  *
- * O VS Code pode entregar uma seleção "aparada": `formatMarkdown` é aplicado
- * ao núcleo e as bordas em branco voltam intactas, para não introduzir
- * diferenças de espaçamento que o usuário não pediu.
+ * o VS Code pode entregar uma selecao aparada: `formatMarkdown` roda no nucleo
+ * e as bordas em branco voltam intactas, pra nao introduzir diferenca de
+ * espacamento que o user nao pediu.
  */
 export function formatSelection(text: string, options: FormatOptions = {}): FormatMarkdownResult {
 	const leading = text.match(/^\s*/)?.[0] ?? '';

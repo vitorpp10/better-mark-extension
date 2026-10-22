@@ -46,9 +46,8 @@ Click the **✨** button in the editor title bar (or `Ctrl+Alt+M`) and pick a mo
 
 | Mode | For | Your words |
 | --- | --- | --- |
-| **Fix formatting** (offline) | Text that's already Markdown | Never touched |
-| **+ AI polish** | Same, but harder cases | Never touched — **verified** |
-| **Rebuild loose text** | Raw text from a PDF, site or chat | Can be rewritten (asks first) |
+| **Fix formatting** (offline) | Quick cleanup. Instant, no network | Never touched |
+| **Format with AI** ⭐ | Anything, including broken Markdown | Can be reworded (asks first) |
 
 **The offline engine runs first, always.** Headings, lists, indentation, bold
 labels and inline code are handled by rules — free, instant, offline. AI is a

@@ -1,55 +1,54 @@
 /**
- * Nível 1 — Listas.
+ * nivel 1 — listas.
  *
- * O usuário escreve listas "quase markdown" e a extensão padroniza:
+ * o user escreve lista quase markdown e a gente padroniza:
  *
- *   `* item`   → `- item`
- *   `+ item`   → `- item`
- *   `1) item`  → `1. item`
- *   `1- item`  → `1. item`
+ *   `* item`   -> `- item`
+ *   `+ item`   -> `- item`
+ *   `1) item`  -> `1. item`
+ *   `1- item`  -> `1. item`
  *
- * Regras de segurança:
- *  - a indentação (tabulação) é preservada exatamente;
- *  - o separador entre marcador e texto vira UM espaço (CommonMark);
- *  - cada nível de indentação mantém seu próprio contador, então
- *    sublistas numeradas continuam corretas;
- *  - linhas que não são item de lista não são tocadas.
+ * cuidados:
+ *  - a indentacao fica intacta;
+ *  - sobra 1 espaco entre marcador e texto (commonmark);
+ *  - cada nivel tem contador proprio, entao sublista numerada nao quebra;
+ *  - o que nao e item de lista fica quieto.
  */
 
 const BULLET_RE = /^([ \t]*)([*+])([ \t]+)(\S.*)$/;
 /**
- * Marcadores ordenados aceitos: `1.`, `1)`, `1-`, `1]`, `1}`.
+ * marcador ordenado aceito: `1.`, `1)`, `1-`, `1]`, `1}`.
  *
- * `)` e `.` são os usuais; `-`, `]` e `}` aparecem quando a pessoa digita
- * uma enumeração informal (`1- item`, `1] item`). Sem isso, `1] item` não
- * era reconhecido como lista e acabava virando título.
+ * `.` e `)` sao os normais. `-`, `]` e `}` aparecem quando o user digita
+ * enumeracao informal (`1- item`, `1] item`). sem isso o `1] item` nao era
+ * reconhecido como lista e virava titulo.
  */
 const ORDERED_RE = /^([ \t]*)(\d{1,9})[.)\]\-}]([ \t]+)(\S.*)$/;
-/** `-   item` com espaçamento irregular (já canônico no marcador). */
+/** `-   item` com espaco sobrando (marcador ja ta canonico). */
 const CANONICAL_RE = /^([ \t]*)(-|\d{1,9}\.)[ \t]{2,}([^\s].*)$/;
 
-/** Marcadores ordenados reconhecidos por `isListItem`/`listMarker`. */
+/** marcadores ordenados que o isListItem/listMarker reconhece. */
 export const ORDERED_MARKER_RE = /^([ \t]*)(\d{1,9})[.)\]\-}][ \t]+\S/;
 
 export const listsRule = {
 	id: 'lists',
 
 	apply(line: string, _index: number, _doc: string[], _ctx: unknown): string {
-		// `* item` / `+ item` → `- item`
+		// `* item` / `+ item` -> `- item`
 		const bullet = line.match(BULLET_RE);
 		if (bullet) {
 			const [, indent, , , content] = bullet;
 			return `${indent}- ${content}`;
 		}
 
-		// `1) item` / `1- item` → `1. item`
+		// `1) item` / `1- item` -> `1. item`
 		const ordered = line.match(ORDERED_RE);
 		if (ordered) {
 			const [, indent, number, , content] = ordered;
 			return `${indent}${number}. ${content}`;
 		}
 
-		// Já é canônico, mas com espaçamento irregular: `-   item` → `- item`.
+		// ja ta canonico mas com espaco sobrando: `-   item` -> `- item`.
 		const canonical = line.match(CANONICAL_RE);
 		if (canonical) {
 			const [, indent, marker, content] = canonical;
@@ -60,14 +59,14 @@ export const listsRule = {
 	},
 };
 
-/** True quando a lista já está no formato canônico (`-` ou `N.`). */
+/** true quando a lista ja ta canonica (`-` ou `N.`). */
 export function isCanonicalListItem(line: string): boolean {
 	return CANONICAL_RE.test(line);
 }
 
 /**
- * Extrai a chave de indentação de um item (para contadores por nível).
- * Retorna null quando a linha não é item de lista.
+ * pega a chave de indentacao do item (pra contar por nivel).
+ * devolve null quando a linha nao e item de lista.
  */
 export function listIndentKey(line: string): string | null {
 	const match = line.match(/^([ \t]*)(?:[-*+]|\d{1,9}[.)])[ \t]/);

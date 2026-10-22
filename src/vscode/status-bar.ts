@@ -1,24 +1,23 @@
 /**
- * Item na barra de status.
+ * item na barra de status.
  *
- * POR QUE SÓ UM EMOJI: o usuário pediu "tire o texto e no lugar um texto um
- * emoji que combine para ser mais prático". Texto longo na barra de status
- * ocupa espaço, compete com os itens nativos do VS Code e enche a tela de
- * ruído. Um símbolo basta, porque o tooltip explica o resto.
+ * porque so emoji: texto longo na barra ocupa espaco, briga com os itens
+ * nativos do vs code e enche a tela de ruido. um simbolo basta, o tooltip
+ * explica o resto.
  *
- * O item só aparece em arquivos Markdown — em um arquivo de código ele seria
- * ruído puro, já que a extensão não faz nada ali.
+ * so aparece em arquivo markdown — em arquivo de codigo seria ruido puro,
+ * ja que a extensao nao faz nada ali.
  *
- * O clique abre o mesmo menu do botão da barra do editor, para que o usuário
- * tenha um caminho só.
+ * o clique abre o mesmo menu do botao da barra do editor, pra ter um
+ * caminho so.
  */
 
 import * as vscode from 'vscode';
 
 /**
- * Emoji do item. `✒️` (caneta) remete a "escrever/reformatar texto" e tem
- * boa legibilidade em temas claro e escuro — diferente de emojis coloridos,
- * que somem em alguns temas.
+ * emoji do item. `✒️` (caneta) lembra "escrever/reformatar texto" e le bem
+ * em tema claro e escuro — diferente de emoji colorido, que some em alguns
+ * temas.
  */
 const ICON = '✒️';
 
@@ -37,7 +36,7 @@ export function registerStatusBarItem(context: vscode.ExtensionContext): void {
 		].join('\n'),
 	);
 
-	/** Mostra o item apenas em Markdown. */
+	/** so mostra o item em markdown. */
 	const update = (editor: vscode.TextEditor | undefined): void => {
 		if (editor?.document.languageId === 'markdown') {
 			item.show();

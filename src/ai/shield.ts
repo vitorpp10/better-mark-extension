@@ -1,45 +1,45 @@
 /**
- * Blindagem de blocos protegidos para a camada de IA.
+ * blindagem de blocos protegidos pra camada de IA.
  *
- * MOTIVO DE EXISTIR:
- * O teste real com a River AI mostrou que o modelo DESTRÓI estrutura mesmo
- * quando o prompt manda preservar. Um bloco ```` ```ts ```` virou `# ts`, uma
- * tabela perdeu os pipes, e duas linhas de parágrafo foram fundidas em uma.
- * O prompt não é suficiente: modelos desobedecem.
+ * porque existe:
+ * teste real com a River AI mostrou que o modelo destroi estrutura mesmo com o
+ * prompt mandando preservar. um bloco ```` ```ts ```` virou `# ts`, uma tabela
+ * perdeu os pipes e duas linhas de paragrafo viraram uma. prompt nao basta:
+ * modelo desobedece.
  *
- * SOLUÇÃO: o modelo nunca vê o que é frágil.
+ * solucao: o modelo nunca ve oq e fragil.
  *
- *   1. EXTRAI os blocos protegidos (código, tabela, front matter, citação)
+ *   1. EXTRAI os blocos protegidos (codigo, tabela, front matter, citacao)
  *      e troca cada um por um sentinela: `<!-- BM-PROTECTED 0 | CODE | ... -->`
- *   2. A IA formata só o texto restante (prosa de verdade)
+ *   2. a IA formata so o texto que sobra (prosa de verdade)
  *   3. DEVOLVE os blocos originais no lugar dos sentinelas
- *   4. Se algum sentinela sumiu, a resposta é rejeitada — nada é escrito
+ *   4. se algum sentinela sumiu, a resposta e rejeitada — nada e escrito
  *
- * O pior caso passa a ser "a IA não fez nada" em vez de "a IA estragou o
- * README do usuário". Essa é a diferença que importa.
+ * o pior caso vira "a IA nao fez nada" em vez de "a IA estragou o README do
+ * user". essa e a diferenca que importa.
  */
 
 import { scanProtected } from '../core/scanner';
 import { splitLines } from '../core/text';
 
 /**
- * Marcador de posição. Usa comentário HTML porque:
+ * marcador de posicao. usa comentario HTML porque:
  *  - passa intacto pela maioria dos formatadores de markdown;
- *  - é reconhecível sem ambiguidade;
- *  - aparece em uma linha própria, o que facilita a recolocação.
+ *  - e reconhecivel sem ambiguidade;
+ *  - fica em linha propria, oq facilita a recolocacao.
  *
- * DESCOBERTA IMPORTANTE: quando dois ou mais marcadores ficam em linhas
- * consecutivas (blocos protegidos colados), o modelo tende a "limpar" o que
- * parece redundante e apaga alguns. Por isso o marcador agora:
- *  - traz o TIPO do bloco (`CODE`, `TABLE`, `META`, `QUOTE`), o que dá
+ * descoberta importante: quando dois ou mais marcadores caem em linhas
+ * consecutivas (blocos protegidos colados), o modelo tende a "limpar" oq
+ * parece redundante e apaga alguns. por isso o marcador agora:
+ *  - traz o TIPO do bloco (`CODE`, `TABLE`, `META`, `QUOTE`), oq da
  *    significado a cada linha em vez de parecer duplicata;
- *  - traz um ID explícito que o modelo consegue citar;
- *  - termina com uma instrução visível, não é só um comentário vazio.
+ *  - traz um ID explicito que o modelo consegue citar;
+ *  - termina com uma instrucao visivel, nao e so um comentario vazio.
  */
 const SENTINEL_PREFIX = '<!-- BM-PROTECTED';
 const SENTINEL_RE = /^[ \t]*<!-- BM-PROTECTED (\d+) \| ([A-Z]+) \|[^>]*-->[ \t]*$/;
 
-/** Rótulo legível por tipo de bloco protegido. */
+/** rotulo legivel por tipo de bloco protegido. */
 const KIND_LABEL: Record<string, string> = {
 	fence: 'CODE',
 	table: 'TABLE',
@@ -48,33 +48,33 @@ const KIND_LABEL: Record<string, string> = {
 	blockquote: 'QUOTE',
 };
 
-/** Monta a linha-sentinela de um bloco. */
+/** monta a linha-sentinela de um bloco. */
 function sentinelFor(index: number, kind: string): string {
 	const label = KIND_LABEL[kind] ?? 'BLOCK';
 	return `${SENTINEL_PREFIX} ${index} | ${label} | nao altere esta linha -->`;
 }
 
 export interface ExtractedBlock {
-	/** Índice do bloco, na ordem em que aparece. */
+	/** indice do bloco, na ordem em que aparece. */
 	index: number;
-	/** Linhas originais, exatamente como estavam. */
+	/** linhas originais, exatamente como estavam. */
 	lines: string[];
-	/** Rótulo legível para diagnóstico. */
+	/** rotulo legivel pra diagnostico. */
 	kind: string;
 }
 
 export interface ShieldedText {
-	/** Texto com os blocos trocados por sentinelas. Vai para a IA. */
+	/** texto com os blocos trocados por sentinelas. vai pra IA. */
 	text: string;
-	/** Blocos guardados, para recolocar depois. */
+	/** blocos guardados, pra recolocar depois. */
 	blocks: ExtractedBlock[];
-	/** Terminador de linha detectado. */
+	/** terminador de linha detectado. */
 	eol: string;
 }
 
 /**
- * Separa o texto em "prosa" (que a IA pode formatar) e "blocos frágeis"
- * (que ela nunca vê).
+ * separa o texto em "prosa" (oq a IA pode formatar) e "blocos frageis"
+ * (oq ela nunca ve).
  */
 export function shieldProtectedBlocks(text: string): ShieldedText {
 	const doc = splitLines(text);
@@ -104,8 +104,8 @@ export function shieldProtectedBlocks(text: string): ShieldedText {
 			continue;
 		}
 
-		// Agrupa linhas consecutivas do mesmo tipo em um único bloco, para que
-		// o sentinela ocupe uma linha só no lugar de uma tabela inteira.
+		// agrupa linhas consecutivas do mesmo tipo num bloco so, pra o
+		// sentinela ocupar uma linha em vez de uma tabela inteira.
 		if (current && current.kind === kind) {
 			current.lines.push(doc.lines[i]);
 			continue;
@@ -121,22 +121,22 @@ export function shieldProtectedBlocks(text: string): ShieldedText {
 
 export interface RestoreResult {
 	ok: boolean;
-	/** Texto com os blocos recolocados (válido apenas se `ok`). */
+	/** texto com os blocos recolocados (so vale se `ok`). */
 	text: string;
-	/** Blocos que o modelo apagou ou alterou. */
+	/** blocos que o modelo apagou ou alterou. */
 	missing: number[];
-	/** Blocos que o modelo duplicou. */
+	/** blocos que o modelo duplicou. */
 	duplicated: number[];
-	/** Sinal de que o modelo reescreveu o sentinela de forma irreconhecível. */
+	/** sinal de que o modelo reescreveu o sentinela de forma irreconhecivel. */
 	mangled: boolean;
 }
 
 /**
- * Recoloca os blocos originais no lugar dos sentinelas.
+ * recoloca os blocos originais no lugar dos sentinelas.
  *
- * Se o modelo apagou, duplicou ou corrompeu um sentinela, `ok` vem `false` e
- * a resposta inteira deve ser descartada. Não tentamos "consertar": um
- * conserto adivinhatório pode apagar o código do usuário.
+ * se o modelo apagou, duplicou ou corrompeu um sentinela, `ok` vem `false` e a
+ * resposta inteira tem que ser descartada. nao tentamos "consertar": um
+ * conserto chutado pode apagar o codigo do user.
  */
 export function restoreProtectedBlocks(shielded: ShieldedText, modelOutput: string): RestoreResult {
 	const outputLines = splitLines(modelOutput).lines;
@@ -147,8 +147,8 @@ export function restoreProtectedBlocks(shielded: ShieldedText, modelOutput: stri
 	for (const line of outputLines) {
 		const match = line.match(SENTINEL_RE);
 		if (!match) {
-			// Detecta sentinela deformado (`BM-PROTECTED` sem o formato exato):
-			// é sinal de que o modelo mexeu no que não devia.
+			// detecta sentinela deformado (`BM-PROTECTED` sem o formato exato):
+			// e sinal de que o modelo mexeu no q nao devia.
 			if (/BM[-_ ]?PROTECTED/i.test(line)) {
 				mangled = true;
 			}
@@ -188,11 +188,11 @@ export function restoreProtectedBlocks(shielded: ShieldedText, modelOutput: stri
 }
 
 /**
- * Compara a estrutura protegida antes e depois.
+ * compara a estrutura protegida antes e depois.
  *
- * Verificação independente da recolocação: confere que a quantidade e o
- * conteúdo dos blocos frágeis sobreviveram. Serve como segunda barreira caso
- * o modelo devolva os sentinelas mas mexa no conteúdo ao redor deles.
+ * verificacao independente da recolocacao: confere que a quantidade e o
+ * conteudo dos blocos frageis sobreviveram. serve de segunda barreira caso o
+ * modelo devolva os sentinelas mas mexa no conteudo em volta.
  */
 export function compareProtectedStructure(before: string, after: string): { ok: boolean; reason?: string } {
 	const a = shieldProtectedBlocks(before);
@@ -214,7 +214,7 @@ export function compareProtectedStructure(before: string, after: string): { ok: 
 	return { ok: true };
 }
 
-/** True quando o texto contém apenas um sentinela (e nada de prosa). */
+/** true quando o texto so tem um sentinela (e nada de prosa). */
 export function isOnlySentinel(text: string): boolean {
 	const trimmed = text.trim();
 	return trimmed.length > 0 && SENTINEL_RE.test(trimmed);

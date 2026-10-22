@@ -1,47 +1,47 @@
 /**
- * Nível 2 — Parte A (local, determinística, sem IA).
+ * nivel 2 — parte A (local, deterministica, sem IA).
  *
- * Transforma rótulos de definição em código inline:
+ * transforma rotulo de definicao em codigo inline:
  *
- *   `Conceito:`            → `` `Conceito`: ``
- *   `GET /users:`          → `` `GET /users`: ``
- *   `timeout_ms:`          → `` `timeout_ms`: ``
+ *   `Conceito:`            -> `` `Conceito`: ``
+ *   `GET /users:`          -> `` `GET /users`: ``
+ *   `timeout_ms:`          -> `` `timeout_ms`: ``
  *
- * E menções a código no meio da frase:
+ * e menciona codigo no meio da frase:
  *
- *   "rode o npm install"   → "rode o `npm install`"
- *   "edite extension.ts"   → "edite `extension.ts`"
+ *   "rode o npm install"   -> "rode o `npm install`"
+ *   "edite extension.ts"   -> "edite `extension.ts`"
  *
- * Regras de segurança (o que NÃO deve mudar):
- *  - textos que já têm crase não são tocados;
- *  - linhas de código, tabelas, citações e front matter ficam de fora;
- *  - títulos recebem o rótulo formatado, mas nunca ganham crase extra;
- *  - frases normais não são reescritas: só casamos padrões conhecidos.
+ * cuidados:
+ *  - texto que ja tem crase nao e tocado;
+ *  - linha de codigo, tabela, citacao e front matter ficam de fora;
+ *  - titulo recebe o rotulo formatado, mas nunca ganha crase extra;
+ *  - frase normal nao e reescrita: so casa padrao conhecido.
  *
- * IMPORTANTE: a regra de crase NUNCA transforma uma linha de parágrafo em
- * título. Ela só mexe em linhas que já passaram pela regra de títulos.
+ * importante: a regra de crase NUNCA vira linha de paragrafo em titulo.
+ * ela so mexe em linha que ja passou pela regra de titulos.
  */
 
 import { isInlineCode, stripIndent, wrapInlineCode } from '../text';
 
-/** Termos que quase sempre são código quando aparecem isolados. */
+/** termo que quase sempre e codigo quando aparece isolado. */
 const CODE_TERM_RE =
 	/^[A-Za-z_][A-Za-z0-9_]*(?:[.\-/\\][A-Za-z0-9_.\-/\\]+)*$/;
 
 /**
- * Extensões de arquivo que valem crase quando citadas na frase.
+ * extensao de arquivo que vale crase quando citada na frase.
  *
- * Inclui as linguagens de C/C++ (cpp, hpp, cc, h) — faltavam na primeira
- * versão, e `app/jogo.cpp` num README de projeto C++ não recebia crase.
+ * inclui as linguagens de C/C++ (cpp, hpp, cc, h) — faltavam na primeira
+ * versao, e `app/jogo.cpp` num README de projeto C++ nao recebia crase.
  */
 const FILE_EXTENSIONS =
 	'md|ts|tsx|js|jsx|mjs|cjs|json|ya?ml|toml|ini|env|css|scss|html|hpp|cpp|cc|cxx|hh|hxx|h|py|rb|go|rs|java|kt|sh|bat|ps1|sql|txt|lock|gitignore|dockerignore|ttf|otf|woff2?|ogg|wav|mp3|png|jpe?g|gif|svg|ico|pdf|vsix';
 
 /**
- * Caminho de arquivo ou diretório citado na frase.
+ * caminho de arquivo ou diretorio citado na frase.
  *
- * O lookbehind permite `../` e `./` (caminhos relativos) mas ainda bloqueia
- * início no meio de outra palavra.
+ * o lookbehind libera `../` e `./` (caminho relativo) mas ainda bloqueia
+ * inicio no meio de outra palavra.
  */
 const FILE_MENTION_RE = new RegExp(
 	`(?<![\\w\`.])((?:\.{1,2}/|/)?(?:[\\w.\\-]+/)*[\\w.\\-]+\\.(?:${FILE_EXTENSIONS}))(?![\\w\`])`,
@@ -49,11 +49,11 @@ const FILE_MENTION_RE = new RegExp(
 );
 
 /**
- * Extensão de arquivo SOZINHA citada na frase: "os arquivos .cpp", "um .json".
+ * extensao de arquivo SOZINHA citada na frase: "os arquivos .cpp", "um .json".
  *
- * Sem nome antes, `FILE_MENTION_RE` não casa. Mas `.cpp` no meio de uma frase
- * é inequivocamente referência a arquivo — não existe palavra que comece com
- * ponto e seja uma extensão conhecida.
+ * sem nome antes o `FILE_MENTION_RE` nao casa. mas `.cpp` no meio da frase e
+ * referencia a arquivo sem duvida — nao existe palavra que comece com ponto e
+ * seja uma extensao conhecida.
  */
 const BARE_EXT_RE = new RegExp(
 	`(?<![\\w\`.])[.](?:${FILE_EXTENSIONS})(?![\\w\`])`,
@@ -61,81 +61,81 @@ const BARE_EXT_RE = new RegExp(
 );
 
 /**
- * Caminhos de DIRETÓRIO terminados em barra: `../assets/`, `src/core/`.
+ * caminho de DIRETORIO terminado em barra: `../assets/`, `src/core/`.
  *
- * Sem o `/` final não dá para distinguir de uma palavra comum, então só
- * marcamos quando a barra está lá — sinal inequívoco de caminho.
+ * sem o `/` final nao da pra distinguir de palavra comum, entao so marca
+ * quando a barra ta la — sinal sem duvida de caminho.
  */
 const DIR_MENTION_RE = /(?<![\w`])((?:\.{1,2}\/|\/)?(?:[\w.\-]+\/){1,})(?![\w`])/g;
 
 /**
- * Constantes e identificadores TÉCNICOS no meio da frase.
+ * constante e identificador TECNICO no meio da frase.
  *
- * Exige um sinal forte para não marcar palavras comuns: UPPER_SNAKE
+ * exige sinal forte pra nao marcar palavra comum: UPPER_SNAKE
  * (`TAM_CELULA`), camelCase (`parseConfig`), snake_case com underscore
- * (`timeout_ms`) ou chamada de função (`preencher_tabuleiro()`).
+ * (`timeout_ms`) ou chamada de funcao (`preencher_tabuleiro()`).
  */
 const IDENTIFIER_RE =
 	/(?<![\w`])((?:[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|(?:[a-z][a-zA-Z0-9]*[A-Z][a-zA-Z0-9]*)|(?:[a-z][a-z0-9]*(?:_[a-z0-9]+)+))(?:\(\))?(?![\w`])/g;
 
 /**
- * Comandos conhecidos que merecem crase quando citados.
+ * comando conhecido que merece crase quando citado.
  *
- * Cobre também a forma com `sudo` na frente (`sudo apt install ...`), que é
- * como a maioria dos READMEs escreve instruções de instalação.
+ * cobre tambem a forma com `sudo` na frente (`sudo apt install ...`), que e
+ * como a maioria dos README escreve instrucao de instalacao.
  */
 const COMMAND_RE =
 	/(?<!`)\b(?:sudo\s+)?(?:apt(?:-get)?|dnf|yum|pacman|brew|snap|flatpak|npm|npx|pnpm|yarn|pip3?|python3?|node|git|docker|docker-compose|kubectl|helm|cargo|rustc|go|make|cmake|g\+\+|clang|deno|bun|uv)\s+(?:run|install|add|remove|update|upgrade|test|build|init|clone|commit|push|pull|fetch|checkout|rebase|merge|status|log|diff|exec|start|dev|create|new|publish|ci|serve|watch|lint|fmt|clean)\b(?![^\s`]*`)/g;
 
 /**
- * Palavras comuns em português/inglês que aparecem como rótulo de prosa
- * ("Baixar: ...", "Resultado: ..."). Um identificador de código quase nunca
- * coincide com elas, então usamos como veto.
+ * palavra comum em portugues/ingles que aparece como rotulo de prosa
+ * ("Baixar: ...", "Resultado: ..."). um identificador de codigo quase nunca
+ * coincide com elas, entao usa como veto.
  *
- * Não é uma lista exaustiva: é o suficiente para os falsos positivos reais.
+ * nao e lista exaustiva: e o suficiente pros falsos positivos reais.
  */
 const PROSE_LABEL_WORDS = new Set([
-	// português
+	// portugues
 	'baixar', 'executar', 'entrada', 'saida', 'resultado', 'exemplo', 'nota',
 	'ideia', 'estrutura', 'stack', 'conceito', 'atencao', 'aviso', 'cuidado',
 	'passo', 'objetivo', 'descricao', 'instalacao', 'configuracao', 'uso',
 	'como', 'quando', 'onde', 'porque', 'motivo', 'resumo', 'introducao',
 	'requisitos', 'referencia', 'links', 'licenca', 'creditos', 'autor',
-	// inglês
+	// ingles
 	'note', 'warning', 'example', 'input', 'output', 'result', 'summary',
 	'steps', 'goal', 'usage', 'install', 'setup', 'requirements', 'license',
 	'introduction', 'overview', 'reference', 'caution', 'tip', 'todo',
 ]);
 
-/** Remove acentos para comparar com a lista de palavras de prosa. */
+/** tira acento pra comparar com a lista de palavras de prosa. */
 function deaccent(text: string): string {
 	return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-/** Comandos que já carregam o suficiente para valerem crase sozinhos. */
+/** comando que ja carrega o suficiente pra valer crase sozinho. */
 const MENTION_PRONE_COMMANDS = /\b(npm|npx|pnpm|yarn|pip3?|git|docker|kubectl|cargo)\b/;
 
 /**
- * `LABEL_RE` casa o rótulo antes dos dois-pontos. Aceitamos crases dentro
- * dele porque a regra de menções pode ter rodado antes (`npm install:`).
+ * `LABEL_RE` casa o rotulo antes dos dois-pontos. aceita crase dentro dele
+ * porque a regra de mencoes pode ter rodado antes (`npm install:`).
  */
 const LABEL_RE = /^([^:]{1,40}?):(?=\s|$)/;
 
 /**
- * `Termo:` → `` `Termo`: ``.
+ * `Termo:` -> `` `Termo`: ``.
  *
- * Só aplica quando o que vem antes dos dois-pontos "parece código":
- * identificador, caminho, método HTTP ou comando. Rótulos em português com
- * acento ou várias palavras normais ficam como estão.
+ * so aplica quando oq vem antes dos dois-pontos "parece codigo":
+ * identificador, caminho, metodo HTTP ou comando. rotulo em portugues com
+ * acento ou varias palavras normais ficam como tao.
  */
 export function formatDefinitionLabel(line: string): string {
 	const indent = line.match(/^[ \t]*/)?.[0] ?? '';
 	const body = stripIndent(line);
 
-	// Um TÍTULO não recebe negrito. Ele já é destaque por si só: deixar
-	// "# **Feature 1:** Criar botão" é redundante e feio. Mas o código inline
-	// ainda vale dentro dele ("## Como usar `npm install`"), então caímos
-	// apenas na regra de menções, nunca na de rótulos.
+	// titulo nao recebe negrito. ele ja e destaque sozinho: deixar
+	// "# **Feature 1:** Criar botao" e redundante e feio. mas o codigo inline
+	// ainda vale dentro dele ("## Como usar `npm install`"), entao caimos
+	// so na regra de mencoes, nunca na de rotulos.
 	const headingMatch = body.match(/^(#{1,6}\s+)(.*)$/);
 	if (headingMatch) {
 		return line;
@@ -145,10 +145,10 @@ export function formatDefinitionLabel(line: string): string {
 }
 
 function formatLabelInText(text: string): string {
-	// O rótulo pode vir depois de um marcador de lista: `- Projeto: Sudoku`.
-	// `LABEL_RE` é ancorado no início, então recuamos o marcador antes de
-	// casar e o devolvemos intacto. Sem isso, o padrão mais comum de um
-	// README (lista de rótulos) não recebia negrito nenhum.
+	// o rotulo pode vir depois de um marcador de lista: `- Projeto: Sudoku`.
+	// `LABEL_RE` e ancorado no inicio, entao recua o marcador antes de casar
+	// e devolve ele intacto. sem isso o padrao mais comum de um README (lista
+	// de rotulos) nao recebia negrito nenhum.
 	const marker = text.match(/^([ \t]*(?:[-*+]|\d{1,9}[.)\]\-}])[ \t]+)/);
 	if (marker) {
 		const inner = formatLabelInText(text.slice(marker[1].length));
@@ -165,24 +165,24 @@ function formatLabelInText(text: string): string {
 		return text;
 	}
 
-	// O rótulo já veio em crase da regra de menções (`npm install:`):
-	// basta recolocar os dois-pontos fora do código, sem duplicar crase.
+	// o rotulo ja veio em crase da regra de mencoes (`npm install:`):
+	// basta recolocar os dois-pontos fora do codigo, sem duplicar crase.
 	if (isInlineCode(label)) {
 		return text;
 	}
 
-	// O rótulo pode conter crase de uma menção no meio (`npm install`):
-	// nesse caso envolvemos a coisa toda, dos dois-pontos para fora.
+	// o rotulo pode conter crase de uma mencao no meio (`npm install`):
+	// nesse caso envolve a coisa toda, dos dois-pontos pra fora.
 	if (looksLikeCodeLabel(stripBackticks(label)) || (MENTION_PRONE_COMMANDS.test(label) && /\s/.test(label))) {
 		const rest = text.slice(label.length + 1);
 		return `${wrapInlineCode(stripBackticks(label))}:${rest}`;
 	}
 
-	// Rótulo de PROSA em negrito: "Projeto: Sudoku" → "**Projeto:** Sudoku".
+	// rotulo de PROSA em negrito: "Projeto: Sudoku" -> "**Projeto:** Sudoku".
 	//
-	// É o padrão mais visível de um README e o que o offline não fazia. Só
-	// aplicamos quando o rótulo é curto e parece um nome de campo, não uma
-	// frase inteira que por acaso tem dois-pontos.
+	// e o padrao mais visivel de um README e oq o offline nao fazia. so aplica
+	// quando o rotulo e curto e parece nome de campo, nao uma frase inteira que
+	// por acaso tem dois-pontos.
 	if (isBoldWorthyLabel(label)) {
 		const rest = text.slice(label.length + 1);
 		return `**${label}:**${rest}`;
@@ -192,16 +192,16 @@ function formatLabelInText(text: string): string {
 }
 
 /**
- * Decide se um rótulo de prosa merece negrito.
+ * decide se um rotulo de prosa merece negrito.
  *
- * Critérios (todos precisam valer):
- *  - 1 a 4 palavras: rótulos de campo são curtos ("Sistema operacional",
- *    "Fonts e assets"). "o que eu quis dizer com isso" não é rótulo;
- *  - não termina em pontuação de frase;
- *  - não é uma frase com verbo no meio (heurística: sem vírgula);
- *  - não começa com artigo/preposição solta ("o", "a", "de", "em"...), que
- *    indica que o dois-pontos faz parte da frase e não de um rótulo;
- *  - não é uma linha de código nem contém crase.
+ * criterios (todos precisam valer):
+ *  - 1 a 4 palavras: rotulo de campo e curto ("Sistema operacional",
+ *    "Fonts e assets"). "oq eu quis dizer com isso" nao e rotulo;
+ *  - nao termina em pontuacao de frase;
+ *  - nao e frase com verbo no meio (heuristica: sem virgula);
+ *  - nao comeca com artigo/preposicao solta ("o", "a", "de", "em"...), que
+ *    indica que os dois-pontos fazem parte da frase e nao de um rotulo;
+ *  - nao e linha de codigo nem contem crase.
  */
 function isBoldWorthyLabel(label: string): boolean {
 	const clean = label.trim();
@@ -214,7 +214,7 @@ function isBoldWorthyLabel(label: string): boolean {
 	if (clean.includes(',') || /[.!?]$/.test(clean)) {
 		return false;
 	}
-	// Já é rótulo em negrito: não duplica.
+	// ja e rotulo em negrito: nao duplica.
 	if (/^\*\*.*\*\*$/.test(clean)) {
 		return false;
 	}
@@ -224,27 +224,28 @@ function isBoldWorthyLabel(label: string): boolean {
 		return false;
 	}
 
-	// Artigo/preposição/conjunção no início indica prosa, não rótulo.
+	// artigo/preposicao/conjuncao no inicio indica prosa, nao rotulo.
 	const first = deaccent(words[0].toLowerCase());
 	if (BOLD_LABEL_STOPWORDS.has(first)) {
 		return false;
 	}
 
-	// Precisa começar com maiúscula: rótulos começam capitalizados.
+	// precisa comecar com maiuscula: rotulo comeca capitalizado.
+	// (o `À-Þ` da regex cobre letra acentuada maiuscula.)
 	if (!/^[A-ZÀ-Þ]/.test(clean)) {
 		return false;
 	}
 
-	// Rótulo com palavra interrogativa no início é pergunta/frase, não campo:
-	// "Como isso funciona:" e "Por que usar:" são prosa.
+	// rotulo com palavra interrogativa no inicio e pergunta/frase, nao campo:
+	// "Como isso funciona:" e "Por que usar:" sao prosa.
 	const interrogative = /^(como|por que|porque|quando|onde|qual|quais|quem|o que|what|how|why|when|where|which|who)\b/i;
 	if (interrogative.test(clean)) {
 		return false;
 	}
 
-	// Frase que COMEÇA com verbo no imperativo é instrução, não rótulo:
-	// "Veja o exemplo abaixo:" e "Considere o seguinte:" são prosa.
-	// Rótulos de campo começam com substantivo ("Projeto", "Fonts e assets").
+	// frase que COMECA com verbo no imperativo e instrucao, nao rotulo:
+	// "Veja o exemplo abaixo:" e "Considere o seguinte:" sao prosa.
+	// rotulo de campo comeca com substantivo ("Projeto", "Fonts e assets").
 	if (IMPERATIVE_STARTS.has(deaccent(words[0].toLowerCase()))) {
 		return false;
 	}
@@ -253,9 +254,9 @@ function isBoldWorthyLabel(label: string): boolean {
 }
 
 /**
- * Verbos que, no início, denunciam instrução/frase em vez de rótulo.
- * Lista pequena e de alta precisão: só o que aparece de fato como falso
- * positivo. Um rótulo de verdade ("Projeto", "Execução") não está aqui.
+ * verbo que, no inicio, entrega instrucao/frase em vez de rotulo.
+ * lista pequena e precisa: so oq aparece de fato como falso positivo.
+ * rotulo de verdade ("Projeto", "Execucao") nao ta aqui.
  */
 const IMPERATIVE_STARTS = new Set([
 	'veja', 'vejam', 'considere', 'confira', 'note', 'observe', 'lembre',
@@ -264,8 +265,8 @@ const IMPERATIVE_STARTS = new Set([
 ]);
 
 /**
- * Palavras que, no início, indicam frase e não rótulo de campo.
- * Conservador de propósito: falso negativo (não botar negrito) é barato;
+ * palavra que, no inicio, indica frase e nao rotulo de campo.
+ * conservador de proposito: falso negativo (nao botar negrito) e barato;
  * falso positivo (botar negrito numa frase) incomoda.
  */
 const BOLD_LABEL_STOPWORDS = new Set([
@@ -275,40 +276,40 @@ const BOLD_LABEL_STOPWORDS = new Set([
 	'it', 'if', 'when', 'where', 'how', 'why', 'is', 'are',
 ]);
 
-/** Remove crases para inspeção do conteúdo. */
+/** tira as crases pra inspecionar o conteudo. */
 function stripBackticks(text: string): string {
 	return text.replace(/`/g, '');
 }
 
-/** Decide se o rótulo é "coisa de código" e não prosa. */
+/** decide se o rotulo e "coisa de codigo" e nao prosa. */
 export function looksLikeCodeLabel(label: string): boolean {
 	const trimmed = label.trim();
 	if (trimmed.length === 0) {
 		return false;
 	}
-	// URL não leva crase: `https:` viraria lixo.
+	// URL nao leva crase: `https:` viraria lixo.
 	if (/^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed)) {
 		return false;
 	}
-	// Número puro (ex.: `1:` em enumeração) não é código.
+	// numero puro (ex.: `1:` em enumeracao) nao e codigo.
 	if (/^\d+$/.test(trimmed)) {
 		return false;
 	}
-	// Prosa: "Baixar:", "Resultado:", "Nota:" são rótulos de texto, não código.
+	// prosa: "Baixar:", "Resultado:", "Nota:" sao rotulo de texto, nao codigo.
 	if (PROSE_LABEL_WORDS.has(deaccent(trimmed.toLowerCase()))) {
 		return false;
 	}
-	// Método HTTP ou verbo de API seguido de rota: `GET /users`, `POST /v1/x`.
+	// metodo HTTP ou verbo de API seguido de rota: `GET /users`, `POST /v1/x`.
 	if (/^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+\S+$/.test(trimmed)) {
 		return true;
 	}
-	// Caminho, arquivo ou membro: `src/core`, `index.ts`, `obj.method`.
-	// Vem ANTES do identificador simples, porque `index.ts` também casaria.
+	// caminho, arquivo ou membro: `src/core`, `index.ts`, `obj.method`.
+	// vem ANTES do identificador simples, porque `index.ts` tambem casaria.
 	if (CODE_TERM_RE.test(trimmed) && /[.\-_/\\]/.test(trimmed)) {
 		return true;
 	}
-	// Identificador único (`timeout`, `parseConfig`, `MAX_RETRIES`), mas só
-	// quando traz pista de código: underscore, camelCase ou CAIXA ALTA.
+	// identificador unico (`timeout`, `parseConfig`, `MAX_RETRIES`), mas so
+	// quando traz pista de codigo: underscore, camelCase ou CAIXA ALTA.
 	if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(trimmed)) {
 		const hasUnderscore = trimmed.includes('_');
 		const isCamelCase = /[a-z][A-Z]/.test(trimmed);
@@ -318,13 +319,13 @@ export function looksLikeCodeLabel(label: string): boolean {
 	return false;
 }
 
-/** Aplica crase em arquivos e comandos citados no meio da frase. */
+/** poe crase em arquivo e comando citado no meio da frase. */
 export function formatInlineMentions(line: string): string {
 	let result = line;
 
-	// Evita mexer em linhas que já usam crase de forma "densa".
+	// nao mexe em linha que ja usa crase de forma "densa".
 	if ((result.match(/`/g) ?? []).length >= 2 && result.includes('`')) {
-		// Ainda permitimos comandos, mas nunca dentro de trechos já em crase.
+		// comando ainda passa, mas nunca dentro de trecho ja em crase.
 		result = result.replace(COMMAND_RE, (match) => wrapInlineCode(match));
 		return result;
 	}
@@ -338,15 +339,15 @@ export function formatInlineMentions(line: string): string {
 	});
 	result = result.replace(BARE_EXT_RE, (match) => wrapInlineCode(match));
 	result = result.replace(DIR_MENTION_RE, (match, dir: string) => {
-		// Só caminhos que começam com `.` ou `/` — um `algo/` solto no meio
-		// de uma frase é ambíguo demais ("e/ou", "HTTP/2").
+		// so caminho que comeca com `.` ou `/`. um `algo/` solto no meio
+		// da frase e ambiguo demais ("e/ou", "HTTP/2").
 		if (dir.startsWith('http')) {
 			return match;
 		}
 		return wrapInlineCode(dir);
 	});
 	result = result.replace(IDENTIFIER_RE, (match) => {
-		// Não marcar palavras que são só um nome próprio capitalizado comum.
+		// nao marca palavra que e so um nome proprio capitalizado comum.
 		if (PROSE_LABEL_WORDS.has(deaccent(match.replace(/\(\)$/, '').toLowerCase()))) {
 			return match;
 		}

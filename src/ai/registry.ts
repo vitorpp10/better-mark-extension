@@ -1,9 +1,9 @@
 /**
- * Registro de provedores.
+ * registro de provedores.
  *
- * Ponto único onde a extensão resolve "qual provedor usar". Para adicionar
- * um provedor novo basta implementar `AiProvider` e registrar aqui — nada
- * mais no código precisa saber que ele existe.
+ * ponto unico onde a extensao resolve qual provedor usar. pra adicionar um
+ * provedor novo basta implementar `AiProvider` e registrar aqui, nada mais no
+ * codigo precisa saber que ele existe.
  */
 
 import type { AiProvider } from './provider';
@@ -18,11 +18,11 @@ import { GeminiProvider } from './gemini';
 import { ProxyProvider } from './proxy';
 
 /**
- * Ordem importa: o primeiro é o padrão e aparece no topo do seletor.
+ * a ordem importa: o primeiro e o padrao e aparece no topo do seletor.
  *
- * O proxy vem primeiro porque é o único que funciona SEM o usuário criar
- * conta em lugar nenhum — que é o ponto da extensão. Quem preferir usar a
- * própria chave escolhe outro provedor nas configurações.
+ * o proxy vem primeiro porque e o unico que funciona sem o user criar conta em
+ * lugar nenhum, que e o ponto da extensao. quem preferir usar a propria chave
+ * escolhe outro provedor nas configuracoes.
  */
 export const PROVIDERS: readonly AiProvider[] = [
 	new ProxyProvider(),
@@ -34,20 +34,20 @@ export const PROVIDERS: readonly AiProvider[] = [
 	new OpenAiProvider(),
 ];
 
-/** Ids válidos, na ordem em que aparecem no seletor do VS Code. */
+/** ids validos, na ordem em que aparecem no seletor do VS Code. */
 export const PROVIDER_IDS = PROVIDERS.map((provider) => provider.id);
 
-/** True quando o provedor não exige API key (fala com o nosso servidor). */
+/** true quando o provedor nao exige API key (fala com o nosso servidor). */
 export function isKeylessProvider(id: string): boolean {
 	return id === 'proxy';
 }
 
-/** Busca por id, com fallback para o primeiro (DeepSeek por padrão). */
+/** busca por id, com fallback pro primeiro (DeepSeek por padrao). */
 export function getProvider(id: string): AiProvider {
 	return PROVIDERS.find((provider) => provider.id === id) ?? PROVIDERS[0];
 }
 
-/** Modelo padrão do provedor, usado quando o usuário não configura nada. */
+/** modelo padrao do provedor, usado quando o user nao configura nada. */
 export function getDefaultModel(id: string): string {
 	return getProvider(id).defaultModel;
 }

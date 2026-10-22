@@ -39,15 +39,15 @@ describe('Nível 1 — títulos', () => {
 		});
 
 		it('continuação de parágrafo (sem linha em branco) não vira título', () => {
-			// Caso real de "quebra de linha acidental": a segunda linha
-			// pertence ao MESMO parágrafo, então nada deve mudar.
+			// caso real de quebra de linha acidental: a segunda linha
+			// pertence ao MESMO paragrafo, entao nada muda.
 			const input = 'Processo\nSim, e eu começaria bem menor do que a descrição.';
 			expect(formatMarkdown(input).text).toBe(input);
 		});
 
 		it('linha curta isolada DEPOIS de linha em branco vira título', () => {
-			// Comportamento intencional: `Processo` sozinho, cercado por
-			// linhas em branco, é um cabeçalho de seção.
+			// comportamento intencional: `Processo` sozinho, cercado por
+			// linha em branco, e cabecalho de secao.
 			const input = 'Processo\n\nSim. E eu começaria bem menor do que a descrição inteira.';
 			const expected = '# Processo\n\nSim. E eu começaria bem menor do que a descrição inteira.';
 			expect(formatMarkdown(input).text).toBe(expected);
@@ -132,8 +132,8 @@ describe('Nível 1 — idempotência e finais de linha', () => {
 });
 
 describe('Nível 1 — marcadores de lista alternativos', () => {
-	// Encontrado em teste real: `3] item` e `4} item` não eram reconhecidos
-	// como lista e acabavam virando título.
+	// achado em teste real: `3] item` e `4} item` nao eram reconhecidos
+	// como lista e viravam titulo.
 	const cases: Array<[string, string, string]> = [
 		['parêntese', '5) item', '5. item'],
 		['colchete', '3] item', '3. item'],
@@ -154,8 +154,8 @@ describe('Nível 1 — proporção e horário não são título', () => {
 });
 
 describe('Nível 1 — prosa com formatação inline nunca vira título', () => {
-	// BUG CORRIGIDO na v0.3.0: `stripInlineFormatting` era aplicado antes da
-	// decisão, então "Vamos usar o **negrito** aqui" virava
+	// bug corrigido na v0.3.0: `stripInlineFormatting` rodava antes da
+	// decisao, entao "Vamos usar o **negrito** aqui" virava
 	// "# Vamos usar o negrito aqui".
 	const mustNotChange = [
 		'Vamos usar o **negrito** aqui',
@@ -175,8 +175,8 @@ describe('Nível 1 — prosa com formatação inline nunca vira título', () => 
 });
 
 describe('Nível 1 — texto colado de PDF/site (recuo de 4 espaços)', () => {
-	// Caso real: texto copiado de um PDF vem com recuo uniforme de 4 espaços,
-	// que em Markdown significa "bloco de código". A regra de recuo devolve
+	// caso real: texto copiado de PDF vem com recuo uniforme de 4 espacos,
+	// que em Markdown significa bloco de codigo. a regra de recuo devolve
 	// isso como lista, respeitando a hierarquia.
 	it('converte bloco indentado em lista', () => {
 		const input = [
@@ -225,8 +225,8 @@ describe('Nível 1 — texto colado de PDF/site (recuo de 4 espaços)', () => {
 	});
 
 	it('NÃO converte linha indentada isolada em lista', () => {
-		// A linha não vira item de lista (não há bloco), mas "texto" sozinho
-		// é legitimamente um título — o que importa é o recuo sobreviver.
+		// a linha nao vira item de lista (nao tem bloco), mas "texto" sozinho
+		// e legitimamente um titulo — oq importa e o recuo sobreviver.
 		const input = 'texto\n\n    so uma linha aqui\n\ntexto';
 		const result = formatMarkdown(input).text;
 		expect(result).toContain('    so uma linha aqui');
@@ -234,8 +234,8 @@ describe('Nível 1 — texto colado de PDF/site (recuo de 4 espaços)', () => {
 	});
 
 	it('linha indentada nunca vira título', () => {
-		// BUG CORRIGIDO: a regra de títulos fazia `trim()` antes de decidir,
-		// então "    so uma linha aqui" virava "# so uma linha aqui".
+		// bug corrigido: a regra de titulos fazia `trim()` antes de decidir,
+		// entao "    so uma linha aqui" virava "# so uma linha aqui".
 		const result = formatMarkdown('texto\n\n    so uma linha aqui\n\ntexto').text;
 		expect(result).not.toContain('# so uma linha aqui');
 		expect(result).toContain('    so uma linha aqui');

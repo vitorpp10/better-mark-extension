@@ -1,22 +1,22 @@
 /**
- * Tipos compartilhados pelo motor de formatação.
+ * tipos compartilhados pelo motor de formatacao.
  *
- * Nada aqui importa o módulo `vscode`: o motor é TypeScript puro e pode ser
- * testado por CLI (vitest). O VS Code só entra na camada `src/vscode`.
+ * nada aqui importa o modulo `vscode`: o motor e TypeScript puro e roda em
+ * CLI (vitest). o VS Code so entra na camada `src/vscode`.
  */
 
-/** Idiomas em que a extensão se considera "em casa". */
+/** idiomas em que a extensao se considera em casa. */
 export const SUPPORTED_LANGUAGES = ['markdown'] as const;
 
 /**
- * Estrutura de linhas de um texto markdown.
+ * estrutura de linhas de um texto markdown.
  *
- * O motor trabalha linha por linha, mas algumas regras precisam saber o que
- * vem antes/depois (listas, citações, blocos de código). Por isso separamos:
+ * o motor trabalha linha por linha, mas algumas regras precisam saber oq vem
+ * antes/depois (listas, citacoes, blocos de codigo). por isso separamos:
  *
- * - `lines`  → texto exato de cada linha (sem o `\n`), usado para reconstruir.
- * - `eol`    → terminador de linha detectado (`\n`, `\r\n` ou `''`).
- * - `fenced` → true quando a linha está DENTRO de um bloco ``` ou ~~~.
+ * - `lines`  -> texto exato de cada linha (sem o `\n`), usado pra reconstruir.
+ * - `eol`    -> terminador de linha detectado (`\n`, `\r\n` ou `''`).
+ * - `fenced` -> true quando a linha ta DENTRO de um bloco ``` ou ~~~.
  */
 export interface DocumentLines {
 	lines: string[];
@@ -24,67 +24,67 @@ export interface DocumentLines {
 	fenced: boolean[];
 }
 
-/** Contexto opcional passado para cada regra. */
+/** contexto opcional passado pra cada regra. */
 export interface FormatContext {
-	/** Compartilhado entre regras para que uma não desfaça a outra. */
+	/** compartilhado entre regras pra uma nao desfazer a outra. */
 	state: FormatState;
 }
 
-/** Estado compartilhado durante uma execução de `formatMarkdown`. */
+/** estado compartilhado durante uma execucao de `formatMarkdown`. */
 export interface FormatState {
-	/** True depois que a regra de títulos já emitiu um heading. */
+	/** true depois que a regra de titulos ja emitiu um heading. */
 	headingEmitted: boolean;
-	/** True quando a regra de títulos encontrou o PRIMEIRO candidato. */
+	/** true quando a regra de titulos achou o PRIMEIRO candidato. */
 	headingCandidateFound: boolean;
 	/**
-	 * Níveis de título já existentes no trecho (`#`, `##`, ...).
-	 * Usado para inferir o nível do próximo heading em vez de cravar `#`.
+	 * niveis de titulo que ja existem no trecho (`#`, `##`, ...).
+	 * serve pra inferir o nivel do proximo heading em vez de cravar `#`.
 	 */
 	existingLevels: number[];
 	/**
-	 * True quando a linha atual está DENTRO de um bloco frágil (fence, tabela,
-	 * front matter...). Dentro de um bloco nada é reformatado, nem mesmo a
-	 * indentação — um recuo dentro de código é significativo.
+	 * true quando a linha atual ta DENTRO de um bloco fragil (fence, tabela,
+	 * front matter...). dentro de um bloco nada e reformatado, nem a
+	 * indentacao — recuo dentro de codigo e significativo.
 	 */
 	insideProtected: boolean;
 }
 
 /**
- * Uma regra do pipeline.
+ * uma regra do pipeline.
  *
- * `id`    → nome curto (aparece em testes e em diagnósticos).
- * `apply` → recebe UMA linha e devolve a linha transformada (ou a mesma).
+ * `id`    -> nome curto (aparece em testes e em diagnosticos).
+ * `apply` -> recebe UMA linha e devolve a linha transformada (ou a mesma).
  */
 export interface Rule {
 	id: string;
-	/** Recebe UMA linha e devolve a linha transformada (ou a MESMA referência). */
+	/** recebe UMA linha e devolve a linha transformada (ou a MESMA referencia). */
 	apply(line: string, index: number, doc: string[], ctx: FormatContext, options: never): string;
 }
 
-/** Opções do pipeline. */
+/** opcoes do pipeline. */
 export interface FormatOptions {
-	/** Nível máximo de heading a emitir (1–6). Padrão: inferido/1. */
+	/** nivel maximo de heading a emitir (1–6). padrao: inferido/1. */
 	headingLevel?: number;
-	/** Ativa a regra de código inline do Nível 2 (`Termo:` → `` `Termo`: ``). */
+	/** ativa a regra de codigo inline do nivel 2 (`Termo:` -> `` `Termo`: ``). */
 	inlineCodeTerms?: boolean;
-	/** Ativa a regra de menções a código (nomes de arquivo, funções...). */
+	/** ativa a regra de mencoes a codigo (nomes de arquivo, funcoes...). */
 	inlineCodeMentions?: boolean;
-	/** Preserva blocos de código, tabelas, front matter e HTML. Padrão: true. */
+	/** preserva blocos de codigo, tabelas, front matter e HTML. padrao: true. */
 	protectBlocks?: boolean;
 }
 
-/** Resultado de uma formatação, com o que mudou (útil para relatórios/testes). */
+/** resultado de uma formatacao, com oq mudou (util pra relatorio/teste). */
 export interface FormatResult {
 	text: string;
-	/** Ids das regras que alteraram pelo menos uma linha. */
+	/** ids das regras que alteraram pelo menos uma linha. */
 	appliedRules: string[];
-	/** Quantidade de linhas alteradas. */
+	/** quantas linhas mudaram. */
 	changedLines: number;
 }
 
 /**
- * Classificação estrutural de uma linha.
- * Usado pelo scanner e pelas regras para saber o que é intocável.
+ * classificacao estrutural de uma linha.
+ * o scanner e as regras usam pra saber oq e intocavel.
  */
 export type ProtectedKind =
 	| 'fence'

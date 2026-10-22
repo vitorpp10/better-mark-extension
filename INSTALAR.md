@@ -45,9 +45,8 @@ Extension 'markdownify-0.6.0.vsix' was successfully installed.
 Devem aparecer os comandos:
 
 ```
-Markdownify: Fix formatting (no AI)
-Markdownify: Improve with AI (keep my words)
-Markdownify: Rebuild loose text into Markdown (AI)
+Markdownify: Fix formatting (no AI, instant)
+Markdownify: Format with AI (rebuilds everything)
 Markdownify: Set API key
 Markdownify: Show current configuration
 ```
@@ -60,13 +59,12 @@ Markdownify: Show current configuration
 2. **Selecione o texto** que quer arrumar
 3. Clique no **✒️** na barra de status (canto inferior) — ou use o botão
    **"Format… (choose a mode)"** na barra de título do editor
-4. Escolha um dos três modos:
+4. Escolha um dos dois modos:
 
 | Modo | Quando usar | Suas palavras |
 | --- | --- | --- |
-| **Fix formatting** | O texto já é Markdown | Nunca mudam |
-| **Fix formatting + AI polish** | Já é Markdown, quer refinamento | Nunca mudam (validado) |
-| **Rebuild loose text** ⭐ | Texto cru de PDF, site ou chat | Podem ser reescritas (pede confirmação) |
+| **Fix formatting** | Limpeza rápida, instantânea, sem internet | Nunca mudam |
+| **Format with AI** ⭐ | Qualquer texto — inclusive Markdown quebrado | Podem ser reescritas (pede confirmação) |
 
 **Não precisa criar conta. Não precisa de API key.** A chave fica no servidor.
 
@@ -83,7 +81,7 @@ Crie um arquivo `teste.md` e cole exatamente assim (com os espaços no começo):
     app/jogo.cpp: logica principal.
 ```
 
-Selecione tudo (`Ctrl+A`), clique no **✒️**, escolha **Rebuild loose text** →
+Selecione tudo (`Ctrl+A`), clique no **✒️**, escolha **Format with AI** →
 **Continue**.
 
 **Resultado esperado:**

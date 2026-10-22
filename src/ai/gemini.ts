@@ -59,7 +59,7 @@ export class GeminiProvider implements AiProvider {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					// A chave do Gemini vai no header, não na URL (evita vazar em logs).
+					// a chave do gemini vai no header, nao na url (evita vazar em log).
 					'x-goog-api-key': config.apiKey,
 				},
 				body: JSON.stringify(body),

@@ -1,25 +1,25 @@
 /**
- * Serviço de IA — orquestra blindagem, chamada e validação.
+ * servico de ia — orquestra blindagem, chamada e validacao.
  *
- * FLUXO COMPLETO (e por que cada passo existe):
+ * fluxo completo (e porque cada passo existe):
  *
- *   seleção do usuário
+ *   selecao do user
  *     ↓
- *   [1] shieldProtectedBlocks   → tira código/tabela/front matter da vista
- *     ↓                           da IA e põe sentinelas no lugar
- *   [2] runDeterministicFirst   → roda o Nível 1+2A na prosa que sobrou,
- *     ↓                           de graça e sem risco de alucinação
- *   [3] AiProvider.format       → a IA reestrutura só a prosa
+ *   [1] shieldProtectedBlocks   → tira codigo/tabela/front matter da vista
+ *     ↓                           da ia e poe sentinela no lugar
+ *   [2] runDeterministicFirst   → roda o nivel 1+2A na prosa que sobrou,
+ *     ↓                           de graca e sem risco de alucinacao
+ *   [3] AiProvider.format       → a ia reestrutura so a prosa
  *     ↓
  *   [4] restoreProtectedBlocks  → devolve os blocos originais intactos
  *     ↓
- *   [5] validações finais       → tamanho, recusa, estrutura protegida
+ *   [5] validacoes finais       → tamanho, recusa, estrutura protegida
  *     ↓
- *   markdown final (ou nada, se alguma validação reprovar)
+ *   markdown final (ou nada, se alguma validacao reprovar)
  *
- * Lição aprendida em teste real: o modelo destruiu bloco de código, tabela e
- * fundiu parágrafos, mesmo com prompt mandando preservar. Prompt é a segunda
- * linha de defesa; a primeira é NUNCA deixar o modelo ver o que é frágil.
+ * licao de teste real: o modelo destruiu bloco de codigo, tabela e fundiu
+ * paragrafo, mesmo com prompt mandando preservar. prompt e a segunda linha de
+ * defesa; a primeira e NUNCA deixar o modelo ver oq e fragil.
  */
 
 import type * as vscode from 'vscode';
@@ -39,52 +39,52 @@ export interface AiFormatterSettings {
 	apiKey: string;
 	timeoutMs: number;
 	baseUrl?: string;
-	/** Identificador da instalação, usado só pelo provedor `proxy`. */
+	/** id da instalacao, usado so pelo provedor `proxy`. */
 	installId?: string;
-	/** Instruções extras vindas da configuração do usuário. */
+	/** instrucoes extras que vem da config do user. */
 	instructions?: string;
-	/** Opções do formatador determinístico aplicado antes da IA. */
+	/** opcoes do formatador deterministico rodado antes da ia. */
 	formatOptions?: FormatOptions;
-	/** Intensidade da dedução de ênfase (`off` | `safe` | `deduce`). */
+	/** intensidade da deducao de enfase (`off` | `safe` | `deduce`). */
 	emphasis?: 'off' | 'safe' | 'deduce';
 	/**
-	 * `preserve` (padrão) garante que nenhuma palavra muda.
-	 * `restructure` permite reestruturar a prosa — use só em texto que ainda
-	 * NÃO é Markdown. Nesse modo `compareWords` não se aplica.
+	 * `preserve` (padrao) garante que nenhuma palavra muda.
+	 * `restructure` deixa reestruturar a prosa — so use em texto que ainda
+	 * NAO e markdown. nesse modo `compareWords` nao se aplica.
 	 */
 	mode?: 'preserve' | 'restructure';
 }
 
-/** Validação de segurança da resposta do modelo. */
+/** validacao de seguranca da resposta do modelo. */
 export interface ValidationResult {
 	ok: boolean;
 	reason?: string;
 }
 
-/** Relatório do que aconteceu, útil para log e para a mensagem ao usuário. */
+/** relatorio do que rolou, serve pra log e pra mensagem pro user. */
 export interface AiFormatReport {
 	markdown: string;
 	model: string;
 	usage?: { inputTokens?: number; outputTokens?: number };
-	/** Blocos que ficaram fora da vista da IA. */
+	/** blocos que ficaram fora da vista da ia. */
 	shieldedBlocks: number;
-	/** Linhas de prosa que o formatador offline já resolveu. */
+	/** linhas de prosa que o formatador offline ja resolveu. */
 	deterministicChanges: number;
 }
 
 export class AiFormatter {
 	constructor(private readonly log: (message: string) => void) {}
 
-	/** Provedor resolvido a partir das configurações. */
+	/** provedor resolvido a partir das configs. */
 	provider(settings: AiFormatterSettings): AiProvider {
 		return getProvider(settings.providerId);
 	}
 
 	/**
-	 * Formata um trecho com IA.
+	 * formata um trecho com ia.
 	 *
-	 * `token` é o CancellationToken do VS Code: o usuário pode cancelar pela
-	 * barra de progresso e a requisição HTTP é abortada de verdade.
+	 * `token` e o CancellationToken do VS Code: o user cancela pela barra de
+	 * progresso e a request HTTP e abortada de verdade.
 	 */
 	async format(
 		text: string,
@@ -93,8 +93,8 @@ export class AiFormatter {
 	): Promise<AiFormatReport> {
 		const provider = this.provider(settings);
 
-		// O provedor `proxy` não exige chave: ela vive no nosso servidor. Só
-		// os provedores diretos (River, DeepSeek, OpenAI...) precisam dela.
+		// o provedor `proxy` nao exige chave: ela vive no nosso servidor. so os
+		// provedores diretos (River, DeepSeek, OpenAI...) precisam dela.
 		if (!settings.apiKey && !isKeylessProvider(provider.id)) {
 			throw new AiError('missing-key', `No API key for ${provider.label}.`);
 		}
@@ -102,14 +102,14 @@ export class AiFormatter {
 			throw new AiError('bad-response', 'Nothing selected.');
 		}
 
-		// [1] Blindagem: a IA só vê prosa.
+		// [1] blindagem: a ia so ve prosa.
 		const shielded = shieldProtectedBlocks(text);
 		this.log(
 			`blindagem: ${shielded.blocks.length} bloco(s) protegido(s) ` +
 				`(${shielded.blocks.map((b) => b.kind).join(', ') || 'nenhum'})`,
 		);
 
-		// [2] O determinístico roda PRIMEIRO: é grátis, é confiável, e resolve
+		// [2] o deterministico roda PRIMEIRO: e gratis, e confiavel, e resolve
 		// os casos que o modelo errou (ex.: `2- item` → `2. item`).
 		const preFormatted = formatMarkdown(shielded.text, {
 			...settings.formatOptions,
@@ -117,12 +117,12 @@ export class AiFormatter {
 		});
 		this.log(`pré-formatação offline: ${preFormatted.changedLines} linha(s)`);
 
-		// Se só há blocos protegidos, não há o que a IA fazer.
+		// se so tem bloco protegido, nao tem oq a ia fazer.
 		if (preFormatted.text.trim().length === 0) {
 			throw new AiError('bad-response', 'The selection contains only protected blocks.');
 		}
 
-		// [3] Chamada à IA.
+		// [3] chamada a ia.
 		const controller = new AbortController();
 		const disposable = token?.onCancellationRequested(() => controller.abort());
 
@@ -146,13 +146,13 @@ export class AiFormatter {
 
 			const candidate = stripCodeFence(response.markdown);
 
-			// O modelo sinaliza texto vazio/ininteligível com este marcador,
-			// em vez de devolver uma resposta inútil que passaria adiante.
+			// o modelo sinaliza texto vazio/ininteligivel com esse marcador, em
+			// vez de devolver uma resposta inutil que passaria adiante.
 			if (candidate.trim() === 'ERRO_SEM_TEXTO') {
 				throw new AiError('bad-response', 'Empty or unreadable text.');
 			}
 
-			// [4] Devolve os blocos originais no lugar dos sentinelas.
+			// [4] devolve os blocos originais no lugar dos sentinelas.
 			const restored = restoreProtectedBlocks(shielded, candidate);
 			if (!restored.ok) {
 				throw new AiError(
@@ -162,7 +162,7 @@ export class AiFormatter {
 				);
 			}
 
-			// [5] Validações finais.
+			// [5] validacoes finais.
 			const validation = validateAiResult(preFormatted.text, restored.text);
 			if (!validation.ok) {
 				throw new AiError(
@@ -171,7 +171,7 @@ export class AiFormatter {
 				);
 			}
 
-			// Segunda barreira, independente: a estrutura frágil sobreviveu?
+			// segunda barreira, independente: a estrutura fragil sobreviveu?
 			const structure = compareProtectedStructure(text, restored.text);
 			if (!structure.ok) {
 				throw new AiError(
@@ -180,21 +180,21 @@ export class AiFormatter {
 				);
 			}
 
-			// Terceira barreira: a IA pode ter acrescentado MARCADORES de
-			// formatação, mas não pode ter mudado as PALAVRAS.
+			// terceira barreira: a ia pode ter acrescentado MARCADOR de
+			// formatacao, mas nao pode ter mudado as PALAVRA.
 			//
-			// IMPORTANTE: esta barreira só existe no modo `preserve`. No modo
-			// `restructure` a IA PRECISA reescrever a estrutura da prosa (é o
-			// ponto do modo), então comparar palavras reprovaria toda resposta
-			// correta. A troca é consciente: `restructure` é para texto que
-			// ainda não é Markdown, e o usuário é avisado de que a IA vai
-			// mexer mais.
+			// importante: essa barreira so existe no modo `preserve`. no modo
+			// `restructure` a ia PRECISA reescrever a estrutura da prosa (e o
+			// ponto do modo), entao comparar palavra reprovaria toda resposta
+			// correta. a troca e consciente: `restructure` e pra texto que
+			// ainda nao e markdown, e o user e avisado de que a ia vai mexer
+			// mais.
 			//
-			// Comparamos a PROSA blindada (`preFormatted.text`) com a resposta
-			// ANTES de recolocar os blocos (`candidate`): os dois lados então
-			// estão na mesma unidade, com os blocos representados por
-			// sentinelas. Comparar depois da recolocação colocaria o conteúdo
-			// real de um lado e sentinelas do outro, reprovando toda resposta
+			// a gente compara a PROSA blindada (`preFormatted.text`) com a
+			// resposta ANTES de recolocar os blocos (`candidate`): os dois
+			// lados entao ficam na mesma unidade, com os blocos representados
+			// por sentinela. comparar depois da recolocacao poria o conteudo
+			// real de um lado e sentinela do outro, reprovando toda resposta
 			// por falso positivo.
 			const aiMode = settings.mode ?? 'preserve';
 			if (aiMode === 'preserve') {
@@ -207,7 +207,7 @@ export class AiFormatter {
 					);
 				}
 			} else {
-				// No modo restructure, ao menos garantimos que nada foi RESUMIDO.
+				// no modo restructure, ao menos garante que nada foi RESUMIDO.
 				const content = validateContentPreserved(preFormatted.text, candidate);
 				if (!content.ok) {
 					throw new AiError(
@@ -235,7 +235,7 @@ export class AiFormatter {
 	}
 }
 
-/** Mensagem legível sobre por que a recolocação falhou. */
+/** mensagem legivel do porque a recolocacao falhou. */
 function describeRestoreFailure(result: {
 	missing: number[];
 	duplicated: number[];
@@ -255,61 +255,61 @@ function describeRestoreFailure(result: {
 }
 
 /**
- * Normaliza o texto removendo TUDO que é marcador de formatação, deixando só
- * as palavras. Serve para provar que a IA só acrescentou formatação.
+ * normaliza o texto tirando TUDO oq e marcador de formatacao, deixa so as
+ * palavra. serve pra provar que a ia so acrescentou formatacao.
  *
- * Removemos:
- *  - ênfase: `**`, `__`, `~~`, e `*`/`_` isolados usados como par;
- *  - crases de código inline;
- *  - marcadores de título (`#`);
- *  - marcadores de lista (`- `, `* `, `1. `);
- *  - espaços em excesso (a IA pode reindentar levemente).
+ * tira:
+ *  - enfase: `**`, `__`, `~~`, e `*`/`_` solto usado como par;
+ *  - crase de codigo inline;
+ *  - marcador de titulo (`#`);
+ *  - marcador de lista (`- `, `* `, `1. `);
+ *  - espaco sobrando (a ia pode reindentar de leve).
  *
- * O que NÃO removemos: letras, números, pontuação de frase. Se a IA trocar
- * uma palavra, o resultado normalizado muda e a validação reprova.
+ * oq NAO tira: letra, numero, pontuacao de frase. se a ia trocar uma palavra,
+ * o resultado normalizado muda e a validacao reprova.
  */
 export function normalizeForWordComparison(text: string): string {
 	return text
-		// Sentinelas são encanamento, não conteúdo: ignoradas dos dois lados.
+		// sentinela e encanamento, nao conteudo: ignorada dos dois lados.
 		.replace(/<!--\s*BM-PROTECTED[^>]*-->/g, '')
-		.replace(/`+/g, '') // código inline
-		.replace(/\*\*|__|~~/g, '') // ênfase forte e tachado
-		.replace(/(^|[\s(])[*_](?=\S)/g, '$1') // abre itálico
-		.replace(/(?<=\S)[*_](?=[\s).,;:!?]|$)/g, '') // fecha itálico
-		.replace(/^[ \t]{0,3}#{1,6}[ \t]+/gm, '') // títulos ATX
-		.replace(/^[ \t]*([-*+]|\d{1,9}[.)\]\-}])[ \t]+/gm, '') // listas
-		.replace(/[ \t]+/g, ' ') // espaços normalizados
-		.replace(/[ \t]*\n[ \t]*/g, '\n') // espaços em volta da quebra
-		.replace(/\n{2,}/g, '\n') // linhas em branco não contam
+		.replace(/`+/g, '') // codigo inline
+		.replace(/\*\*|__|~~/g, '') // enfase forte e tachado
+		.replace(/(^|[\s(])[*_](?=\S)/g, '$1') // abre italico
+		.replace(/(?<=\S)[*_](?=[\s).,;:!?]|$)/g, '') // fecha italico
+		.replace(/^[ \t]{0,3}#{1,6}[ \t]+/gm, '') // titulo ATX
+		.replace(/^[ \t]*([-*+]|\d{1,9}[.)\]\-}])[ \t]+/gm, '') // lista
+		.replace(/[ \t]+/g, ' ') // espaco normalizado
+		.replace(/[ \t]*\n[ \t]*/g, '\n') // espaco em volta da quebra
+		.replace(/\n{2,}/g, '\n') // linha em branco nao conta
 		.trim();
 }
 
 /**
- * Compara o conteúdo PALAVRA por palavra, ignorando formatação.
+ * compara o conteudo PALAVRA por palavra, ignorando formatacao.
  *
- * Esta é a garantia central do modo dedutivo: a IA tem liberdade para marcar
- * `npm install` como código ou **Atenção** como negrito, mas se ela trocar,
- * apagar ou acrescentar qualquer palavra, a resposta é descartada.
+ * e a garantia central do modo dedutivo: a ia pode marcar `npm install` como
+ * codigo ou **Atencao** como negrito, mas se trocar, apagar ou acrescentar
+ * qualquer palavra, a resposta e descartada.
  *
- * Um formatador que reescreve o texto do usuário não é um formatador.
+ * formatador que reescreve o texto do user nao e formatador.
  */
 /**
- * Guarda de conteúdo para o modo `restructure`.
+ * guarda de conteudo pro modo `restructure`.
  *
- * Neste modo a IA PODE reestruturar a prosa, então `compareWords` não se
+ * nesse modo a ia PODE reestruturar a prosa, entao `compareWords` nao se
  * aplica — comparar palavra por palavra reprovaria toda resposta correta
- * (quebrar um parágrafo em lista já muda a sequência de tokens).
+ * (quebrar um paragrafo em lista ja muda a sequencia de token).
  *
- * Mas "pode reestruturar" não é "pode resumir". O risco real do modo
- * restructure é o modelo decidir encurtar. Verificamos então:
+ * mas "pode reestruturar" nao e "pode resumir". o risco real do restructure e
+ * o modelo decidir encurtar. entao a gente checa:
  *
- *  1. nenhum token TÉCNICO do original desapareceu (caminhos, comandos,
- *     constantes, identificadores) — é o conteúdo que mais importa num
- *     README e o que o modelo mais tende a "limpar" ao resumir;
- *  2. o volume não encolheu de forma suspeita.
+ *  1. nenhum token TECNICO do original sumiu (caminho, comando, constante,
+ *     identificador) — e o conteudo que mais importa num README e oq o modelo
+ *     mais tende a "limpar" ao resumir;
+ *  2. o volume nao encolheu de forma suspeita.
  *
- * É uma rede mais frouxa que `compareWords`, e é honesto dizer isso: o modo
- * restructure dá mais liberdade à IA porque a tarefa exige.
+ * e uma rede mais frouxa que `compareWords`, e e honesto dizer isso: o modo
+ * restructure da mais liberdade pra ia porque a tarefa exige.
  */
 export function validateContentPreserved(
 	before: string,
@@ -317,23 +317,50 @@ export function validateContentPreserved(
 ): { ok: boolean; reason?: string } {
 	const afterLower = after.toLowerCase();
 
-	// (1) Tokens técnicos precisam sobreviver.
+	// (1) token tecnico precisa sobreviver.
 	const tokens = new Set<string>();
 	for (const match of before.matchAll(
 		/[\w.\-/]{3,}\.(?:ts|js|tsx|jsx|py|cpp|hpp|c|h|json|md|txt|yml|yaml|toml|sh)\b/gi,
 	)) {
 		tokens.add(match[0].toLowerCase());
 	}
+	// palavra toda em maiuscula costuma ser constante ou sigla (TAM_CELULA,
+	// HTTP), e essas precisam sobreviver. mas titulo escrito em caixa alta
+	// ("INTRODUCAO AO PROJETO") casa com o mesmo padrao — e normalizar esse
+	// titulo pra Title Case e exatamente oq a ia deve fazer. contar essas
+	// palavra como termo tecnico reprovava toda resposta correta.
+	//
+	// foi o bug visto no laptop em 22/10: um documento com secao em caixa alta
+	// voltava sempre com "content lost (3 technical terms disappeared:
+	// especificacao, introducao, codigo)" — a ia tinha acertado.
+	//
+	// criterio: linha inteira em caixa alta (ignorando pontuacao) e titulo,
+	// nao token. sigla solta no meio da prosa continua sendo token.
+	const upperOnlyLines = new Set<string>();
+	for (const line of before.split('\n')) {
+		const limpa = line.replace(/[^\p{L}\p{N}\s]/gu, '').trim();
+		if (limpa.length >= 3 && limpa === limpa.toUpperCase() && /\p{Lu}/u.test(limpa)) {
+			for (const palavra of limpa.split(/\s+/)) {
+				if (palavra.length >= 3) {
+					upperOnlyLines.add(palavra.toLowerCase());
+				}
+			}
+		}
+	}
 	for (const match of before.matchAll(/\b[A-Z][A-Z0-9_]{2,}\b/g)) {
-		tokens.add(match[0].toLowerCase());
+		const palavra = match[0].toLowerCase();
+		if (upperOnlyLines.has(palavra)) {
+			continue;
+		}
+		tokens.add(palavra);
 	}
 	for (const match of before.matchAll(/\b[a-z]+_[a-z_]+\b/g)) {
 		tokens.add(match[0].toLowerCase());
 	}
 
 	const missing = [...tokens].filter((t) => !afterLower.includes(t));
-	// Toleramos 1 token ausente (pode ter sido reformulado), não mais: vários
-	// ausentes indicam sumiço de conteúdo.
+	// tolera 1 token ausente (pode ter sido reformulado), nao mais: varios
+	// ausente indica sumico de conteudo.
 	if (missing.length > 1) {
 		return {
 			ok: false,
@@ -343,8 +370,8 @@ export function validateContentPreserved(
 		};
 	}
 
-	// (2) Volume: markdown reestruturado tende a crescer (marcadores
-	// acrescentados). Encolher muito indica resumo.
+	// (2) volume: markdown reestruturado tende a crescer (marcador
+	// acrescentado). encolher muito indica resumo.
 	const beforeChars = before.replace(/\s+/g, ' ').trim().length;
 	const afterChars = after.replace(/\s+/g, ' ').trim().length;
 	if (beforeChars > 200 && afterChars < beforeChars * 0.6) {
@@ -367,7 +394,7 @@ export function compareWords(before: string, after: string): { ok: boolean; reas
 		return { ok: true };
 	}
 
-	// Identifica a primeira divergência para dar mensagem útil.
+	// acha a primeira divergencia pra dar mensagem util.
 	const beforeWords = a.split(/\s+/);
 	const afterWords = b.split(/\s+/);
 	const max = Math.max(beforeWords.length, afterWords.length);
@@ -383,16 +410,16 @@ export function compareWords(before: string, after: string): { ok: boolean; reas
 	return { ok: false, reason: 'diferença estrutural no texto' };
 }
 
-/** Tolerância de encolhimento: a IA não pode sumir com o conteúdo. */
+/** tolerancia de encolhimento: a ia nao pode sumir com o conteudo. */
 const MIN_LENGTH_RATIO = 0.5;
-/** Tolerância de crescimento: evita que o modelo "explique" ou invente. */
+/** tolerancia de crescimento: evita que o modelo "explique" ou invente. */
 const MAX_LENGTH_RATIO = 2.5;
 
 /**
- * Regras de sanidade aplicadas à resposta antes de tocar no documento.
+ * regra de sanidade aplicada na resposta antes de tocar no documento.
  *
- * Se o modelo respondeu algo muito diferente (muito menor, muito maior ou
- * vazio), é mais seguro NÃO alterar o arquivo e mostrar um erro.
+ * se o modelo respondeu algo muito diferente (muito menor, muito maior ou
+ * vazio), e mais seguro NAO alterar o arquivo e mostrar um erro.
  */
 export function validateAiResult(original: string, candidate: string): ValidationResult {
 	const trimmed = candidate.trim();
@@ -417,7 +444,7 @@ export function validateAiResult(original: string, candidate: string): Validatio
 		return { ok: false, reason: 'o modelo se recusou a responder' };
 	}
 
-	// O modelo não pode devolver código-fonte em vez do markdown pedido.
+	// o modelo nao pode devolver codigo-fonte em vez do markdown pedido.
 	if (/^(def |function |class |import |const |let |var )/m.test(trimmed) && !/^#/m.test(trimmed)) {
 		return { ok: false, reason: 'a resposta parece código-fonte, não Markdown' };
 	}

@@ -1,12 +1,12 @@
 /**
- * Comandos do VS Code.
+ * comandos do vs code.
  *
- * Aqui fica SÓ a cola entre o editor e o motor puro:
+ * aqui fica so a cola entre o editor e o motor puro:
  *
- *   editor → seleção → texto → core/ai → novo texto → editor.edit
+ *   editor -> selecao -> texto -> core/ai -> texto novo -> editor.edit
  *
- * Nenhuma regra de markdown mora neste arquivo. É por isso que as regras
- * podem ser testadas sem abrir o VS Code.
+ * nenhuma regra de markdown mora aqui. e por isso que da pra testar as
+ * regras sem abrir o vs code.
  */
 
 import * as vscode from 'vscode';
@@ -16,16 +16,16 @@ import { AiFormatter } from '../ai/formatter';
 import { getAiSettings, getFormatOptions, setApiKey, clearApiKey } from './config';
 import { isKeylessProvider } from '../ai/registry';
 
-/** Resultado de localizar o alvo do comando. */
+/** resultado de achar o alvo do comando. */
 type Target =
 	| { ok: true; editor: vscode.TextEditor; range: vscode.Range; text: string }
 	| { ok: false; reason: string };
 
 /**
- * Descobre o que formatar.
+ * descobre oq formatar.
  *
- * - com seleção → formata a seleção (fluxo principal);
- * - sem seleção → formata o documento inteiro (fluxo "arruma meu README").
+ * - com selecao -> formata a selecao (fluxo principal)
+ * - sem selecao -> formata o documento inteiro (fluxo "arruma meu readme")
  */
 function resolveTarget(editor: vscode.TextEditor | undefined, allowWholeDocument: boolean): Target {
 	if (!editor) {
@@ -36,7 +36,7 @@ function resolveTarget(editor: vscode.TextEditor | undefined, allowWholeDocument
 	const selected = editor.document.getText(selection);
 
 	if (selected.trim().length > 0) {
-		// Seleção vazia com cursor: expande para a linha atual.
+		// selecao vazia com cursor: expande pra linha atual.
 		return { ok: true, editor, range: selection, text: selected };
 	}
 
@@ -52,12 +52,12 @@ function resolveTarget(editor: vscode.TextEditor | undefined, allowWholeDocument
 	return { ok: true, editor, range: fullRange, text: document.getText() };
 }
 
-/** Aplica o texto novo no editor, com Undo funcionando (replace em 1 passo). */
+/** joga o texto novo no editor com undo funcionando (replace em 1 passo). */
 async function replaceRange(editor: vscode.TextEditor, range: vscode.Range, text: string): Promise<boolean> {
 	return editor.edit((builder) => builder.replace(range, text));
 }
 
-/** Comando 1: formatação determinística (Níveis 1 + 2A). Sem internet. */
+/** comando 1: formatacao deterministica (niveis 1 + 2A). sem internet. */
 export function registerFormatCommand(context: vscode.ExtensionContext): void {
 	const disposable = vscode.commands.registerCommand('better-mark.format', async () => {
 		const target = resolveTarget(vscode.window.activeTextEditor, true);
@@ -90,10 +90,10 @@ export function registerFormatCommand(context: vscode.ExtensionContext): void {
 }
 
 /**
- * Executa a formatação com IA e aplica no editor.
+ * roda a formatacao com IA e joga no editor.
  *
- * Extraído para que os modos "preserve" e "restruture" compartilhem o mesmo
- * caminho — a ÚNICA diferença entre eles é uma string de modo.
+ * ficou separado pra todo modo de IA passar pelo mesmo caminho. a unica
+ * diferenca entre um modo e outro e a string do modo.
  */
 async function runAiFormat(
 	context: vscode.ExtensionContext,
@@ -109,10 +109,10 @@ async function runAiFormat(
 	const { editor, range, text } = target;
 	const settings = await getAiSettings(context);
 
-	// Só exige chave quando o provedor realmente precisa de uma. O padrão
-	// (`proxy`) é keyless: a chave vive no servidor do Markdownify, e pedir
-	// chave aqui contradiria a promessa de "instale e use".
-	// O `ai/formatter.ts` repete esta checagem como rede de segurança.
+	// so pede chave quando o provedor precisa mesmo. o padrao (`proxy`) e
+	// keyless: a chave fica no servidor do markdownify, e pedir chave aqui
+	// quebrava a promessa de "instale e use". bug real, corrigido em 21/10.
+	// o ai/formatter.ts repete essa checagem como rede de seguranca.
 	if (!settings.apiKey && !isKeylessProvider(settings.providerId)) {
 		const action = await vscode.window.showWarningMessage(
 			`Markdownify: "${settings.providerId}" needs an API key.`,
@@ -159,15 +159,17 @@ async function runAiFormat(
 }
 
 /**
- * Comando central: um único botão que abre o menu de modos.
+ * comando central: um botao so que abre o menu de modos.
  *
- * POR QUE UM MENU SÓ: antes eram duas telas (offline vs. IA, depois preserve
- * vs. restructure). O usuário tinha que classificar o próprio texto antes de
- * ver a opção que queria. Agora as três opções aparecem de uma vez, cada uma
- * dizendo o que faz e qual o risco — a decisão fica em um clique.
+ * dois modos, nao tres. o "IA sem mudar palavra" saiu em 22/10: o offline ja
+ * entrega isso, e melhor (instantaneo, sem rede, sem risco). manter os dois
+ * gerava confusao sem ganho. agora a escolha e binaria:
+ *
+ *   offline -> conserta o obvio, nunca muda palavra
+ *   IA      -> reformata tudo, do jeito que o claude faria
  */
 export function registerFormatMenuCommand(context: vscode.ExtensionContext): void {
-	const ai = new AiFormatter((message) => console.log(`[better-mark] ${message}`));
+	const ai = new AiFormatter((message) => console.log(`[markdownify] ${message}`));
 
 	const disposable = vscode.commands.registerCommand('better-mark.menu', async () => {
 		const picked = await vscode.window.showQuickPick(
@@ -175,25 +177,19 @@ export function registerFormatMenuCommand(context: vscode.ExtensionContext): voi
 				{
 					label: '$(check) Fix formatting',
 					detail:
-						'Offline: headings, lists, PDF indentation, bold labels and inline code. Free, instant, never touches your words.',
+						'Offline and instant. Headings, lists, PDF indentation, bold labels and inline code. Never changes a single word.',
 					value: 'offline' as const,
 				},
 				{
-					label: '$(sparkle) Fix formatting + AI polish',
+					label: '$(sparkle) Format with AI',
 					detail:
-						'Same as above, then the AI adds emphasis and code the text hints at. Validated word by word: if a word changes, the result is discarded.',
-					value: 'preserve' as const,
-				},
-				{
-					label: '$(wand) Rebuild loose text',
-					detail:
-						'RECOMMENDED for text copied from a PDF, site or chat. The AI rebuilds headings, lists and paragraphs, and may reword. Asks for confirmation first.',
+						'RECOMMENDED. Sends the text to the AI and rebuilds it as proper Markdown — headings, lists, code blocks, emphasis. Works on already-broken Markdown too. Never touches code, tables or front matter. Asks for confirmation first.',
 					value: 'restructure' as const,
 				},
 			],
 			{
 				title: 'Markdownify — choose a mode',
-				placeHolder: 'Already Markdown? Pick the first. Raw text from a PDF or chat? Pick the last.',
+				placeHolder: 'Offline fixes the obvious. AI rebuilds everything.',
 				matchOnDetail: true,
 			},
 		);
@@ -207,9 +203,9 @@ export function registerFormatMenuCommand(context: vscode.ExtensionContext): voi
 			return;
 		}
 
-		if (picked.value === 'restructure') {
+		{
 			const confirm = await vscode.window.showWarningMessage(
-				'Rebuild mode lets the AI restructure your text, which changes more than the other modes. Continue?',
+				'The AI will rebuild your text and may reword it. Code blocks, tables and front matter are never touched. Continue?',
 				{ modal: true },
 				'Continue',
 			);
@@ -224,33 +220,16 @@ export function registerFormatMenuCommand(context: vscode.ExtensionContext): voi
 	context.subscriptions.push(disposable);
 }
 
-/** Comando 2: formatação com IA no modo `preserve` (não muda palavras). */
+/** comando 2: reformata com IA direto, sem passar pelo menu. */
 export function registerFormatWithAiCommand(context: vscode.ExtensionContext): void {
-	const ai = new AiFormatter((message) => console.log(`[better-mark] ${message}`));
+	const ai = new AiFormatter((message) => console.log(`[markdownify] ${message}`));
 	const disposable = vscode.commands.registerCommand('better-mark.formatWithAi', async () => {
-		await runAiFormat(context, ai, 'preserve');
-	});
-	context.subscriptions.push(disposable);
-}
-
-/** Comando: reestruturar texto solto em Markdown. */
-export function registerRestructureCommand(context: vscode.ExtensionContext): void {
-	const ai = new AiFormatter((message) => console.log(`[better-mark] ${message}`));
-	const disposable = vscode.commands.registerCommand('better-mark.restructure', async () => {
-		const confirm = await vscode.window.showWarningMessage(
-			'Rebuild mode lets the AI restructure your text, which changes more than the other modes. Continue?',
-			{ modal: true },
-			'Continue',
-		);
-		if (confirm !== 'Continue') {
-			return;
-		}
 		await runAiFormat(context, ai, 'restructure');
 	});
 	context.subscriptions.push(disposable);
 }
 
-/** Comando 3: configurar a API key (vai para o SecretStorage). */
+/** comando 3: configurar a api key (vai pro secretstorage). */
 export function registerConfigureApiKeyCommand(context: vscode.ExtensionContext): void {
 	const disposable = vscode.commands.registerCommand('better-mark.configureApiKey', async () => {
 		const settings = await getAiSettings(context);
@@ -281,7 +260,7 @@ export function registerConfigureApiKeyCommand(context: vscode.ExtensionContext)
 	context.subscriptions.push(disposable);
 }
 
-/** Comando 4: mostra a configuração efetiva — útil para diagnosticar. */
+/** comando 4: mostra a config que ta valendo — bom pra diagnosticar. */
 export function registerShowStatsCommand(context: vscode.ExtensionContext): void {
 	const disposable = vscode.commands.registerCommand('better-mark.showStats', async () => {
 		const format = getFormatOptions();
@@ -323,13 +302,12 @@ export function registerShowStatsCommand(context: vscode.ExtensionContext): void
 	context.subscriptions.push(disposable);
 }
 
-/** Traduz erro de IA em mensagem útil + atalho para configurar a chave. */
+/** vira erro de IA em mensagem util + atalho pra configurar a chave. */
 function reportAiError(context: vscode.ExtensionContext, error: unknown): void {
 	if (error instanceof AiError) {
 		console.error('[better-mark]', error.kind, error.message);
-		// Mensagens de rejeição são propositalmente descartadas na UI: o
-		// usuário não precisa do detalhe técnico, e o arquivo está intacto.
-		// O motivo fica no Output/console para diagnóstico.
+		// rejeicao nao aparece na ui de proposito: o user nao precisa do
+		// detalhe tecnico e o arquivo ta intacto. o motivo fica no console.
 		if (error.kind === 'cancelled') {
 			void vscode.window.showInformationMessage('Markdownify: operation cancelled.');
 			return;

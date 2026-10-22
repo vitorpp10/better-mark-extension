@@ -1,13 +1,13 @@
 /**
- * Utilidades de texto puras (sem `vscode`).
+ * utilidades de texto puras (sem `vscode`).
  *
- * Toda a normalização de linha vive aqui para que as regras do formatter
- * fiquem legíveis e para que o comportamento em CRLF seja testável.
+ * toda a normalizacao de linha mora aqui pra deixar as regras do formatter
+ * legiveis e pra dar pra testar o comportamento em CRLF.
  */
 
 import type { DocumentLines } from './types';
 
-/** Detecta o terminador de linha dominante do texto. */
+/** detecta o terminador de linha dominante do texto. */
 export function detectEol(text: string): string {
 	if (text.includes('\r\n')) {
 		return '\r\n';
@@ -22,47 +22,47 @@ export function detectEol(text: string): string {
 }
 
 /**
- * Quebra o texto em linhas preservando o terminador detectado.
+ * quebra o texto em linhas usando o terminador detectado.
  *
- * Inclui a última linha mesmo quando o texto termina em quebra de linha, para
- * que a reconstrução com `join(eol)` seja byte a byte idêntica à entrada.
+ * inclui a ultima linha mesmo quando o texto termina em quebra de linha, pra
+ * que a reconstrucao com `join(eol)` saia byte a byte igual a entrada.
  */
 export function splitLines(text: string): DocumentLines {
 	const eol = detectEol(text);
-	// Um texto vazio não tem linhas; um texto que termina em \n tem uma linha
-	// vazia final que o join precisa recriar.
+	// texto vazio nao tem linha. texto que termina em \n tem uma linha vazia
+	// final que o join precisa recriar.
 	const lines = text.length === 0 ? [] : text.split(/\r\n|\r|\n/);
 	return { lines, eol, fenced: new Array(lines.length).fill(false) };
 }
 
-/** Junta as linhas de volta em um texto único. */
+/** junta as linhas de volta num texto so. */
 export function joinLines(lines: string[], eol: string): string {
 	return lines.join(eol);
 }
 
-/** Conta espaços/tabs à esquerda (largura em colunas, tab = 1). */
+/** conta espacos/tabs a esquerda (largura em colunas, tab = 1). */
 export function leadingWhitespace(line: string): string {
 	return line.match(/^[ \t]*/)?.[0] ?? '';
 }
 
-/** Remove a indentação inicial. */
+/** remove a indentacao inicial. */
 export function stripIndent(line: string): string {
 	return line.replace(/^[ \t]*/, '');
 }
 
-/** True quando a linha não tem nenhum conteúdo além de espaços. */
+/** true quando a linha nao tem nada alem de espaco. */
 export function isBlank(line: string): boolean {
 	return line.trim().length === 0;
 }
 
-/** Quantidade de caracteres "crus" da linha, sem indentação. */
+/** quantidade de caracteres crus da linha, sem indentacao. */
 export function contentLength(line: string): number {
 	return stripIndent(line).length;
 }
 
 /**
- * Envolve o texto em crases, escolhendo um número de crases que não colida
- * com o conteúdo (`` ``a`b`` `` em vez de `` `a`b` ``).
+ * envolve o texto em crases, escolhendo uma quantidade que nao colida com o
+ * conteudo (`` ``a`b`` `` em vez de `` `a`b` ``).
  */
 export function wrapInlineCode(text: string): string {
 	const runs = text.match(/`+/g) ?? [];
@@ -72,12 +72,12 @@ export function wrapInlineCode(text: string): string {
 	return needsPadding ? `${ticks} ${text} ${ticks}` : `${ticks}${text}${ticks}`;
 }
 
-/** True quando o texto já é um trecho de código inline cercado por crases. */
+/** true quando o texto ja e trecho de codigo inline cercado por crases. */
 export function isInlineCode(text: string): boolean {
 	return /^`+[^`].*`+$/.test(text) || /^`+$/.test(text);
 }
 
-/** Remove formatação inline (`**`, `_`, `` ` ``, links) para inspeção. */
+/** remove formatacao inline (`**`, `_`, `` ` ``, links) pra inspecao. */
 export function stripInlineFormatting(text: string): string {
 	return text
 		.replace(/`[^`]*`/g, '')
@@ -85,7 +85,7 @@ export function stripInlineFormatting(text: string): string {
 		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1');
 }
 
-/** True quando a linha contém apenas um rótulo curto terminando em `:`. */
+/** true quando a linha so tem um rotulo curto terminando em `:`. */
 export function isLabelLine(line: string): boolean {
 	return /^[^:]{1,40}:\s*$/.test(line.trim());
 }

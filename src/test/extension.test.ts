@@ -2,12 +2,12 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 /**
- * Testes de INTEGRAÇÃO: rodam dentro de um VS Code de verdade.
+ * teste de integracao: roda dentro de um vs code de verdade.
  *
  *   npm run test:integration
  *
- * Aqui testamos o que o vitest não alcança: registro de comandos e a
- * escrita real no documento do editor.
+ * aqui testamos oq o vitest nao alcanca: registro de comando e a escrita
+ * real no documento do editor.
  */
 suite('Markdownify — integração', () => {
 	test('a extensão está ativa e registrou os comandos', async () => {
@@ -36,7 +36,7 @@ suite('Markdownify — integração', () => {
 		});
 		const editor = await vscode.window.showTextDocument(document);
 
-		// Seleciona tudo para que o comando tenha alvo.
+		// seleciona tudo pra o comando ter alvo.
 		const fullRange = new vscode.Range(
 			document.positionAt(0),
 			document.positionAt(document.getText().length),

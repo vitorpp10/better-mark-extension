@@ -13,7 +13,7 @@ import { getProvider, PROVIDER_IDS, isKeylessProvider } from '../registry';
 
 const CONFIG = { apiKey: 'test-key', model: 'test-model', timeoutMs: 5000 };
 
-/** Substitui o fetch global por um stub e devolve o mock. */
+/** troca o fetch global por um stub e devolve o mock. */
 function mockFetch(response: Partial<{ ok: boolean; status: number; body: string }>) {
 	const fn = vi.fn(async () =>
 		({
@@ -158,8 +158,8 @@ describe('AiError', () => {
 
 describe('registry', () => {
 	it('tem os provedores esperados', () => {
-		// `proxy` vem primeiro: é o padrão e o único que funciona sem o
-		// usuário criar conta em lugar nenhum.
+		// `proxy` vem primeiro: e o padrao e o unico que roda sem o
+		// user criar conta em lugar nenhum.
 		expect(PROVIDER_IDS).toEqual([
 			'proxy',
 			'river',
@@ -212,7 +212,7 @@ describe('compareWords — garantia de que a IA não reescreve', () => {
 	});
 
 	it('REPROVA quando a IA "corrige" ortografia', () => {
-		// O prompt manda não corrigir; a validação garante.
+		// o prompt manda nao corrigir; a validacao garante.
 		expect(compareWords('Atencao: algo', '**Atenção**: algo').ok).toBe(false);
 	});
 
@@ -243,12 +243,14 @@ describe('buildSystemPrompt — modos e anti-injeção', () => {
 
 	it('modo restructure permite reconstruir a estrutura', () => {
 		const prompt = buildSystemPrompt('deduce', 'restructure');
-		expect(prompt).toContain('TEXTO SOLTO');
+		expect(prompt).toContain('QUALQUER TEXTO');
+		// cobre tambem markdown ja quebrado, nao so texto solto
+		expect(prompt).toContain('CASO B');
 		expect(prompt).toContain('NÃO resuma');
 	});
 
 	it('modo restructure não traz a proibição de mexer nas palavras', () => {
-		// Se trouxesse, o modelo não conseguiria quebrar parágrafos.
+		// se trouxesse, o modelo nao conseguiria quebrar paragrafo.
 		const prompt = buildSystemPrompt('deduce', 'restructure');
 		expect(prompt).not.toContain('NUNCA mude as palavras');
 	});
@@ -393,5 +395,56 @@ describe('ProxyProvider — o fluxo "sem configuração"', () => {
 		await expect(
 			provider.format({ text: 'oi' }, { apiKey: '', model: 'm', timeoutMs: 5000 }),
 		).rejects.toMatchObject({ kind: 'bad-response' });
+	});
+});
+
+// bug do laptop (22/10): documento com secao em CAIXA ALTA voltava sempre com
+// "content lost (N technical terms disappeared)". a IA normalizava o titulo
+// pra Title Case — certo — e o validador tratava cada palavra maiuscula como
+// termo tecnico perdido. falso positivo que rejeitava resposta boa.
+describe('validateContentPreserved — título em caixa alta não é termo técnico', () => {
+	it('aceita título em MAIÚSCULAS normalizado para Title Case', () => {
+		const antes = [
+			'DOCUMENTO DE ESPECIFICACAO DE SOFTWARE',
+			'',
+			'INTRODUCAO AO PROJETO',
+			'',
+			'O objetivo e otimizar processos internos.',
+			'',
+			'REQUISITOS DO SISTEMA',
+			'',
+			'O usuario deve poder fazer login.',
+		].join('\n');
+		const depois = [
+			'# Documento de Especificação de Software',
+			'',
+			'## Introdução ao Projeto',
+			'',
+			'O objetivo é otimizar processos internos.',
+			'',
+			'## Requisitos do Sistema',
+			'',
+			'O usuário deve poder fazer login.',
+		].join('\n');
+		expect(validateContentPreserved(antes, depois).ok).toBe(true);
+	});
+
+	it('continua reprovando quando sigla solta na prosa desaparece', () => {
+		const antes = 'O servidor usa HTTP e o token TAM_CELULA define o tamanho.';
+		const depois = 'O servidor usa e o token define o tamanho.';
+		const r = validateContentPreserved(antes, depois);
+		expect(r.ok).toBe(false);
+		expect(r.reason).toContain('http');
+	});
+
+	it('continua reprovando quando a saída encolhe demais', () => {
+		// o limite de volume só vale acima de 200 caracteres
+		const antes =
+			'Parágrafo longo com bastante conteúdo relevante sobre o sistema e suas ' +
+			'partes internas, incluindo detalhes de configuração, dependências, ' +
+			'modos de execução e observações de instalação que o autor original ' +
+			'escreveu com bastante cuidado ao longo de várias linhas de texto.';
+		const depois = 'Parágrafo curto.';
+		expect(validateContentPreserved(antes, depois).ok).toBe(false);
 	});
 });

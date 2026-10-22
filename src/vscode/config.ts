@@ -1,12 +1,12 @@
 /**
- * Configuração da extensão.
+ * config da extensao.
  *
- * Toda a leitura de `workspace.getConfiguration` vive aqui: o resto do
- * código recebe objetos já resolvidos (e testáveis).
+ * toda leitura de `workspace.getConfiguration` mora aqui. o resto do codigo
+ * recebe objeto ja resolvido (e testavel).
  *
- * Decisão de segurança: a API key NUNCA fica no código. Ela é lida da
- * configuração do VS Code (setting `betterMark.ai.apiKey`) ou, de
- * preferência, do SecretStorage do VS Code, que é criptografado pelo SO.
+ * seguranca: a api key nunca fica no codigo. ela vem do setting
+ * `betterMark.ai.apiKey` ou, de preferencia, do secretstorage do vs code,
+ * que o so criptografa.
  */
 
 import * as vscode from 'vscode';
@@ -15,7 +15,7 @@ import type { AiFormatterSettings } from '../ai/formatter';
 import { getDefaultModel, getProvider, isKeylessProvider } from '../ai/registry';
 
 export const CONFIG_SECTION = 'betterMark';
-/** Chave usada no SecretStorage (mais seguro que settings.json). */
+/** chave do secretstorage (mais seguro que settings.json). */
 export const SECRET_API_KEY = 'betterMark.apiKey';
 
 interface RawConfig {
@@ -45,7 +45,7 @@ function readConfig(): RawConfig {
 	};
 }
 
-/** Opções do motor determinístico (Níveis 1 e 2A). */
+/** opcoes do motor deterministico (niveis 1 e 2A). */
 export function getFormatOptions(): FormatOptions {
 	const raw = readConfig();
 	return {
@@ -56,7 +56,7 @@ export function getFormatOptions(): FormatOptions {
 	};
 }
 
-/** `0` = inferir do documento; fora de 1–6 também cai em inferir. */
+/** `0` = infere do documento; fora de 1-6 tambem cai em inferir. */
 function normalizeHeadingLevel(level: number | undefined): number {
 	if (typeof level !== 'number' || !Number.isFinite(level)) {
 		return 0;
@@ -65,22 +65,22 @@ function normalizeHeadingLevel(level: number | undefined): number {
 }
 
 /**
- * Resolve as configurações de IA.
+ * resolve as configs de IA.
  *
- * Ordem de prioridade da API key:
- *   1. SecretStorage (comando "Configurar API key") — recomendado;
- *   2. setting `betterMark.ai.apiKey` — conveniência para testes.
+ * prioridade da api key:
+ *   1. secretstorage (comando "set api key") — recomendado
+ *   2. setting `betterMark.ai.apiKey` — so pra teste
  */
 export async function getAiSettings(context: vscode.ExtensionContext): Promise<AiFormatterSettings> {
 	const raw = readConfig();
-	// O padrão é o `proxy`: é o único provedor que funciona sem o usuário
-	// criar conta em lugar nenhum, que é o ponto da extensão.
+	// o padrao e o `proxy`: unico provedor que roda sem o user criar conta
+	// em lugar nenhum, que e o ponto da extensao.
 	const providerId = raw.ai?.provider ?? 'proxy';
 	const provider = getProvider(providerId);
 
-	// O provedor `proxy` NÃO usa API key — a chave vive no nosso servidor.
-	// Buscar o secret aqui seria só custo, e exigir a chave quebraria o
-	// fluxo "instale e use".
+	// o provedor `proxy` nao usa api key — a chave fica no nosso servidor.
+	// buscar o secret aqui era so custo, e exigir chave quebrava o fluxo
+	// "instale e use".
 	const keyless = isKeylessProvider(provider.id);
 	const storedSecret = keyless ? undefined : await context.secrets.get(SECRET_API_KEY);
 	const apiKey = storedSecret ?? (keyless ? '' : (raw.ai?.apiKey ?? ''));
@@ -98,11 +98,11 @@ export async function getAiSettings(context: vscode.ExtensionContext): Promise<A
 }
 
 /**
- * Identificador anônimo e estável desta instalação.
+ * id anonimo e estavel dessa instalacao.
  *
- * Serve SÓ para o servidor aplicar a cota diária sem que uma pessoa consuma
- * a cota de outra. Não identifica o usuário, não sai do nosso servidor e não
- * é segredo. Gerado uma vez e guardado no `globalState`.
+ * serve so pro servidor aplicar a cota diaria sem um user comer a cota do
+ * outro. nao identifica ninguem, nao sai do nosso servidor e nao e segredo.
+ * gerado uma vez e guardado no `globalState`.
  */
 function getInstallId(context: vscode.ExtensionContext): string {
 	const KEY = 'betterMark.installId';
@@ -110,7 +110,7 @@ function getInstallId(context: vscode.ExtensionContext): string {
 	if (existing) {
 		return existing;
 	}
-	// 32 caracteres hexadecimais aleatórios: suficiente para não colidir.
+	// 32 chars hex aleatorios: ja basta pra nao colidir.
 	const bytes = new Uint8Array(16);
 	for (let i = 0; i < bytes.length; i++) {
 		bytes[i] = Math.floor(Math.random() * 256);
@@ -120,7 +120,7 @@ function getInstallId(context: vscode.ExtensionContext): string {
 	return id;
 }
 
-/** Garante que o modo de ênfase é um dos valores válidos. */
+/** garante que o modo de enfase ta entre os validos. */
 function normalizeEmphasis(value: string | undefined): 'off' | 'safe' | 'deduce' {
 	return value === 'off' || value === 'safe' ? value : 'deduce';
 }
@@ -132,12 +132,12 @@ function normalizeTimeout(value: number | undefined): number {
 	return Math.min(Math.max(Math.floor(value), 5000), 120000);
 }
 
-/** Grava a API key no SecretStorage do VS Code. */
+/** grava a api key no secretstorage do vs code. */
 export async function setApiKey(context: vscode.ExtensionContext, apiKey: string): Promise<void> {
 	await context.secrets.store(SECRET_API_KEY, apiKey);
 }
 
-/** Remove a API key armazenada. */
+/** apaga a api key guardada. */
 export async function clearApiKey(context: vscode.ExtensionContext): Promise<void> {
 	await context.secrets.delete(SECRET_API_KEY);
 }

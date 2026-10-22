@@ -1,11 +1,11 @@
 /**
- * Nível 2 — Parte B: camada de IA.
+ * nivel 2 — parte B: camada de IA.
  *
- * Contrato ÚNICO que a extensão conhece. Os provedores concretos
- * (DeepSeek, Gemini, GLM, Nemotron/OpenAI-compatíveis) ficam atrás desta
- * interface, para que a extensão nunca vire "a extensão do Gemini".
+ * contrato unico que a extensao conhece. os provedores concretos
+ * (DeepSeek, Gemini, GLM, Nemotron/OpenAI-compativeis) ficam atras desta
+ * interface, pra extensao nunca virar "a extensao do Gemini".
  *
- *   Nível 2
+ *   nivel 2
  *     ↓
  *   AiFormatter
  *     ↓
@@ -14,54 +14,54 @@
  *   DeepSeek / Gemini / GLM / Nemotron / OpenAI
  */
 
-/** Requisição de formatação enviada ao provedor. */
+/** request de formatacao mandado pro provedor. */
 export interface AiFormatRequest {
-	/** Trecho markdown que o usuário selecionou (já blindado). */
+	/** trecho markdown que o user selecionou (ja blindado). */
 	text: string;
-	/** Instruções extras (ex.: "apenas padronize listas"). */
+	/** instrucoes extras (ex.: "apenas padronize listas"). */
 	instructions?: string;
-	/** AbortSignal para cancelamento (o VS Code dá suporte nativo). */
+	/** AbortSignal pra cancelamento (o VS Code da suporte nativo). */
 	signal?: AbortSignal;
 	/**
-	 * Intensidade da dedução de ênfase.
-	 * - `off`    → não acrescenta negrito/itálico;
-	 * - `safe`   → só padrões inequívocos;
-	 * - `deduce` → deduz a partir das pistas do texto (padrão).
+	 * intensidade da deducao de enfase.
+	 * - `off`    -> nao acrescenta negrito/italico;
+	 * - `safe`   -> so padroes inequivocos;
+	 * - `deduce` -> deduz pelas pistas do texto (padrao).
 	 */
 	emphasis?: 'off' | 'safe' | 'deduce';
 	/**
-	 * Modo de operação:
-	 * - `preserve`    → não muda palavras (padrão);
-	 * - `restructure` → converte texto solto em Markdown, podendo
-	 *                   reestruturar a prosa.
+	 * modo de operacao:
+	 * - `preserve`    -> nao muda palavra (padrao);
+	 * - `restructure` -> vira texto solto em Markdown, podendo
+	 *                    reestruturar a prosa.
 	 */
 	mode?: 'preserve' | 'restructure';
 }
 
-/** Resposta normalizada, independente do provedor. */
+/** resposta normalizada, independente do provedor. */
 export interface AiFormatResponse {
-	/** Markdown resultante, já sem cercas de código. */
+	/** markdown resultante, ja sem cerca de codigo. */
 	markdown: string;
-	/** Modelo que respondeu (para log/diagnóstico). */
+	/** modelo que respondeu (pra log/diagnostico). */
 	model: string;
-	/** Tokens usados, quando o provedor informa. */
+	/** tokens usados, quando o provedor informa. */
 	usage?: { inputTokens?: number; outputTokens?: number };
 }
 
-/** Configuração resolvida de um provedor. */
+/** configuracao resolvida de um provedor. */
 export interface AiProviderConfig {
 	apiKey: string;
 	model: string;
 	baseUrl?: string;
 	timeoutMs: number;
 	/**
-	 * Identificador da instalação, usado SÓ pelo provedor `proxy` para a cota
-	 * diária do servidor. Não é segredo e não autentica nada.
+	 * id da instalacao, usado so pelo provedor `proxy` pra cota diaria do
+	 * servidor. nao e segredo e nao autentica nada.
 	 */
 	installId?: string;
 }
 
-/** Erros que a UI precisa distinguir para dar boa mensagem ao usuário. */
+/** erros que a UI precisa distinguir pra dar mensagem boa pro user. */
 export type AiErrorKind =
 	| 'missing-key'
 	| 'unauthorized'
@@ -83,11 +83,11 @@ export class AiError extends Error {
 	}
 
 	/**
-	 * Mensagem amigável para `showErrorMessage`.
+	 * mensagem amigavel pro `showErrorMessage`.
 	 *
-	 * Em INGLÊS: a extensão é publicada para uso global, então tudo que o
-	 * usuário final vê na tela (notificação, erro, tooltip) é em inglês.
-	 * Comentários e documentação seguem em português.
+	 * em INGLES: a extensao e publicada pra uso global, entao tudo que o user
+	 * final ve na tela (notificacao, erro, tooltip) fica em ingles. comentario
+	 * e documentacao seguem em portugues.
 	 */
 	get friendlyMessage(): string {
 		switch (this.kind) {
@@ -111,28 +111,28 @@ export class AiError extends Error {
 	}
 }
 
-/** Interface que todo provedor implementa. */
+/** interface que todo provedor implementa. */
 export interface AiProvider {
-	/** Identificador curto: `deepseek`, `gemini`, `glm`, `nemotron`. */
+	/** id curto: `deepseek`, `gemini`, `glm`, `nemotron`. */
 	readonly id: string;
-	/** Nome para exibir ao usuário. */
+	/** nome pra exibir pro user. */
 	readonly label: string;
-	/** Modelo padrão quando o usuário não escolhe. */
+	/** modelo padrao quando o user nao escolhe. */
 	readonly defaultModel: string;
-	/** Formata um trecho markdown. */
+	/** formata um trecho markdown. */
 	format(request: AiFormatRequest, config: AiProviderConfig): Promise<AiFormatResponse>;
 }
 
 /**
- * O prompt do sistema vive em `prompt.ts` (é longo e tem testes próprios).
- * Reexportado aqui para que os provedores tenham um ponto único de import.
+ * o prompt de sistema mora em `prompt.ts` (e longo e tem teste proprio).
+ * reexportado aqui pra os provedores terem um ponto unico de import.
  */
 export { SYSTEM_PROMPT, buildSystemPrompt, buildUserPrompt } from './prompt';
 export type { EmphasisMode } from './prompt';
 
 /**
- * Remove cercas de código que o modelo às vezes adiciona em volta da resposta.
- * Também remove preâmbulos do tipo "Aqui está o markdown:".
+ * tira cerca de codigo que o modelo as vezes poe em volta da resposta.
+ * tambem tira preambulo tipo "Aqui está o markdown:".
  */
 export function stripCodeFence(raw: string): string {
 	let text = raw.trim();
@@ -143,7 +143,7 @@ export function stripCodeFence(raw: string): string {
 		text = fence[1];
 	}
 
-	// Preâmbulo curto antes de um fence interno.
+	// preambulo curto antes de um fence interno.
 	const withPreamble = text.match(/^(?:Aqui est[áa][\s\S]*?:\s*\n)?```[a-zA-Z]*\s*\n([\s\S]*?)\n?```$/);
 	if (withPreamble) {
 		text = withPreamble[1];

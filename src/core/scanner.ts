@@ -1,19 +1,19 @@
 /**
- * Varredura estrutural do trecho.
+ * varredura estrutural do trecho.
  *
- * Antes de qualquer regra rodar, precisamos saber QUAIS linhas são intocáveis:
- * blocos de código, front matter, tabelas, HTML, citações. Essa é a defesa
- * mais importante contra "a extensão estragou meu README".
+ * antes de qualquer regra rodar, precisamos saber QUAIS linhas sao intocaveis:
+ * blocos de codigo, front matter, tabelas, HTML, citacoes. essa e a defesa
+ * mais importante contra "a extensao estragou meu README".
  *
- * Sem `vscode` aqui: recebe strings, devolve metadados.
+ * sem `vscode` aqui: recebe string, devolve metadado.
  */
 
 import type { ProtectedKind } from './types';
 
 export interface ScanResult {
-	/** Para cada linha, o tipo de bloco protegido (ou null). */
+	/** pra cada linha, o tipo de bloco protegido (ou null). */
 	protectedKind: (ProtectedKind | null)[];
-	/** True quando a linha faz parte de um fence ``` / ~~~. */
+	/** true quando a linha faz parte de um fence ``` / ~~~. */
 	fenced: boolean[];
 }
 
@@ -21,13 +21,13 @@ const FENCE_RE = /^[ \t]{0,3}(```+|~~~+)(.*)$/;
 const FRONT_MATTER_RE = /^(-{3}|\+{3})\s*$/;
 const LIST_ITEM_RE = /^([ \t]*)([-*+]|\d{1,9}[.)\]\-}])[ \t]+\S/;
 
-/** True quando a barra de tabela aparece fora de código inline. */
+/** true quando a barra de tabela aparece fora de codigo inline. */
 function hasTablePipe(line: string): boolean {
 	const withoutCode = line.replace(/`[^`]*`/g, '');
 	return withoutCode.includes('|');
 }
 
-/** Linha composta só por pipes, traços, dois-pontos e espaços → `| --- |`. */
+/** linha so com pipes, tracos, dois-pontos e espaco -> `| --- |`. */
 export function isTableDelimiter(line: string): boolean {
 	const trimmed = line.trim();
 	if (!trimmed.includes('-') || !trimmed.includes('|')) {
@@ -36,33 +36,33 @@ export function isTableDelimiter(line: string): boolean {
 	return /^\|?[\s:|-]+\|?$/.test(trimmed) && /^[|\s:-]+$/.test(trimmed);
 }
 
-/** True quando a linha inicia um item de lista. */
+/** true quando a linha inicia um item de lista. */
 export function isListItem(line: string): boolean {
 	return LIST_ITEM_RE.test(line);
 }
 
-/** Extrai o marcador (`-`, `*`, `+`, `1.`, `1)`) de um item de lista. */
+/** tira o marcador (`-`, `*`, `+`, `1.`, `1)`) de um item de lista. */
 export function listMarker(line: string): string | null {
 	return line.match(LIST_ITEM_RE)?.[2] ?? null;
 }
 
 /**
- * True quando o `---` na linha `index` ABRE um bloco de front matter.
+ * true quando o `---` na linha `index` ABRE um bloco de front matter.
  *
- * Distingue front matter de uma régua horizontal (`---` sozinha) olhando o
- * que vem depois: front matter tem linhas `chave: valor` e fecha com outro
- * `---`. Uma régua horizontal é seguida por texto comum ou linha em branco.
+ * separa front matter de regua horizontal (`---` sozinha) olhando oq vem
+ * depois: front matter tem linhas `chave: valor` e fecha com outro `---`.
+ * regua horizontal e seguida de texto comum ou linha em branco.
  *
- * Isso evita proteger uma régua solta (que é só decoração e pode ser
- * reformatada normalmente) e evita também tratar todo `---` como abertura.
+ * isso evita proteger regua solta (que e so decoracao e pode ser reformatada
+ * normal) e evita tratar todo `---` como abertura.
  */
 function startsFrontMatterBlock(lines: string[], index: number): boolean {
-	// `---` na primeira linha é front matter por definição.
+	// `---` na primeira linha e front matter por definicao.
 	if (index === 0) {
 		return true;
 	}
-	// Precisa estar isolado: nada antes na mesma linha, nada depois.
-	// Procura o fechamento e exige pelo menos uma linha com `chave: valor`.
+	// precisa tar isolado: nada antes na mesma linha, nada depois.
+	// procura o fechamento e exige pelo menos uma linha com `chave: valor`.
 	for (let i = index + 1; i < Math.min(lines.length, index + 40); i++) {
 		const line = lines[i];
 		if (FRONT_MATTER_RE.test(line)) {
@@ -76,14 +76,14 @@ function startsFrontMatterBlock(lines: string[], index: number): boolean {
 }
 
 /**
- * Percorre o texto marcando regiões protegidas.
+ * percorre o texto marcando regiao protegida.
  *
- * Regras de proteção:
- * 1. Fence aberto (```/~~~) protege tudo até o fence de fechamento.
- * 2. Front matter (`---` na primeira linha) protege até o `---` de volta.
- * 3. Tabelas: uma linha com `|` seguida de delimitador, ou já dentro de tabela.
- * 4. Blocos HTML (`<div>`, `<details>`, `<table>`...) protegem até fecharem.
- * 5. Blocos de citação (`>`) são protegidos: reescrever citação é trabalho da IA.
+ * regras de protecao:
+ * 1. fence aberto (```/~~~) protege tudo ate o fence de fechamento.
+ * 2. front matter (`---` na primeira linha) protege ate o `---` de volta.
+ * 3. tabela: linha com `|` seguida de delimitador, ou ja dentro de tabela.
+ * 4. bloco HTML (`<div>`, `<details>`, `<table>`...) protege ate fechar.
+ * 5. bloco de citacao (`>`) e protegido: reescrever citacao e trabalho da IA.
  */
 export function scanProtected(text: string): ScanResult {
 	const lines = text.split(/\r\n|\r|\n/);
@@ -100,14 +100,14 @@ export function scanProtected(text: string): ScanResult {
 		const line = lines[i];
 		const trimmed = line.trim();
 
-		// --- 1. Blocos de código -------------------------------------------
+		// --- 1. blocos de codigo -------------------------------------------
 		const fence = line.match(FENCE_RE);
 		if (fenceChar !== null) {
 			fenced[i] = true;
 			insideFence[i] = true;
 			kind[i] = 'fence';
 			if (fence && fence[1][0] === fenceChar && trimmed.startsWith(fenceChar)) {
-				// Fence de fechamento.
+				// fence de fechamento.
 				fenceChar = null;
 			}
 			continue;
@@ -120,12 +120,12 @@ export function scanProtected(text: string): ScanResult {
 			continue;
 		}
 
-		// --- 2. Front matter e blocos `---` --------------------------------
-		// `---` na primeira linha é front matter YAML clássico. Mas `---`
-		// também aparece no MEIO de documentos como separador de seção ou
-		// como front matter de um trecho colado. Antes só tratávamos o caso
-		// da primeira linha, e o bloco do meio ficava exposto — num teste
-		// real a IA recebeu `---\ntitle: x\n---` e reescreveu o conteúdo.
+		// --- 2. front matter e blocos `---` --------------------------------
+		// `---` na primeira linha e front matter YAML classico. mas `---`
+		// tambem aparece no MEIO do documento como separador de secao ou
+		// front matter de trecho colado. antes so tratavamos o caso da
+		// primeira linha, e o bloco do meio ficava exposto — num teste real
+		// a IA recebeu `---\ntitle: x\n---` e reescreveu o conteudo.
 		if (inFrontMatter) {
 			kind[i] = 'frontMatter';
 			if (FRONT_MATTER_RE.test(line)) {
@@ -153,7 +153,7 @@ export function scanProtected(text: string): ScanResult {
 			continue;
 		}
 
-		// --- 4. Tabelas ---------------------------------------------------
+		// --- 4. tabelas ---------------------------------------------------
 		if (inTable) {
 			kind[i] = 'table';
 			if (!hasTablePipe(line) && trimmed.length > 0) {
@@ -171,7 +171,7 @@ export function scanProtected(text: string): ScanResult {
 			continue;
 		}
 
-		// --- 5. Citações e labels ----------------------------------------
+		// --- 5. citacoes e labels ----------------------------------------
 		if (/^[ \t]{0,3}>/.test(line)) {
 			kind[i] = 'blockquote';
 			continue;

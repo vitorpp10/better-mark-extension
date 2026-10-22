@@ -4,10 +4,10 @@ import { formatMarkdown } from '../formatter';
 const L2 = { inlineCodeTerms: true, inlineCodeMentions: true };
 
 describe('Nível 2A — rótulos de definição', () => {
-	// Só rótulos que "parecem código" recebem crase. `Conceito:` era aceito
-	// numa versão anterior e virou falso positivo em texto real (o `desc.md`
-	// do próprio projeto tem "Baixar:" e "Executar:") — por isso hoje é
-	// rejeitado, junto com as demais palavras de prosa.
+	// so rotulo que "parece codigo" ganha crase. `Conceito:` era aceito
+	// numa versao antiga e virou falso positivo em texto real (o `desc.md`
+	// do proprio projeto tem "Baixar:" e "Executar:") — por isso hoje e
+	// rejeitado, junto com as outras palavras de prosa.
 	const cases: Array<[string, string, string]> = [
 		['snake_case', 'timeout_ms:\n', '`timeout_ms`:\n'],
 		['SCREAMING_CASE', 'MAX_RETRIES:\n', '`MAX_RETRIES`:\n'],
@@ -28,9 +28,9 @@ describe('Nível 2A — rótulos de definição', () => {
 	});
 
 	describe('rótulos de prosa recebem negrito', () => {
-		// MUDANÇA DE COMPORTAMENTO: antes estes rótulos ficavam intactos. Agora
-		// viram negrito, que é o padrão visual de um README e o que o motor
-		// offline não fazia. O valor depois dos dois-pontos não é tocado.
+		// mudanca de comportamento: antes esses rotulos ficavam intactos.
+		// agora viram negrito, que e o padrao visual de README e oq o motor
+		// offline nao fazia. o valor depois dos dois-pontos nao e tocado.
 		const proseLabels: Array<[string, string]> = [
 			['Entrada: o texto selecionado', '**Entrada:** o texto selecionado'],
 			['Resultado: markdown formatado', '**Resultado:** markdown formatado'],
@@ -53,7 +53,7 @@ describe('Nível 2A — rótulos de definição', () => {
 		});
 	});
 
-	describe('frases com dois-pontos NÃO viram negrito', () => {
+	describe('frases com dois-pontos nao viram negrito', () => {
 		const frases = [
 			'O importante aqui: isto e uma frase comum.',
 			'nota: isto comeca minusculo.',
@@ -61,13 +61,13 @@ describe('Nível 2A — rótulos de definição', () => {
 			'Por que usar: nao e rotulo.',
 		];
 
-		it.each(frases)('não altera: %j', (input) => {
+		it.each(frases)('nao altera: %j', (input) => {
 			expect(formatMarkdown(input, L2).text).toBe(input);
 		});
 	});
 });
 
-describe('Nível 2A — o que NÃO deve mudar', () => {
+describe('Nivel 2A — oq NAO deve mudar', () => {
 	const mustNotChange = [
 		'Este é um parágrafo normal, com vírgulas, e que termina em ponto.',
 		'https://exemplo.com: a url não deve ganhar crase.',
@@ -77,7 +77,7 @@ describe('Nível 2A — o que NÃO deve mudar', () => {
 		'- `já em crase`\n',
 	];
 
-	it.each(mustNotChange)('não altera: %j', (input) => {
+	it.each(mustNotChange)('nao altera: %j', (input) => {
 		expect(formatMarkdown(input, L2).text).toBe(input);
 	});
 
@@ -92,9 +92,9 @@ describe('Nível 2A — o que NÃO deve mudar', () => {
 });
 
 describe('Nível 2A — menções a código', () => {
-	// Nota: uma linha curta e isolada VIRA título (regra do Nível 1). Para
-	// testar só a crase, usamos frases de parágrafo (longas o bastante para
-	// não serem título) — que é exatamente o caso real de uso.
+	// nota: uma linha curta e isolada VIRA titulo (regra do nivel 1). pra
+	// testar so a crase, a gente usa frase de paragrafo (longa o bastante
+	// pra nao ser titulo) — que e exatamente o caso real de uso.
 	it('coloca crase em nome de arquivo citado', () => {
 		const input = 'Se der erro, edite o extension.ts e salve novamente o arquivo.\n';
 		expect(formatMarkdown(input, L2).text).toBe(
@@ -131,9 +131,9 @@ describe('Nível 2A — idempotência', () => {
 });
 
 describe('Nível 2A — menções técnicas no meio da prosa', () => {
-	// As frases abaixo são longas de propósito: frases curtas seriam
-	// legitimamente promovidas a título pela regra de títulos, e o teste
-	// mediria outra coisa.
+	// as frases abaixo sao longas de proposito: frase curta seria
+	// promovida a titulo pela regra de titulos, e o teste mediria outra
+	// coisa.
 	it('marca caminhos de arquivo C/C++ (extensões que faltavam)', () => {
 		expect(formatMarkdown('Você precisa editar o arquivo app/jogo.cpp com atenção.', L2).text).toBe(
 			'Você precisa editar o arquivo `app/jogo.cpp` com atenção.',
@@ -192,7 +192,7 @@ describe('Nível 2A — menções técnicas no meio da prosa', () => {
 		).toBe('A fonte principal está em `assets/PressStart2P-Regular.ttf` do projeto.');
 	});
 
-	it('NÃO marca prosa comum', () => {
+	it('NAO marca prosa comum', () => {
 		const prosa = [
 			'O projeto tem boas praticas e notas importantes.',
 			'A saída do programa é rápida.',
@@ -224,9 +224,9 @@ describe('Nível 2A — rótulos dentro de itens de lista', () => {
 });
 
 describe('Nível 2A — títulos não recebem negrito', () => {
-	// BUG CORRIGIDO na v0.5.0: "# Feature 1: Criar botão" virava
-	// "# **Feature 1:** Criar botão". Um título já é destaque; negrito
-	// dentro dele é redundante.
+	// bug corrigido na v0.5.0: "# Feature 1: Criar botao" virava
+	// "# **Feature 1:** Criar botao". titulo ja e destaque; negrito
+	// dentro dele e redundante.
 	const titulos = [
 		'# Feature 1: Criar e visualizar botão',
 		'## Instalação: primeiros passos',
@@ -234,7 +234,7 @@ describe('Nível 2A — títulos não recebem negrito', () => {
 		'### Stack: ferramentas',
 	];
 
-	it.each(titulos)('não altera: %j', (input) => {
+	it.each(titulos)('nao altera: %j', (input) => {
 		expect(formatMarkdown(`${input}\n`, L2).text).toBe(`${input}\n`);
 	});
 
@@ -246,8 +246,8 @@ describe('Nível 2A — títulos não recebem negrito', () => {
 });
 
 describe('Nível 1 — diagrama indentado não vira lista', () => {
-	// O recuo de 4 espaços num diagrama de árvore é INTENCIONAL. Converter em
-	// lista destrói o alinhamento das colunas, que é o ponto do diagrama.
+	// o recuo de 4 espacos num diagrama de arvore e INTENCIONAL. converter
+	// em lista destroi o alinhamento das colunas, que e o ponto do diagrama.
 	it('preserva diagrama alinhado por espaços', () => {
 		const input = [
 			'A separação atual:',

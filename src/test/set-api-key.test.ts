@@ -2,15 +2,15 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 /**
- * Utilitário de desenvolvimento: grava a API key no SecretStorage do VS Code.
+ * utilitario de dev: grava a api key no secretstorage do vs code.
  *
- * Rode com a chave na variável de ambiente — ela NÃO fica no código nem no
+ * roda com a chave na variavel de ambiente — ela nao fica no codigo nem no
  * settings.json:
  *
  *   BETTER_MARK_API_KEY=rv_... npm run set-api-key
  *
- * A chave fica no armazenamento criptografado pelo sistema operacional, que é
- * o mesmo lugar usado pelo comando "Markdownify: Configurar API key".
+ * a chave fica no armazenamento criptografado pelo so, o mesmo lugar que o
+ * comando "markdownify: set api key" usa.
  */
 suite('Markdownify — configurar API key', () => {
 	test('grava a chave vinda do ambiente', async function () {
@@ -28,8 +28,8 @@ suite('Markdownify — configurar API key', () => {
 
 		await extension.exports?.setApiKey?.(apiKey);
 
-		// Não usamos o comando aqui de propósito: ele abre um input box, que
-		// travaria a execução automatizada.
+		// nao usamos o comando aqui de proposito: ele abre um input box, que
+		// travaria a execucao automatizada.
 		const stored = await extension.exports?.getApiKey?.();
 		assert.strictEqual(stored, apiKey, 'a chave não foi gravada corretamente');
 

@@ -1,20 +1,20 @@
 /**
- * markdownify — extensão VS Code.
+ * markdownify — extensao do vs code.
  *
- * Ponto de entrada. Responsabilidade única: registrar comandos e limpar
- * recursos. A lógica vive em:
+ * ponto de entrada. faz uma coisa so: registra comando e limpa recurso.
+ * a logica mora em:
  *
- *   src/core/    → motor de formatação puro (sem `vscode`), testado por vitest
- *   src/ai/      → camada de IA, com provedores atrás de uma interface
- *   src/vscode/  → a cola com o editor (comandos, configuração, erros)
+ *   src/core/    -> motor puro (sem `vscode`), testado no vitest
+ *   src/ai/      -> camada de ia, provedor atras de interface
+ *   src/vscode/  -> cola com o editor (comando, config, erro)
  *
- * Fluxo:
+ * fluxo:
  *
- *   package.json  → declara comando / menu / ativação
- *         ↓
- *   activate()    → registra os comandos
- *         ↓
- *   comando       → lê a seleção, chama o core, escreve de volta
+ *   package.json  -> declara comando / menu / ativacao
+ *         |
+ *   activate()    -> registra os comandos
+ *         |
+ *   comando       -> le a selecao, chama o core, escreve de volta
  */
 
 import * as vscode from 'vscode';
@@ -23,7 +23,6 @@ import {
 	registerFormatCommand,
 	registerFormatMenuCommand,
 	registerFormatWithAiCommand,
-	registerRestructureCommand,
 	registerShowStatsCommand,
 } from './vscode/commands';
 import { registerStatusBarItem } from './vscode/status-bar';
@@ -32,16 +31,16 @@ import { getAiSettings, setApiKey, clearApiKey } from './vscode/config';
 import { PROVIDERS } from './ai/registry';
 
 /**
- * API exposta para automação (scripts e testes de integração).
+ * api exposta pra automacao (script e teste de integracao).
  *
- * Serve para gravar a API key no SecretStorage sem passar pelo input box do
- * comando interativo. Não é API pública da extensão: pode mudar sem aviso.
+ * serve pra gravar a api key no secretstorage sem passar pelo input box do
+ * comando. nao e api publica da extensao: pode mudar sem aviso.
  */
 export interface BetterMarkApi {
 	setApiKey(apiKey: string): Promise<void>;
 	getApiKey(): Promise<string | undefined>;
 	clearApiKey(): Promise<void>;
-	/** Provedores disponíveis, para diagnóstico. */
+	/** provedores disponiveis, pra diagnostico. */
 	listProviders(): string[];
 }
 
@@ -51,7 +50,6 @@ export function activate(context: vscode.ExtensionContext): BetterMarkApi {
 	registerFormatMenuCommand(context);
 	registerFormatCommand(context);
 	registerFormatWithAiCommand(context);
-	registerRestructureCommand(context);
 	registerConfigureApiKeyCommand(context);
 	registerShowStatsCommand(context);
 	registerStatusBarItem(context);
@@ -65,7 +63,7 @@ export function activate(context: vscode.ExtensionContext): BetterMarkApi {
 
 	console.log(`markdownify: idiomas suportados → ${SUPPORTED_LANGUAGES.join(', ')}`);
 
-	// Retornar a API faz o VS Code publicá-la em `extension.exports`.
+	// devolver a api faz o vs code publicar ela em `extension.exports`.
 	const api: BetterMarkApi = {
 		setApiKey: (apiKey: string) => setApiKey(context, apiKey),
 		getApiKey: async () => (await getAiSettings(context)).apiKey,
@@ -76,10 +74,10 @@ export function activate(context: vscode.ExtensionContext): BetterMarkApi {
 }
 
 export function deactivate(): void {
-	// Nada a liberar: tudo foi registrado em `context.subscriptions`.
+	// nada a liberar: tudo ja foi registrado em `context.subscriptions`.
 }
 
-/** Expõe `betterMark.isMarkdown` para as `when` clauses do package.json. */
+/** expoe `betterMark.isMarkdown` pras `when` clauses do package.json. */
 function setMarkdownContext(editor: vscode.TextEditor | undefined): void {
 	const isMarkdown = editor?.document.languageId === 'markdown';
 	void vscode.commands.executeCommand('setContext', 'betterMark.isMarkdown', isMarkdown);

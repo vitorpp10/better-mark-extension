@@ -1,12 +1,12 @@
 /**
- * Provedores OpenAI-compatíveis.
+ * provedores openai-comutiveis.
  *
- * DeepSeek, GLM (Zhipu) e Nemotron (NVIDIA NIM) todos falam o mesmo dialeto
- * `/chat/completions`, então compartilham a mesma implementação e só mudam
- * baseUrl, modelo padrão e nome.
+ * DeepSeek, GLM (Zhipu) e Nemotron (NVIDIA NIM) falam o mesmo dialeto
+ * `/chat/completions`, entao compartilham a mesma implementacao e so mudam
+ * baseUrl, modelo padrao e nome.
  *
- * `fetch` é global no Node 18+ / VS Code 1.8x, então não adicionamos
- * dependência nenhuma para HTTP.
+ * `fetch` e global no Node 18+ / VS Code 1.8x, entao nao adicionamos
+ * dependencia nenhuma pra HTTP.
  */
 
 import {
@@ -32,15 +32,15 @@ interface ChatResponse {
 }
 
 /**
- * Cliente base para qualquer endpoint `/chat/completions`.
- * Subclasses só definem identidade e padrões.
+ * cliente base pra qualquer endpoint `/chat/completions`.
+ * as subclasses so definem identidade e padroes.
  */
 export abstract class OpenAiCompatibleProvider implements AiProvider {
 	abstract readonly id: string;
 	abstract readonly label: string;
 	abstract readonly defaultModel: string;
 
-	/** Caminho do endpoint, relativo ao baseUrl. */
+	/** caminho do endpoint, relativo ao baseUrl. */
 	protected readonly path = '/chat/completions';
 
 	async format(request: AiFormatRequest, config: AiProviderConfig): Promise<AiFormatResponse> {
@@ -79,7 +79,7 @@ export abstract class OpenAiCompatibleProvider implements AiProvider {
 
 	protected abstract defaultBaseUrl(): string;
 
-	/** POST com timeout, cancelamento e tradução de erros HTTP. */
+	/** POST com timeout, cancelamento e traducao de erro HTTP. */
 	protected async post(
 		url: string,
 		config: AiProviderConfig,
@@ -132,7 +132,7 @@ export abstract class OpenAiCompatibleProvider implements AiProvider {
 	}
 }
 
-/** Traduz status HTTP para o vocabulário de erro da extensão. */
+/** traduz status HTTP pro vocabulario de erro da extensao. */
 export function mapHttpStatus(status: number): 'unauthorized' | 'rate-limit' | 'network' | 'unknown' {
 	if (status === 401 || status === 403) {
 		return 'unauthorized';
@@ -176,7 +176,7 @@ export class NemotronProvider extends OpenAiCompatibleProvider {
 	}
 }
 
-/** OpenAI — mantido como fallback genérico. */
+/** OpenAI — mantido como fallback generico. */
 export class OpenAiProvider extends OpenAiCompatibleProvider {
 	readonly id = 'openai';
 	readonly label = 'OpenAI';
@@ -187,9 +187,9 @@ export class OpenAiProvider extends OpenAiCompatibleProvider {
 }
 
 /**
- * River AI — gateway compatível com OpenAI.
+ * River AI — gateway compativel com OpenAI.
  *
- * Chaves começam com `rv_`. Serve modelos de vários fabricantes pelo mesmo
+ * chave comeca com `rv_`. serve modelo de varios fabricantes pelo mesmo
  * endpoint, por isso o modelo precisa ser qualificado (`fabricante/modelo`).
  */
 export class RiverProvider extends OpenAiCompatibleProvider {

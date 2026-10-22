@@ -1,23 +1,23 @@
 /**
- * Provedor que fala com o proxy do Markdownify.
+ * provedor que fala com o proxy do Markdownify.
  *
- * POR QUE ESTE PROVEDOR EXISTE (a razão de o projeto ter um servidor):
+ * POR QUE ESTE PROVEDOR EXISTE (a razao de o projeto ter um servidor):
  *
- * A extensão existe para o usuário NÃO precisar criar conta em provedor de
- * IA, gerar chave e colar em configuração. Se ele tivesse que fazer isso, a
- * extensão seria só "um jeito mais chato de usar o ChatGPT".
+ * a extensao existe pro user NAO precisar criar conta em provedor de IA,
+ * gerar chave e colar em configuracao. se ele tivesse que fazer isso, a
+ * extensao seria so "um jeito mais chato de usar o ChatGPT".
  *
- * Mas a chave da API não pode viajar dentro do `.vsix`: o arquivo é aberto
- * por qualquer um, e a chave seria extraída em dias — com o custo caindo na
- * conta do dono da extensão.
+ * mas a chave da API nao pode viajar dentro do `.vsix`: o arquivo e aberto
+ * por qualquer um, e a chave seria extraida em dias — com o custo caindo na
+ * conta do dono da extensao.
  *
- * A solução é este provedor: ele fala com um servidor intermediário que
- * guarda a chave. A extensão nunca vê segredo nenhum, e o usuário não
- * configura nada. É o modo padrão de `better-mark.ai.provider`.
+ * a solucao e este provedor: ele fala com um servidor intermediario que
+ * guarda a chave. a extensao nunca ve segredo nenhum, e o user nao configura
+ * nada. e o modo padrao de `better-mark.ai.provider`.
  *
- * Se o usuário PREFERIR usar a própria chave (por privacidade, ou porque o
- * proxy está fora do ar), os outros provedores continuam disponíveis — este
- * é um caminho a mais, não uma obrigação.
+ * se o user PREFERIR usar a propria chave (por privacidade, ou porque o
+ * proxy ta fora do ar), os outros provedores continuam disponiveis — este e
+ * um caminho a mais, nao uma obrigacao.
  */
 
 import {
@@ -29,11 +29,11 @@ import {
 } from './provider';
 
 /**
- * Endereço padrão do proxy.
+ * endereco padrao do proxy.
  *
- * Aponta para o servidor publicado — é o que faz a extensão funcionar sem
- * nenhuma configuração. Para desenvolver contra o servidor local, troque
- * temporariamente para 'http://localhost:8787'.
+ * aponta pro servidor publicado — e oq faz a extensao funcionar sem nenhuma
+ * configuracao. pra desenvolver contra o servidor local, troque
+ * temporariamente pra 'http://localhost:8787'.
  */
 export const DEFAULT_PROXY_URL = 'https://better-mark-server.onrender.com';
 
@@ -42,12 +42,12 @@ export class ProxyProvider implements AiProvider {
 	readonly label = 'Markdownify (no setup)';
 	readonly defaultModel = 'default';
 	/**
-	 * O modelo é escolhido no servidor, não aqui. `baseUrl` da configuração
-	 * sobrescreve o endereço padrão, útil para apontar a um proxy próprio.
+	 * o modelo e escolhido no servidor, nao aqui. `baseUrl` da configuracao
+	 * sobrescreve o endereco padrao, util pra apontar pra um proxy proprio.
 	 */
 	readonly isProxy = true;
 
-	/** URL padrão; a configuração pode sobrescrever por chamada. */
+	/** URL padrao; a configuracao pode sobrescrever por chamada. */
 	readonly defaultBaseUrl: string;
 
 	constructor(baseUrl: string = DEFAULT_PROXY_URL) {
@@ -55,15 +55,15 @@ export class ProxyProvider implements AiProvider {
 	}
 
 	/**
-	 * Envia para o proxy.
+	 * manda pro proxy.
 	 *
-	 * Sem `Authorization`: não há segredo do lado do cliente. O que
-	 * identificamos é a INSTALAÇÃO, para o servidor aplicar a cota diária.
+	 * sem `Authorization`: nao tem segredo do lado do cliente. oq a gente
+	 * identifica e a INSTALACAO, pro servidor aplicar a cota diaria.
 	 */
 	async format(request: AiFormatRequest, config: AiProviderConfig): Promise<AiFormatResponse> {
 		const controller = new AbortController();
-		// O sinal do VS Code (cancelamento) e o timeout do provedor precisam
-		// coexistir: um aborta por escolha do usuário, o outro por demora.
+		// o sinal do VS Code (cancelamento) e o timeout do provedor precisam
+		// conviver: um aborta por escolha do user, o outro por demora.
 		const onAbort = (): void => controller.abort();
 		request.signal?.addEventListener('abort', onAbort, { once: true });
 
@@ -73,8 +73,8 @@ export class ProxyProvider implements AiProvider {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					// Identifica a instalação para a cota. NÃO é autenticação:
-					// é só para uma pessoa não consumir a cota de outra.
+					// identifica a instalacao pra cota. NAO e autenticacao:
+					// e so pra uma pessoa nao consumir a cota de outra.
 					'x-bm-install': config.installId ?? 'unknown-install',
 				},
 				body: JSON.stringify({
@@ -113,8 +113,8 @@ export class ProxyProvider implements AiProvider {
 				throw error;
 			}
 			if (error instanceof Error && error.name === 'AbortError') {
-				// Distinguir os dois abortos importa: cancelamento do usuário
-				// não é erro, e não deve virar notificação vermelha.
+				// distinguir os dois abortos importa: cancelamento do user nao e
+				// erro, e nao deve virar notificacao vermelha.
 				throw new AiError(
 					request.signal?.aborted ? 'cancelled' : 'timeout',
 					request.signal?.aborted
@@ -131,10 +131,10 @@ export class ProxyProvider implements AiProvider {
 		}
 	}
 
-	/** Converte a resposta de erro do proxy em `AiError` amigável. */
+	/** converte a resposta de erro do proxy em `AiError` amigavel. */
 	private async translateError(response: Response): Promise<AiError> {
-		// 429 tem tratamento próprio: é o limite diário, e o usuário precisa
-		// saber que é temporário, não que algo quebrou.
+		// 429 tem tratamento proprio: e o limite diario, e o user precisa
+		// saber que e temporario, nao que algo quebrou.
 		if (response.status === 429) {
 			const retry = response.headers.get('X-RateLimit-Reset');
 			const quando = retry
@@ -162,7 +162,7 @@ export class ProxyProvider implements AiProvider {
 			const body = (await response.json()) as { error?: string };
 			detail = body.error ?? '';
 		} catch {
-			// Corpo não-JSON: ignoramos e usamos a mensagem genérica.
+			// corpo nao-JSON: ignora e usa a mensagem generica.
 		}
 
 		return new AiError(
