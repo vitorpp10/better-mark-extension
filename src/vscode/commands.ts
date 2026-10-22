@@ -70,7 +70,11 @@ export function registerFormatCommand(context: vscode.ExtensionContext): void {
 		const result = formatSelection(text, getFormatOptions());
 
 		if (result.text === text) {
-			void vscode.window.showInformationMessage('Markdownify: nothing to format.');
+			// o texto ja esta no formato final. nao e erro: e o caso comum de
+			// rodar de novo depois de ja ter formatado. a mensagem diz isso.
+			void vscode.window.showInformationMessage(
+				'Markdownify: already well formatted — nothing to change.',
+			);
 			return;
 		}
 
@@ -80,9 +84,9 @@ export function registerFormatCommand(context: vscode.ExtensionContext): void {
 			return;
 		}
 
-		const rules = result.appliedRules.length > 0 ? result.appliedRules.join(', ') : 'nenhuma';
+		const rules = result.appliedRules.length > 0 ? result.appliedRules.join(', ') : 'none';
 		void vscode.window.showInformationMessage(
-			`Markdownify: ${result.changedLines} linha(s) ajustada(s) — ${rules}.`,
+			`Markdownify: ${result.changedLines} line(s) adjusted — ${rules}.`,
 		);
 	});
 
